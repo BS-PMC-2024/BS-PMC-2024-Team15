@@ -1,0 +1,28 @@
+/* EventsComponent.css */
+.events {
+    padding: 20px;
+}
+
+.events h2 {
+    margin-bottom: 10px;
+}
+
+.events-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.events-table th,
+.events-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.events-table th {
+    background-color: #f4f4f4;
+}
+
+.events-table td button {
+    margin-right: 5px;
+}
