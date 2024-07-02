@@ -1,0 +1,116 @@
+.section-full-height {
+    height: 100vh;
+  }
+  
+  .container-full-height {
+    height: 100%;
+  }
+  
+  .social-login-button {
+    margin-left: 4px;
+    margin-right: 4px;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background-color: var(--tw-bg-primary);
+    color: var(--tw-text-white);
+    text-transform: uppercase;
+    box-shadow: var(--tw-shadow-md);
+    transition: var(--tw-duration-150) ease-in-out;
+  }
+  
+  .social-login-button:hover {
+    background-color: var(--tw-bg-primary-600);
+    box-shadow: var(--tw-shadow-lg);
+  }
+  
+  .social-login-button:focus {
+    background-color: var(--tw-bg-primary-600);
+    box-shadow: var(--tw-shadow-lg);
+    outline: none;
+  }
+  
+  .social-login-button:active {
+    background-color: var(--tw-bg-primary-700);
+    box-shadow: var(--tw-shadow-lg);
+  }
+  
+  .separator {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    border-top: 1px solid var(--tw-border-neutral-300);
+  }
+  
+  .checkbox-container {
+    margin-bottom: 0.125rem;
+    min-height: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .checkbox-input {
+    margin-right: 8px;
+    height: 16px;
+    width: 16px;
+    border-radius: 0.25rem;
+    border: 1px solid var(--tw-border-gray-300);
+    background-color: var(--tw-bg-white);
+    appearance: none;
+    /* Tailwind-specific class names in CSS are not supported directly. 
+       Use these classes in JSX instead: `checked:bg-primary checked:border-primary focus:outline-none` */
+  }
+  
+  .checkbox-label {
+    padding-left: 0.15rem;
+    cursor: pointer;
+  }
+  
+  .primary-link {
+    color: var(--tw-text-primary);
+    transition: var(--tw-duration-200) ease-in-out;
+  }
+  
+  .primary-link:hover {
+    color: var(--tw-text-primary-700);
+  }
+  
+  .primary-link:focus {
+    color: var(--tw-text-primary-700);
+  }
+  
+  .primary-link:active {
+    color: var(--tw-text-primary-800);
+  }
+  
+  .submit-button {
+    display: inline-block;
+    border-radius: 0.25rem;
+    background-color: var(--tw-bg-primary);
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--tw-text-white);
+    box-shadow: var(--tw-shadow-md);
+    transition: var(--tw-duration-150) ease-in-out;
+  }
+  
+  .submit-button:hover {
+    background-color: var(--tw-bg-primary-700);
+    box-shadow: var(--tw-shadow-lg);
+  }
+  
+  .submit-button:focus {
+    background-color: var(--tw-bg-primary-700);
+    box-shadow: var(--tw-shadow-lg);
+    outline: none;
+  }
+  
+  .submit-button:active {
+    background-color: var(--tw-bg-primary-800);
+    box-shadow: var(--tw-shadow-lg);
+  }
+  
