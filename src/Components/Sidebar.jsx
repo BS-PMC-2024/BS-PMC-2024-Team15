@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 import EventFormModal from './EventForm';
 
-const Sidebar = ({ scrollToCalendar, scrollToEvents }) => {
+const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -23,8 +23,6 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents }) => {
     };
 
 
-
-
     return (
         <>
             <aside className="sidebar">
@@ -33,7 +31,7 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents }) => {
                     <li><button className="sidebar-btn" onClick={scrollToCalendar}>Calendar</button></li>
                     <li><button className="sidebar-btn">Tasks</button></li>
                     <li><button className="sidebar-btn" onClick={scrollToEvents}>Events</button></li>
-                    <li><button className="sidebar-btn">Assistant Chat</button></li>
+                    <li><button className="sidebar-btn" onClick={toggleAIAssistant} >Assistant Chat</button></li>
                 </ul>
             </aside>
             <EventFormModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveEvent} />
