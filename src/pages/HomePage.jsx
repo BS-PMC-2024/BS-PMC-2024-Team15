@@ -1,44 +1,44 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './Home.css';
-import CalendarComponent from '../Components/CalendarComponent';
-import EventsComponent from '../Components/EventsComponent';
+import CalendarComponent from '../Components/Calendar';
+import EventsComponent from '../Components/Events';
+import Navbar from '../Components/Navbar';
+import Sidebar from '../Components/Sidebar';
 
 const HomePage = () => {
+    const calendarRef = useRef(null);
+    const eventsRef = useRef(null);
+
+    const scrollToCalendar = () => {
+        if (calendarRef.current) {
+            calendarRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    const scrollToEvents = () => {
+        if (eventsRef.current) {
+            eventsRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <div className="homepage">
-        <nav className="navbar">
-            <h1>Study Buddy</h1>
-            <div className="navbar-buttons">
-                <button className="nav-btn">Home</button>
-                <button className="nav-btn">About Us</button>
-                <button className="nav-btn">Contact</button>
-            </div>
-        </nav>
-        <div className="container">
-            <aside className="sidebar">
-                <ul>
-                    <li><button className="sidebar-btn">Calendar</button></li>
-                    <li><button className="sidebar-btn">Tasks</button></li>
-                    <li><button className="sidebar-btn">Events</button></li>
-                    <li><button className="sidebar-btn">Assistant Chat</button></li>
-                </ul>
-            </aside>
-            <main className="main-content">
-                <div className="calendar">
-                    {/* Placeholder for calendar component */
-                             
-                    }
-                    <h2>Calendar</h2>
-                    <div className="calendar-container">
-                        <CalendarComponent />
+            <Navbar />
+            <div className="container">
+                <Sidebar scrollToCalendar={scrollToCalendar} scrollToEvents={scrollToEvents} />
+                <main className="main-content">
+                    <div className="calendar" ref={calendarRef}>
+                        <h2>Calendar</h2>
+                        <div className="calendar-container">
+                            <CalendarComponent />
+                        </div>
                     </div>
-                    <div className="events-section">
+                    <div className="events-section" ref={eventsRef}>
                         <EventsComponent />
                     </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
-    </div>
     );
 }
 
