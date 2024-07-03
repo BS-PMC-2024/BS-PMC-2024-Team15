@@ -3,6 +3,7 @@ import CanvasJSReact from '@canvasjs/react-charts';
 
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+ 
 
 class GraphComponent extends Component {
     constructor() {
