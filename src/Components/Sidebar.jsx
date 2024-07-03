@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 import EventFormModal from './EventForm';
 
-const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant }) => {
+const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollToStatistics }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-
-
-    //adding new event Model functions
+    // Modal functions
     const handleAddNewEvent = () => {
         setIsModalOpen(true);
     };
@@ -17,11 +15,14 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant }) => {
     };
 
     const handleSaveEvent = (event) => {
-
-        console.log('sidebar -Event saved:', event);
-        // Here you can add the logic to save the event
+        console.log('sidebar - Event saved:', event);
+        // Logic to save the event
     };
 
+    // Scroll to statistics function
+    const handleScrollToStatistics = () => {
+        scrollToStatistics(); // Assuming scrollToStatistics is implemented in the parent component
+    };
 
     return (
         <>
@@ -29,9 +30,9 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant }) => {
                 <ul>
                     <li><button className="sidebar-btn" onClick={handleAddNewEvent}>Add New Event</button></li>
                     <li><button className="sidebar-btn" onClick={scrollToCalendar}>Calendar</button></li>
-                    <li><button className="sidebar-btn">Tasks</button></li>
                     <li><button className="sidebar-btn" onClick={scrollToEvents}>Events</button></li>
-                    <li><button className="sidebar-btn" onClick={toggleAIAssistant} >Assistant Chat</button></li>
+                    <li><button className="sidebar-btn" onClick={handleScrollToStatistics}>Statistics</button></li>
+                    <li><button className="sidebar-btn" onClick={toggleAIAssistant}>Assistant Chat</button></li>
                 </ul>
             </aside>
             <EventFormModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveEvent} />
