@@ -30,4 +30,13 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 
 
+
+
 ### `npm install react-big-calendar`
+
+
+
+
+
+
+### 'npm install @canvasjs/react-charts --save' 

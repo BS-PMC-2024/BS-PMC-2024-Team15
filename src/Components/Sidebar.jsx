@@ -5,24 +5,23 @@ import EventFormModal from './EventForm';
 const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollToStatistics }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Modal functions
+    // Sidebar components Scrolling functions
+    const handleScrollToStatistics = () => {
+        scrollToStatistics(); 
+    };
+    
+    // Sidebar add new events handler
     const handleAddNewEvent = () => {
         setIsModalOpen(true);
     };
-
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
-
     const handleSaveEvent = (event) => {
         console.log('sidebar - Event saved:', event);
         // Logic to save the event
     };
 
-    // Scroll to statistics function
-    const handleScrollToStatistics = () => {
-        scrollToStatistics(); // Assuming scrollToStatistics is implemented in the parent component
-    };
 
     return (
         <>

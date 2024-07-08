@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './EventForm.css';
 
+
+
 const EventFormModal = ({ isOpen, onClose, onSave }) => {
     const [title, setTitle] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -69,5 +71,7 @@ const EventFormModal = ({ isOpen, onClose, onSave }) => {
         </div>
     );
 }
+
+
 
 export default EventFormModal;
