@@ -31,6 +31,7 @@ db = firebase.database()
 # Initialize Firestore client
 firestore_db = firestore.client()
 
+# Register call
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -57,7 +58,7 @@ def register():
     except Exception as e:
         return jsonify({"message": str(e)}), 400
 
-    
+#Login Call  
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -70,12 +71,38 @@ def login():
     except Exception as e:
         return jsonify({"message": "Invalid credentials."}), 400
 
-
+#Logout
 @app.route('/logout', methods=['POST'])
 def logout():
     # Invalidate token logic if necessary
     return jsonify({"message": "Logged out successfully"}), 200
 
+#add event
+@app.route('/add_event', methods=['POST'])
+def add_event():
+    data = request.get_json()
+    title = data.get('title')
+    startTime = data.get('startTime')
+    duration = data.get('duration')
+    importance = data.get('importance')
+    description = data.get('description')
+
+    try:
+        # Add event to Firestore collection 'events'
+        
+        event_ref = {
+            'title': title,
+            'startTime': startTime,
+            'duration': duration,
+            'importance': importance,
+            'description': description,
+            'createdAt': firestore.SERVER_TIMESTAMP  # Optional: Timestamp of creation
+        }
+        firestore_db.collection('events').add(event_ref)
+
+        return jsonify({"message": "Event added successfully"}), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)

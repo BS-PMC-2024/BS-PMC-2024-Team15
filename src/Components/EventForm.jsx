@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './EventForm.css';
 
-
-
 const EventFormModal = ({ isOpen, onClose, onSave }) => {
     const [title, setTitle] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -10,12 +8,28 @@ const EventFormModal = ({ isOpen, onClose, onSave }) => {
     const [importance, setImportance] = useState('1');
     const [description, setDescription] = useState('');
 
-    const handleSave = () => {
-        //gettint event data from Form - returning to sidebar - handlesave event
-        onSave({ title, startTime, duration, importance, description });
-        onClose();
+    const handleSave = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/add_event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, startTime, duration, importance, description }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to add event');
+            }
+    
+            console.log('Event added successfully');
+            onClose(); // Close the modal after saving
+        } catch (error) {
+            console.error('Error adding event:', error);
+            // Handle error (e.g., show error message)
+        }
     };
-
+    
     if (!isOpen) return null;
 
     return (
@@ -39,12 +53,6 @@ const EventFormModal = ({ isOpen, onClose, onSave }) => {
                             <option value="0:45">0:45</option>
                             <option value="1:00">1:00</option>
                         </select>
-                        <input
-                            type="text"
-                            placeholder="or enter manually"
-                            value={duration}
-                            onChange={(e) => setDuration(e.target.value)}
-                        />
                     </label>
                     <label>
                         Importance:
@@ -70,8 +78,6 @@ const EventFormModal = ({ isOpen, onClose, onSave }) => {
             </div>
         </div>
     );
-}
-
-
+};
 
 export default EventFormModal;

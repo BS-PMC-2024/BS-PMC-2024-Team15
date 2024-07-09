@@ -14,17 +14,12 @@ function App() {
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
-        // Here you could decode the token or fetch user info if needed
-        console.log("User logged in. Email:", getUserEmailFromToken(accessToken)); // Replace with actual decoding or fetching logic
+        console.log("User logged in."); 
     } else {
         console.log("No user logged in.");
     }
 }, []);
 
-const getUserEmailFromToken = (token) => {
-    // Implement your logic to decode the token and extract user email
-    return "example@example.com";  // Replace with actual decoding logic
-};
 
 
   return (
