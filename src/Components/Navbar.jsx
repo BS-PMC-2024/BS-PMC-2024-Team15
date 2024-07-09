@@ -4,11 +4,34 @@ import './Navbar.css';
 
 const Navbar = () => {
     const navigate = useNavigate();
+    
 
     const handleLogout = () => {
-        // Add your logout logic here (e.g., clearing user data, tokens, etc.)
-        navigate('/login');
-    }
+        const accessToken = localStorage.getItem('accessToken');
+        fetch("http://localhost:5000/logout", {
+            method: 'POST',
+            headers: {  //ERROR-LOGOUT RESPONCE --FIX *******
+               
+                // Add authorization header with bearer token if needed
+                'Authorization': `Bearer ${accessToken}`
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                //ERROR- NOT REMOVING TOKEN --FIX *******
+                localStorage.removeItem('accessToken');
+                navigate('/login');
+            } else {
+                throw new Error('Logout failed');
+                navigate('/login');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle logout error
+        });
+    };
+
 
     return (
         <nav className="navbar">

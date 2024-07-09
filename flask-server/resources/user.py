@@ -41,6 +41,7 @@ class UserLogin(MethodView):
             return {"access_token": access_token, "message": "User logged in successfully."}
         abort(401, message="Invalid credentials.")
 
+
 @blp.route("/logout")
 class UserLogout(MethodView):
     @jwt_required()
@@ -48,6 +49,8 @@ class UserLogout(MethodView):
         jti = get_jwt()["jti"]
         BLOCKLIST.add(jti)
         return {"message": "Successfully logged out."}
+
+
 
 @blp.route("/user/<int:user_id>")
 class User(MethodView):

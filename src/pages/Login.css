@@ -1,3 +1,4 @@
+/* Base styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -5,14 +6,14 @@ body {
   background-color: #f8f9fa;
 }
 
-.login-section {
+.form-section {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
-.login-container {
+.form-container {
   display: flex;
   flex-direction: row;
   background: white;
@@ -21,52 +22,52 @@ body {
   overflow: hidden;
 }
 
-.login-image img {
-  width: 100%;
-  height: auto;
-  max-width: 400px;
-}
-
-.login-form-container {
+.form-content {
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.login-form-container h2 {
+.form-content h2 {
   margin-bottom: 20px;
 }
 
-.login-form-container label {
+.form-content label {
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-.login-form-container input {
+.form-content input,
+.form-content select {
   margin-bottom: 10px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.login-form-container .remember-me {
+.form-content select {
+  width: 100%;
+  padding: 10px;
+}
+
+.form-content .checkbox-container {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.login-form-container .forgot-password {
+.form-content .forgot-password {
   color: #007bff;
   text-decoration: none;
   margin-bottom: 20px;
 }
 
-.login-form-container .forgot-password:hover {
+.form-content .forgot-password:hover {
   text-decoration: underline;
 }
 
-.login-form-container button {
+.form-content button {
   padding: 10px;
   background-color: #007bff;
   color: white;
@@ -75,20 +76,20 @@ body {
   cursor: pointer;
 }
 
-.login-form-container button:hover {
+.form-content button:hover {
   background-color: #0056b3;
 }
 
-.login-form-container p {
+.form-content p {
   margin-top: 20px;
   font-size: 14px;
 }
 
-.login-form-container .register-link {
+.form-content .register-link {
   color: #dc3545;
   text-decoration: none;
 }
 
-.login-form-container .register-link:hover {
+.form-content .register-link:hover {
   text-decoration: underline;
 }

@@ -6,58 +6,78 @@ import { TEInput, TERipple } from 'tw-elements-react';
 import './Login.css';
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [message, setMessage] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const status = useSelector((state) => state.auth.status);
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(login({ email, password }));
+        fetch("http://localhost:5000/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.message);
+            if (data.message !== "Invalid credentials.") {
+                //Make shure token is stored succecfully**
+                localStorage.setItem('accessToken', data.access_token);
+                //homepage redirect 
+                navigate('/home');
+            } else {
+                setMessage("Invalid credentials. Please try again.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            setMessage("An error occurred. Please try again.");
+        });
     };
 
-    useEffect(() => {
-        if (status === 'logged_in') {
-            // navigate('/dashboard'); // Uncomment this line to redirect to the dashboard
-        }
-    }, [status, navigate]);
-
     return (
-        <section className="login-section">
-            <div className="login-container">
+        <section className="form-section">
+            <div className="form-container login-container">
                 <div className="login-image">
                     <img
                         src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
                         alt="Sample"
                     />
                 </div>
-                <div className="login-form-container">
+                <div className="form-content login-form-container">
                     <form onSubmit={handleSubmit}>
                         <h2>Sign in</h2>
-                        <label>Email address</label>
+                        <label htmlFor="username">Username</label>
                         <input
                             type="text"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             required
                         />
-                        <label>Password</label>
+                        <label htmlFor="password">Password</label>
                         <input
                             type="password"
+                            id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        <div className="remember-me">
+                        {/* <div className="checkbox-container remember-me">
                             <input type="checkbox" id="rememberMe" />
-                            <label htmlFor="rememberMe">Remember me</label>
+                             <label htmlFor="rememberMe">Remember me</label> </>  
                         </div>
-                        <a href="#!" className="forgot-password">Forgot password?</a>
+                        <a href="#!" className="forgot-password">Forgot password?</a>*/}
                         <button type="submit">Login</button>
                         <p>
                             Don't have an account?
-                            <a href="#!" className="register-link"> Register</a>
+                            <a href="http://localhost:3000/Register#!" className="register-link"> Register</a>
                         </p>
                     </form>
                 </div>
@@ -67,3 +87,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+
