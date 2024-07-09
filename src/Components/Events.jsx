@@ -1,18 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Events.css';
 import EventFormModal from './EventForm'; // Import the modal component
 
-const events = [
-    // Test events for UI
-    
-    { id: 1, title: 'React Study Group', startTime: '2024-07-10T10:00', duration: '2 hours', importance: 'High' },
-    { id: 2, title: 'JavaScript Workshop', startTime: '2024-07-15T14:00', duration: '3 hours', importance: 'Medium' },
-    { id: 3, title: 'CSS Deep Dive', startTime: '2024-08-20T09:00', duration: '1.5 hours', importance: 'Low' },
-    
-];
-
 const EventsComponent = () => {
+    const [events, setEvents] = useState([]);
     const [showEventForm, setShowEventForm] = useState(false); // State to manage modal visibility
+
+    
+    // Function to fetch events from Flask endpoint
+    const fetchEvents = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/get_events');
+            if (!response.ok) {
+                throw new Error('Failed to fetch events');
+            }
+            const data = await response.json();
+            setEvents(data);
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    };
+    
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+    
 
     // Function to toggle modal visibility
     const toggleEventForm = () => {
@@ -31,7 +43,7 @@ const EventsComponent = () => {
         return `${days}d ${hours}h ${minutes}m`;
     };
 
-    // Handle adding a new event (dummy function for now)
+    // Handle adding a new event
     const handleAddNewEvent = () => {
         toggleEventForm(); // Open the modal
     };
@@ -39,58 +51,41 @@ const EventsComponent = () => {
     return (
         <div className="events">
             {events.length === 0 ? (
-                <h2>No Upcoming Events 
-                    ----  
-                    <button className="sidebar-btn" onClick={handleAddNewEvent}>Add New Event</button>
-                </h2>
-                
-            ) : (
-                <>
-                    <h2>My Upcoming Events</h2>
-                    
-                    <table className="events-table">
-                        <thead>
-                            <tr>
-                                <th>Event Name</th>
-                                <th>Starting Time</th>
-                                <th>Time Left</th>
-                                <th>Duration</th>
-                                <th>Importance Level</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {events.map(event => (
-                                <tr key={event.id}>
-                                    <td>{event.title}</td>
-                                    <td>{new Date(event.startTime).toLocaleString()}</td>
-                                    <td>{calculateTimeLeft(event.startTime)}</td>
-                                    <td>{event.duration}</td>
-                                    <td>{event.importance}</td>
-                                    <td>
-                                        <button>|Edit-btn|</button>
-                                        <button>|Remove-btn|</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </>
-            )}
-
-            {/* Render the EventFormModal if showEventForm state is true */}
-            {showEventForm && (
-                <EventFormModal
-                    isOpen={showEventForm}
-                    onClose={toggleEventForm}
-                    onSave={(formData) => {
-                        console.log('Form Data:', formData);
-                        // Handle saving new event logic here
-                        // For now, just close the modal
-                        toggleEventForm();
-                    }}
-                />
-            )}
+    <h2>No Upcoming Events 
+        <button className="sidebar-btn" onClick={handleAddNewEvent}>Add New Event</button>
+    </h2>
+) : (
+    <>
+        <h2>My Upcoming Events</h2>
+        <table className="events-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Starting Time</th>
+                    <th>Time Left</th>
+                    <th>Duration</th>
+                    <th>Importance Level</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {events.map(event => (
+                    <tr key={event.id}>
+                        <td>{event.title}</td>
+                        <td>{new Date(event.startTime).toLocaleString()}</td>
+                        <td>{calculateTimeLeft(event.startTime)}</td>
+                        <td>{event.duration}</td>
+                        <td>{event.importance}</td>
+                        <td>
+                            <button>| Edit-btn |</button>
+                            <button>| Remove-btn |</button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </>
+)}
         </div>
     );
 }

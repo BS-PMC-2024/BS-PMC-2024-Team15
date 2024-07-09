@@ -18,6 +18,7 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollTo
         setIsModalOpen(false);
     };
     const handleSaveEvent = (event) => {
+        
         console.log('sidebar - Event saved:', event);
         // Logic to save the event
     };
