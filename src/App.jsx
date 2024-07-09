@@ -6,8 +6,7 @@ import AppRoutes from './routes/AppRoutes';
 function App() {
 
   const [data, setData] = useState([{}])
-
-
+  
   useEffect(() => {
     fetch("/users").then(
       res => res.json()
@@ -18,6 +17,8 @@ function App() {
       }
     )
   }, [])
+
+
   return (
     <Router>
       <div className="App">

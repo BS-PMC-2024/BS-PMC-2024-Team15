@@ -11,6 +11,7 @@ from blocklist import BLOCKLIST
 from resources.item import blp as ItemBlueprint
 from resources.store import blp as StoreBlueprint
 from resources.user import blp as UserBlueprint
+from flask_cors import CORS
 
 def create_app(db_url = None):
     
@@ -32,6 +33,7 @@ def create_app(db_url = None):
     db.init_app(app)
     migrate = Migrate(app,db)
     api = Api(app)
+    CORS(app)  # Enable CORS for all routes
     # generate secrete key
     # secrets.SystemRandom().getrandbits(128)
     app.config["JWT_SECRET_KEY"]="109042823831263165988633942797840713884" 
