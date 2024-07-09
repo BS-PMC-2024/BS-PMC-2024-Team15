@@ -1,0 +1,9 @@
+# contains every python library the projects depends on
+flask
+flask-smorest
+python-dotenv
+sqlalchemy
+flask-sqlalchemy
+flask-jwt-extended
+passlib
+flask-migrate
