@@ -10,33 +10,23 @@ function App() {
 
   const [data, setData] = useState([]);
 
-
-  //show user state 
+  //see if user is logged in function
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      console.log('User logged in with token:', token);
-      // Optionally dispatch an action to set user login status in Redux
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+        // Here you could decode the token or fetch user info if needed
+        console.log("User logged in. Email:", getUserEmailFromToken(accessToken)); // Replace with actual decoding or fetching logic
     } else {
-      console.log('User not logged in');
+        console.log("No user logged in.");
     }
-  }, []);
+}, []);
+
+const getUserEmailFromToken = (token) => {
+    // Implement your logic to decode the token and extract user email
+    return "example@example.com";  // Replace with actual decoding logic
+};
 
 
-
-  useEffect(() => {
-    fetch("/users")
-      .then(res => res.json())
-      .then(data => {
-        setData(data);
-        console.log("Users DB - information");
-        console.log(data);
-      })
-      .catch(error => console.error("Error fetching users:", error));
-  }, []);
-
-
-  
   return (
     <Provider store={store}>
       <Router>

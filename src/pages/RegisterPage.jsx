@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
-import { TEInput, TERipple } from 'tw-elements-react';
 import './Register.css';
 
-
 const RegisterPage = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+    const [type, setType] = useState('student');
+    const [receiveNews, setReceiveNews] = useState(false);
+    const [message, setMessage] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch("http://localhost:5000/register", {
             method: "POST",
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({
+                email,
+                password,
+                dateOfBirth,
+                type,
+                receiveNews,
+            }),
         })
         .then((response) => response.json())
         .then((data) => {
@@ -29,43 +36,65 @@ const RegisterPage = () => {
 
     return (
         <section className="registration-section">
-          <div className="registration-container">
-            <div className="left-column">
-              <img
-                src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                className="w-full"
-                alt="Sample image"
-              />
+            <div className="registration-container">
+                <div className="left-column">
+                    <img
+                        src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                        className="w-full"
+                        alt="Sample image"
+                    />
+                </div>
+                <div className="registration-form-container">
+                    <h2>Register</h2>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <label htmlFor="dateOfBirth">Date of Birth (optional)</label>
+                        <input
+                            type="date"
+                            id="dateOfBirth"
+                            value={dateOfBirth}
+                            onChange={(e) => setDateOfBirth(e.target.value)}
+                        />
+                        <label htmlFor="type">Type</label>
+                        <select
+                            id="type"
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                        >
+                            <option value="student">Student</option>
+                            <option value="lecturer">Lecturer</option>
+                        </select>
+                        <div className="receive-emails">
+                            <input
+                                type="checkbox"
+                                id="receiveNews"
+                                checked={receiveNews}
+                                onChange={(e) => setReceiveNews(e.target.checked)}
+                            />
+                            <label htmlFor="receiveNews">Interested in receiving news</label>
+                        </div>
+                        <button type="submit">Register</button>
+                        {message && <p className="error-message">{message}</p>}
+                    </form>
+                </div>
             </div>
-            <div className="registration-form-container">
-              <h2>Register</h2>
-              <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username</label>
-                <input
-                  type="text"
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-    
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-  
-                <button type="submit">Register</button>
-              </form>
-              {message && <p>{message}</p>}
-              <p className="mt-2">Have an account? <a href="http://localhost:3000/login">Login</a></p>
-            </div>
-          </div>
         </section>
-      );
-    }
+    );
+};
 
 export default RegisterPage;

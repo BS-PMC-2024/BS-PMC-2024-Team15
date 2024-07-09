@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { login } from '../features/authSlice';  
 import { useNavigate } from 'react-router-dom';
-import { login } from '../features/authSlice';
-import { TEInput, TERipple } from 'tw-elements-react';
 import './Login.css';
 
 const LoginPage = () => {
@@ -11,8 +10,6 @@ const LoginPage = () => {
     const [message, setMessage] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const status = useSelector((state) => state.auth.status);
-
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -26,10 +23,10 @@ const LoginPage = () => {
         .then((response) => response.json())
         .then((data) => {
             console.log(data.message);
-            if (data.message !== "Invalid credentials.") {
-                //Make shure token is stored succecfully**
+            if (data.message === "Login Successful") {
                 localStorage.setItem('accessToken', data.access_token);
-                //homepage redirect 
+                // Dispatch the login action if you need to update Redux state
+                dispatch(login({ token: data.access_token }));
                 navigate('/home');
             } else {
                 setMessage("Invalid credentials. Please try again.");
@@ -69,12 +66,8 @@ const LoginPage = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        {/* <div className="checkbox-container remember-me">
-                            <input type="checkbox" id="rememberMe" />
-                             <label htmlFor="rememberMe">Remember me</label> </>  
-                        </div>
-                        <a href="#!" className="forgot-password">Forgot password?</a>*/}
                         <button type="submit">Login</button>
+                        {message && <p>{message}</p>}
                         <p>
                             Don't have an account?
                             <a href="http://localhost:3000/Register#!" className="register-link"> Register</a>
@@ -87,5 +80,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-

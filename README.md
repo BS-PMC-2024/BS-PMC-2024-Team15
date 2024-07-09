@@ -40,3 +40,9 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 
 ### 'npm install @canvasjs/react-charts --save' 
+
+### 'ip install Flask'
+### 'pip install setuptools'
+### 'pip install pyrebase4'
+### 'pip install flask_cors'
+### 'pip install firebase-admin'

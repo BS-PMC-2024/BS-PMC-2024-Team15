@@ -1,37 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../features/authSlice';  // Import the logout action
 import './Navbar.css';
 
 const Navbar = () => {
     const navigate = useNavigate();
-    
+    const dispatch = useDispatch();
 
     const handleLogout = () => {
-        const accessToken = localStorage.getItem('accessToken');
-        fetch("http://localhost:5000/logout", {
-            method: 'POST',
-            headers: {  //ERROR-LOGOUT RESPONCE --FIX *******
-               
-                // Add authorization header with bearer token if needed
-                'Authorization': `Bearer ${accessToken}`
-            },
-        })
-        .then(response => {
-            if (response.ok) {
-                //ERROR- NOT REMOVING TOKEN --FIX *******
-                localStorage.removeItem('accessToken');
-                navigate('/login');
-            } else {
-                throw new Error('Logout failed');
-                navigate('/login');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // Handle logout error
-        });
+        localStorage.removeItem('accessToken');
+        dispatch(logout());  // Dispatch the logout action to update Redux state
+        navigate('/login');
     };
-
 
     return (
         <nav className="navbar">
