@@ -89,6 +89,10 @@ const RegisterPage = () => {
                             <label htmlFor="receiveNews">Interested in receiving news</label>
                         </div>
                         <button type="submit">Register</button>
+                        <p>
+                            have an account?
+                            <a href="http://localhost:3000/login#!" className="register-link"> login</a>
+                        </p>
                         {message && <p className="error-message">{message}</p>}
                     </form>
                 </div>

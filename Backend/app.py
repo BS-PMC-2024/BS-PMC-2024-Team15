@@ -126,6 +126,16 @@ def remove_event(eventId):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+#update event
+@app.route('/update_event/<eventId>', methods=['PUT'])
+def update_event(eventId):
+    try:
+        event_data = request.json
+        # Update event in Firestore
+        firestore_db.collection('events').document(eventId).update(event_data)
+        return jsonify({"message": "Event updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 
 if __name__ == '__main__':

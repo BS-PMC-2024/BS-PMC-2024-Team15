@@ -14,7 +14,8 @@ function App() {
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
-        console.log("User logged in."); 
+
+        console.log("User logged in."+ accessToken); 
     } else {
         console.log("No user logged in.");
     }

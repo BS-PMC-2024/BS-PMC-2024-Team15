@@ -5,6 +5,7 @@ import EventFormModal from './EventForm'; // Import the modal component
 const EventsComponent = () => {
     const [events, setEvents] = useState([]);
     const [showEventForm, setShowEventForm] = useState(false); // State to manage modal visibility
+    const [selectedEvent, setSelectedEvent] = useState(null); // State to store selected event for editing
 
     // Function to fetch events from Flask endpoint
     const fetchEvents = async () => {
@@ -24,9 +25,10 @@ const EventsComponent = () => {
         fetchEvents();
     }, []);
     
-    // Function to toggle modal visibility
-    const toggleEventForm = () => {
-        setShowEventForm(!showEventForm);
+    // Function to toggle modal visibility and set selected event for editing
+    const toggleEventForm = (event) => {
+        setSelectedEvent(event); // Set selected event for editing
+        setShowEventForm(!showEventForm); // Toggle modal visibility
     };
 
     // Calculating time left until upcoming event starts
@@ -43,9 +45,30 @@ const EventsComponent = () => {
 
     // Handle adding a new event
     const handleAddNewEvent = () => {
-        toggleEventForm(); // Open the modal
+        toggleEventForm(null); // Open the modal for adding new event
     };
 
+    // Handle updating an existing event
+    const handleUpdateEvent = async (updatedEvent) => {
+        try {
+            const response = await fetch(`http://localhost:5000/update_event/${updatedEvent.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedEvent),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update event');
+            }
+            // Refresh events after updating
+            fetchEvents();
+        } catch (error) {
+            console.error('Error updating event:', error);
+        }
+    };
+
+    // Handle removing an event
     const handleRemoveEvent = async (eventId) => {
         try {
             const response = await fetch(`http://localhost:5000/remove_event/${eventId}`, {
@@ -61,6 +84,7 @@ const EventsComponent = () => {
         }
     };
     
+    // Function to determine row class based on event importance
     function getRowClassName(importance) {
         switch (importance) {
             case 'High':
@@ -73,15 +97,11 @@ const EventsComponent = () => {
                 return '';
         }
     }
-    
 
     return (
         <div className="events">
             {events.length === 0 ? (
-                <h2> 
-                    <h2>No Upcoming Events</h2>
-                    {/*<button className="Newevent-btn" onClick={handleAddNewEvent}>Add New Event</button>*/ }
-                </h2>
+                <h2>No Upcoming Events</h2>
             ) : (
                 <>
                     <h2>My Upcoming Events</h2>
@@ -99,22 +119,34 @@ const EventsComponent = () => {
                         <tbody>
                             {events.map((event) => (
                                 <tr key={event.id} className={getRowClassName(event.importance)}>
-                                <td>{event.title}</td>
-                                <td>{new Date(event.startTime).toLocaleString()}</td>
-                                <td>{calculateTimeLeft(event.startTime)}</td>
-                                <td>{event.duration}</td>
-                                <td>{event.importance}</td>
-                                <td>
-                                    <button className="edit-btn">Edit</button>
-                                    <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>
-                                </td>
-                            </tr>
+                                    <td>{event.title}</td>
+                                    <td>{new Date(event.startTime).toLocaleString()}</td>
+                                    <td>{calculateTimeLeft(event.startTime)}</td>
+                                    <td>{event.duration}</td>
+                                    <td>{event.importance}</td>
+                                    <td>
+                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}>Edit</button>
+                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>
+                                    </td>
+                                </tr>
                             ))}
                         </tbody>
                     </table>
                 </>
             )}
-            <EventFormModal isOpen={showEventForm} onClose={toggleEventForm}  />
+            <EventFormModal 
+                isOpen={showEventForm} 
+                onClose={() => {
+                    toggleEventForm(null); // Close modal
+                    setSelectedEvent(null); // Clear selected event after closing
+                }} 
+                onSave={() => {
+                    fetchEvents(); // Refresh events after saving or updating
+                    setSelectedEvent(null); // Clear selected event after saving or updating
+                }} 
+                event={selectedEvent} 
+                onUpdate={handleUpdateEvent} // Pass update handler to modal
+            />
         </div>
     );
 }
