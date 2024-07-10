@@ -111,10 +111,32 @@ def get_events():
     try:
         events_ref = firestore_db.collection('events')
         query_snapshot = events_ref.get()
-        events = [doc.to_dict() for doc in query_snapshot]
+        events = [{**doc.to_dict(), 'id': doc.id} for doc in query_snapshot]
         return jsonify(events), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+#remove event
+@app.route('/remove_event/<eventId>', methods=['DELETE'])
+def remove_event(eventId):
+    try:
+        # Delete event from Firestore
+        firestore_db.collection('events').document(eventId).delete()
+        return jsonify({"message": "Event removed successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+#update event
+@app.route('/update_event/<eventId>', methods=['PUT'])
+def update_event(eventId):
+    try:
+        event_data = request.json
+        # Update event in Firestore
+        firestore_db.collection('events').document(eventId).update(event_data)
+        return jsonify({"message": "Event updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
 
 if __name__ == '__main__':
     app.run(debug=True)
