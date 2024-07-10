@@ -61,11 +61,28 @@ const EventsComponent = () => {
         }
     };
     
+    function getRowClassName(importance) {
+        switch (importance) {
+            case 'High':
+                return 'high-importance';
+            case 'Medium':
+                return 'medium-importance';
+            case 'Low':
+                return 'low-importance';
+            default:
+                return '';
+        }
+    }
+    
+    
+
+
     return (
         <div className="events">
             {events.length === 0 ? (
-                <h2>No Upcoming Events 
-                    <button className="sidebar-btn" onClick={handleAddNewEvent}>Add New Event</button>
+                <h2> 
+                    <h2>No Upcoming Events</h2>
+                    {/*<button className="Newevent-btn" onClick={handleAddNewEvent}>Add New Event</button>*/ }
                 </h2>
             ) : (
                 <>
@@ -83,17 +100,17 @@ const EventsComponent = () => {
                         </thead>
                         <tbody>
                             {events.map((event) => (
-                                <tr key={event.id}>
-                                    <td>{event.title}</td>
-                                    <td>{new Date(event.startTime).toLocaleString()}</td>
-                                    <td>{calculateTimeLeft(event.startTime)}</td>
-                                    <td>{event.duration}</td>
-                                    <td>{event.importance}</td>
-                                    <td>
-                                        <button>| Edit-btn |</button>
-                                        <button onClick={() => handleRemoveEvent(event.id)}>Remove</button>
-                                    </td>
-                                </tr>
+                                <tr key={event.id} className={getRowClassName(event.importance)}>
+                                <td>{event.title}</td>
+                                <td>{new Date(event.startTime).toLocaleString()}</td>
+                                <td>{calculateTimeLeft(event.startTime)}</td>
+                                <td>{event.duration}</td>
+                                <td>{event.importance}</td>
+                                <td>
+                                    <button className="edit-btn">Edit</button>
+                                    <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>
+                                </td>
+                            </tr>
                             ))}
                         </tbody>
                     </table>

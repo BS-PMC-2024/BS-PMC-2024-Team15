@@ -5,7 +5,7 @@ const EventFormModal = ({ isOpen, onClose, onSave }) => {
     const [title, setTitle] = useState('');
     const [startTime, setStartTime] = useState('');
     const [duration, setDuration] = useState('');
-    const [importance, setImportance] = useState('1');
+    const [importance, setImportance] = useState('Medium');
     const [description, setDescription] = useState('');
 
     const handleSave = async () => {
@@ -23,11 +23,21 @@ const EventFormModal = ({ isOpen, onClose, onSave }) => {
             }
     
             console.log('Event added successfully');
+            onSave(); // Notify parent to refresh events after saving
             onClose(); // Close the modal after saving
+            resetForm(); // Clear form fields
         } catch (error) {
             console.error('Error adding event:', error);
             // Handle error (e.g., show error message)
         }
+    };
+
+    const resetForm = () => {
+        setTitle('');
+        setStartTime('');
+        setDuration('');
+        setImportance('Medium');
+        setDescription('');
     };
     
     if (!isOpen) return null;
@@ -57,9 +67,9 @@ const EventFormModal = ({ isOpen, onClose, onSave }) => {
                     <label>
                         Importance:
                         <select value={importance} onChange={(e) => setImportance(e.target.value)}>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
                         </select>
                     </label>
                     <label>
