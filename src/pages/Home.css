@@ -1,38 +1,41 @@
-.homepage {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
-.container {
-    display: flex;
-    flex: 1;
-}
-
 html {
     scroll-behavior: smooth;
 }
 
-.main-content {
-    width: 1400px; 
-  
-    padding: 20px;
-    background-color: #ecf0f1;
+body {
+    background-image: url("../images/main_bg.jpg");
+    padding: 5em;
+    backdrop-filter: brightness(0.5);
+    font-family: "Varela Round", sans-serif;
+    font-weight: 400;
 }
 
-.calendar {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.homepage {
+    background: #0000009e;
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    box-shadow: 0 15px 60px #00000063;
+    padding: 3em;
 }
+
+.container {
+    display: flex; 
+    max-width: 100% !important;
+}
+
+.main-content {
+    width: 100%;
+    padding: 20px;
+    background:#f9f9f9;
+    margin: 2em 0em 2em 2em;
+    border-radius: 20px;
+}
+
 
 .calendar-container {
     margin-top: 20px;
-    height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #bdc3c7;
     border-radius: 40px;
 }

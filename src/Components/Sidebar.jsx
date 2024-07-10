@@ -28,11 +28,11 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollTo
         <>
             <aside className="sidebar">
                 <ul>
-                    <li><button className="sidebar-btn" onClick={handleAddNewEvent}>Add New Event</button></li>
-                    <li><button className="sidebar-btn" onClick={scrollToCalendar}>Calendar</button></li>
-                    <li><button className="sidebar-btn" onClick={scrollToEvents}>Events</button></li>
-                    <li><button className="sidebar-btn" onClick={handleScrollToStatistics}>Statistics</button></li>
-                    <li><button className="sidebar-btn" onClick={toggleAIAssistant}>Assistant Chat</button></li>
+                    <li><a className="sidebar-btn" onClick={handleAddNewEvent}><i class="fa-solid fa-calendar-plus"></i> Add New Event</a></li>
+                    <li><a className="sidebar-btn" onClick={scrollToCalendar}><i class="fa-solid fa-calendar"></i>Calendar</a></li>
+                    <li><a className="sidebar-btn" onClick={scrollToEvents}><i class="fa-solid fa-calendar-plus"></i>Events</a></li>
+                    <li><a className="sidebar-btn" onClick={handleScrollToStatistics}><i class="fa-solid fa-calendar-plus"></i>Statistics</a></li>
+                    <li><a className="sidebar-btn" onClick={toggleAIAssistant}><i class="fa-solid fa-calendar-plus"></i>Assistant Chat</a></li>
                 </ul>
             </aside>
             <EventFormModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveEvent} />
