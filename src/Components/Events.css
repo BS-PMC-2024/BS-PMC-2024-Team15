@@ -103,13 +103,13 @@
 
 /* Conditional row colors based on importance level */
 .events-table .high-importance {
-    background-color: #ffcdd2 !important; /* Light red */
+    background-color: rgba(255, 205, 210, 0.7) !important; /* Light red with 70% opacity */
 }
 
 .events-table .medium-importance {
-    background-color: #ffe0b2 !important; /* Light orange */
+    background-color: rgba(255, 224, 178, 0.7) !important; /* Light orange with 70% opacity */
 }
 
 .events-table .low-importance {
-    background-color: #dcedc8 !important; /* Light green */
+    background-color: rgba(220, 237, 200, 0.7) !important; /* Light green with 70% opacity */
 }

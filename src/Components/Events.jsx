@@ -74,8 +74,6 @@ const EventsComponent = () => {
         }
     }
     
-    
-
 
     return (
         <div className="events">
