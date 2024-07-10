@@ -6,7 +6,6 @@ const EventsComponent = () => {
     const [events, setEvents] = useState([]);
     const [showEventForm, setShowEventForm] = useState(false); // State to manage modal visibility
 
-    
     // Function to fetch events from Flask endpoint
     const fetchEvents = async () => {
         try {
@@ -25,7 +24,6 @@ const EventsComponent = () => {
         fetchEvents();
     }, []);
     
-
     // Function to toggle modal visibility
     const toggleEventForm = () => {
         setShowEventForm(!showEventForm);
@@ -48,44 +46,60 @@ const EventsComponent = () => {
         toggleEventForm(); // Open the modal
     };
 
+    const handleRemoveEvent = async (eventId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/remove_event/${eventId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to remove event');
+            }
+            // Refresh events after removing
+            fetchEvents();
+        } catch (error) {
+            console.error('Error removing event:', error);
+        }
+    };
+    
     return (
         <div className="events">
             {events.length === 0 ? (
-    <h2>No Upcoming Events 
-        <button className="sidebar-btn" onClick={handleAddNewEvent}>Add New Event</button>
-    </h2>
-) : (
-    <>
-        <h2>My Upcoming Events</h2>
-        <table className="events-table">
-            <thead>
-                <tr>
-                    <th>Event Name</th>
-                    <th>Starting Time</th>
-                    <th>Time Left</th>
-                    <th>Duration</th>
-                    <th>Importance Level</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {events.map(event => (
-                    <tr key={event.id}>
-                        <td>{event.title}</td>
-                        <td>{new Date(event.startTime).toLocaleString()}</td>
-                        <td>{calculateTimeLeft(event.startTime)}</td>
-                        <td>{event.duration}</td>
-                        <td>{event.importance}</td>
-                        <td>
-                            <button>| Edit-btn |</button>
-                            <button>| Remove-btn |</button>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    </>
-)}
+                <h2>No Upcoming Events 
+                    <button className="sidebar-btn" onClick={handleAddNewEvent}>Add New Event</button>
+                </h2>
+            ) : (
+                <>
+                    <h2>My Upcoming Events</h2>
+                    <table className="events-table">
+                        <thead>
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Starting Time</th>
+                                <th>Time Left</th>
+                                <th>Duration</th>
+                                <th>Importance Level</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {events.map((event) => (
+                                <tr key={event.id}>
+                                    <td>{event.title}</td>
+                                    <td>{new Date(event.startTime).toLocaleString()}</td>
+                                    <td>{calculateTimeLeft(event.startTime)}</td>
+                                    <td>{event.duration}</td>
+                                    <td>{event.importance}</td>
+                                    <td>
+                                        <button>| Edit-btn |</button>
+                                        <button onClick={() => handleRemoveEvent(event.id)}>Remove</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </>
+            )}
+            <EventFormModal isOpen={showEventForm} onClose={toggleEventForm}  />
         </div>
     );
 }
