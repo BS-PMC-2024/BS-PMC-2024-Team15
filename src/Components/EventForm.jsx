@@ -21,45 +21,48 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
 
     const validateForm = () => {
         let errors = {};
-
+    
         if (title.length < 3) {
             errors.title = 'Event name must be at least 3 characters long';
         }
-
+    
         // Validate date-time format for startTime
         const isValidDateTime = !isNaN(new Date(startTime).getTime());
         if (!isValidDateTime) {
             errors.startTime = 'Please enter a valid date and time';
         }
-
+    
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
-
+    
     const handleSave = async () => {
         if (!validateForm()) {
             return;
         }
-
+    
         try {
             if (event) {
                 // If event exists, update it
                 await onUpdate({ ...event, title, startTime, duration, importance, description });
             } else {
                 // Otherwise, add new event
+                const idToken = localStorage.getItem('accessToken');
+                // console.log(idToken);
                 const response = await fetch('http://localhost:5000/add_event', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
                     },
                     body: JSON.stringify({ title, startTime, duration, importance, description }),
                 });
-
+    
                 if (!response.ok) {
                     throw new Error('Failed to add event');
                 }
             }
-
+    
             console.log('Event saved successfully');
             onSave(); // Notify parent to refresh events after saving
             onClose(); // Close the modal after saving
@@ -69,6 +72,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
             // Handle error (e.g., show error message)
         }
     };
+    
 
     const resetForm = () => {
         setTitle('');

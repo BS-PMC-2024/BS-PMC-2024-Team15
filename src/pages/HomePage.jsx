@@ -6,7 +6,6 @@ import Navbar from '../Components/Navbar';
 import Sidebar from '../Components/Sidebar';
 import AIAssistantComponent from '../Components/AiChatForm'; // Import AI Assistant Component
 import GraphComponent from '../Components/StatisticGraph';
-
 const HomePage = () => {
     const calendarRef = useRef(null);
     const eventsRef = useRef(null);
