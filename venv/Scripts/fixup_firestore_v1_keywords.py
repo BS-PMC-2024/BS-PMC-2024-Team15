@@ -1,4 +1,4 @@
-#!C:\Users\orelh\Documents\GitHub\BS-PMC-2024-Team15\venv\Scripts\python.exe
+#!C:\Users\kehil\OneDrive\Desktop\StudyBuddy\BS-PMC-2024-Team15\venv\Scripts\python.exe
 # -*- coding: utf-8 -*-
 # Copyright 2024 Google LLC
 #
