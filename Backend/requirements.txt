@@ -1,3 +1,5 @@
 Flask
-pyrebase
+pyrebase4
 flask-cors
+firebase-admin
+requests>=2.26.0

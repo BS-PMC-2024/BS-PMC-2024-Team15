@@ -13,7 +13,8 @@ CORS(app)  # Add this line
 # Initialize Firebase Admin SDK
 if not firebase_admin._apps:
     # Initialize Firebase Admin SDK (replace with your service account key JSON file)
-    cred = credentials.Certificate('/Users/guy/Desktop/project-StudyBuddy/BS-PMC-2024-Team15/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
+    # if need to run in the docker conteiner change to this: /Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json
+    cred = credentials.Certificate('/Users/guy/Desktop/Project-StutyBuddy/BS-PMC-2024-Team15/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
     firebase_admin.initialize_app(cred)
 
 # Initialize Firebase using Pyrebase (authentication part)
