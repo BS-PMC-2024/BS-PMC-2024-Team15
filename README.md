@@ -49,7 +49,7 @@ if you want to run the flask app with docker Container follow this steps:
 
     - mac:'source venv/Scripts/activate',windows:'venv\Scripts\activate' : used to activate a virtual environment in Python. A virtual environment is an isolated environment that allows you to manage dependencies for different projects separately.
 
-    - go to app.py and change the cred to the path above . you want the path to the Backend directory and the json inside the Backend directory.
+    - go to app.py and change the cred to the path above . you want the path to the Backend directory and the json inside the Backend directory.-m
 
     - 'docker build -t flask-api /Users/guy/Desktop/Project-StutyBuddy/BS-PMC-2024-Team15/Backend' : make sure to change the path in this line to the path in your computer you want the path for the Backend directory which the Dockerfile in it. this command will build the image for you in the docker desktop.
 
