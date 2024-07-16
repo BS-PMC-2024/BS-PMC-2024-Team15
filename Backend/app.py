@@ -99,51 +99,44 @@ def logout():
     # Invalidate token logic if necessary
     return jsonify({"message": "Logged out successfully"}), 200
 
-
+#new event
 @app.route('/add_event', methods=['POST'])
 def add_event():
     try:
-        # Verify the ID token and get the user ID
         auth_header = request.headers.get('Authorization')
-        print("Authorization Header:", auth_header)  # Debugging line
         if not auth_header or not auth_header.startswith('Bearer '):
             return jsonify({"message": "Missing or invalid token"}), 401
 
-        id_token = auth_header.split(' ')[1]  # Extract the token from the 'Authorization' header
-        print("ID Token:", id_token)  # Debugging line
-
-        # Verify token with Firebase REST API
+        id_token = auth_header.split(' ')[1]
         decoded_token = verify_firebase_token(id_token)
         user_id = decoded_token['users'][0]['localId']
-        print("User ID:", user_id)  # Debugging line
 
-        # Extract event data from request
         data = request.get_json()
-        print("Request Data:", data)  # Debugging line
         title = data.get('title')
         startTime = data.get('startTime')
         duration = data.get('duration')
         importance = data.get('importance')
         description = data.get('description')
+        eventType = data.get('eventType')
 
-        if not title or not startTime or not duration or not importance or not description:
+        if not title or not startTime or not duration or not importance or not description or not eventType:
             return jsonify({"message": "Missing event data"}), 400
 
-        # Add event to Firestore collection 'events'
         event_ref = {
             'title': title,
             'startTime': startTime,
             'duration': duration,
             'importance': importance,
             'description': description,
-            'user_id': user_id,  # Associate the event with the user ID
-            'createdAt': firestore.SERVER_TIMESTAMP  # Optional: Timestamp of creation
+            'eventType': eventType,
+            'user_id': user_id,
+            'createdAt': firestore.SERVER_TIMESTAMP
         }
         firestore_db.collection('events').add(event_ref)
 
         return jsonify({"message": "Event added successfully"}), 200
     except Exception as e:
-        print("Error:", str(e))  # Debugging line
+        print("Error:", str(e))
         return jsonify({"message": str(e)}), 400
 
 

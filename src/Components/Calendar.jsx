@@ -46,6 +46,7 @@ const CalendarComponent = () => {
         }
     };
 
+    
     const handleSelectEvent = (event) => {
         setSelectedEvent(event);
         setShowPopup(true);
@@ -56,18 +57,36 @@ const CalendarComponent = () => {
     };
 
     const eventStyleGetter = (event, start, end, isSelected) => {
+        let backgroundColor = '#3174ad'; // Default color
+        switch (event.importance) {
+            case 'High':
+                backgroundColor = '#e53935'; // Red for high importance
+                break;
+            case 'Medium':
+                backgroundColor = '#ffb74d'; // Orange for medium importance
+                break;
+            case 'Low':
+                backgroundColor = '#81c784'; // Green for low importance
+                break;
+            default:
+                backgroundColor = '#3174ad'; // Default color
+                break;
+        }
+    
         const style = {
-            backgroundColor: '#3174ad',
-            borderRadius: '0px',
+            backgroundColor: backgroundColor,
+            borderRadius: '100px',
             opacity: 0.8,
             color: 'white',
             border: '0px',
             display: 'block',
         };
+    
         return {
             style: style,
         };
     };
+    
 
     const handleSelectSlot = (slotInfo) => {
         if (!slotInfo.action) {
@@ -76,6 +95,7 @@ const CalendarComponent = () => {
             setShowPopup(false); // Hide popup when clicking outside an event
         }
     };
+
 
     return (
         <div className="calendar-wrapper">

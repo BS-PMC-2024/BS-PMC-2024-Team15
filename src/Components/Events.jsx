@@ -37,6 +37,7 @@ const fetchEvents = async () => {
 };
 
 useEffect(() => {
+
     fetchEvents();
 }, []);
 
@@ -127,7 +128,7 @@ useEffect(() => {
                                 <th>Starting Time</th>
                                 <th>Time Left</th>
                                 <th>Duration</th>
-                                <th>Importance Level</th>
+                                <th>Type/Importance</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -138,7 +139,7 @@ useEffect(() => {
                                     <td>{new Date(event.startTime).toLocaleString()}</td>
                                     <td>{calculateTimeLeft(event.startTime)}</td>
                                     <td>{event.duration}</td>
-                                    <td>{event.importance}</td>
+                                    <td>{event.eventType}/{event.importance}</td>
                                     <td>
                                         <button className="edit-btn" onClick={() => toggleEventForm(event)}>Edit</button>
                                         <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>

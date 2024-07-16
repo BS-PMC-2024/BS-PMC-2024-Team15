@@ -7,6 +7,8 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
     const [duration, setDuration] = useState('0:15');
     const [importance, setImportance] = useState('Medium');
     const [description, setDescription] = useState('');
+    const [eventType, setEventType] = useState('Study'); // Add event type state
+    
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -16,6 +18,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
             setDuration(event.duration || '0:15');
             setImportance(event.importance || 'Medium');
             setDescription(event.description || '');
+            setEventType(event.eventType || 'Study'); // Initialize event type if available
         }
     }, [event]);
 
@@ -42,25 +45,25 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
         }
     
         try {
-            if (event) {
-                // If event exists, update it
-                await onUpdate({ ...event, title, startTime, duration, importance, description });
-            } else {
-                // Otherwise, add new event
-                const idToken = localStorage.getItem('accessToken');
-                // console.log(idToken);
-                const response = await fetch('http://localhost:5000/add_event', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${idToken}`
-                    },
-                    body: JSON.stringify({ title, startTime, duration, importance, description }),
-                });
+            const idToken = localStorage.getItem('accessToken');
+            const requestOptions = {
+                method: event ? 'PUT' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify({ title, startTime, duration, importance, description, eventType }),
+            };
     
-                if (!response.ok) {
-                    throw new Error('Failed to add event');
-                }
+            let url = 'http://localhost:5000/add_event';
+            if (event) {
+                url = `http://localhost:5000/update_event/${event.id}`;
+            }
+    
+            const response = await fetch(url, requestOptions);
+    
+            if (!response.ok) {
+                throw new Error(event ? 'Failed to update event' : 'Failed to add event');
             }
     
             console.log('Event saved successfully');
@@ -72,7 +75,6 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
             // Handle error (e.g., show error message)
         }
     };
-    
 
     const resetForm = () => {
         setTitle('');
@@ -80,6 +82,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
         setDuration('0:15');
         setImportance('Medium');
         setDescription('');
+        setEventType('Study'); // Reset event type
         setErrors({});
     };
 
@@ -107,6 +110,10 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
                             <option value="0:30">0:30</option>
                             <option value="0:45">0:45</option>
                             <option value="1:00">1:00</option>
+                            <option value="1    :15">1:15</option>
+                            <option value="1:30">1:30</option>
+                            <option value="1:45">1:45</option>
+                            <option value="2:00">2:00</option>
                         </select>
                     </label>
                     <label>
@@ -115,6 +122,15 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, onUpdate }) => {
                             <option value="High">High</option>
                             <option value="Medium">Medium</option>
                             <option value="Low">Low</option>
+                        </select>
+                    </label>
+                    <label>
+                        Event Type:
+                        <select value={eventType} onChange={(e) => setEventType(e.target.value)}>
+                            <option value="Study">Study</option>
+                            <option value="Social">Social</option>
+                            <option value="Hobby">Hobby</option>
+                            {/* Add more options as needed */}
                         </select>
                     </label>
                     <label>
