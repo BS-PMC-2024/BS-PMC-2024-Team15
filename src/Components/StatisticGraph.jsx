@@ -8,7 +8,8 @@ class GraphComponent extends Component {
     constructor() {
         super();
         this.state = {
-            eventStatistics: []
+            eventStatistics: [],
+            loading: true // Add loading state
         };
         this.addSymbols = this.addSymbols.bind(this);
     }
@@ -43,10 +44,11 @@ class GraphComponent extends Component {
             });
 
             const eventStatistics = this.calculateEventStatistics(filteredEvents);
-            this.setState({ eventStatistics });
+            this.setState({ eventStatistics, loading: false }); // Set loading to false after fetch
         } catch (error) {
             console.error('Error fetching events:', error);
             // Handle error (e.g., show error message)
+            this.setState({ loading: false }); // Set loading to false even if there is an error
         }
     };
 
@@ -87,7 +89,7 @@ class GraphComponent extends Component {
     }
 
     render() {
-        const { eventStatistics } = this.state;
+        const { eventStatistics, loading } = this.state;
 
         const options = {
             animationEnabled: true,
@@ -114,7 +116,11 @@ class GraphComponent extends Component {
 
         return (
             <div id="statistic">
-                <CanvasJSChart options={options} />
+                {loading ? (
+                    <p>Loading event statistics...</p>
+                ) : (
+                    <CanvasJSChart options={options} />
+                )}
             </div>
         );
     }
