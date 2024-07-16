@@ -2,100 +2,146 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './Calendar.css'; // Your custom CSS for calendar styling
+import './Calendar.css';
+import EventFormModal from './EventForm';
 
 const localizer = momentLocalizer(moment);
 
 const CalendarComponent = () => {
     const [events, setEvents] = useState([]);
-    const [showPopup, setShowPopup] = useState(false);
+    const [showEventForm, setShowEventForm] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [newEvent, setNewEvent] = useState({
-        title: '',
-        startTime: '',
-        duration: '',
-        importance: '',
-        description: ''
-    });
+    const [selectedSlot, setSelectedSlot] = useState(null);
 
     useEffect(() => {
-        // Fetch events from backend when component mounts
         fetchEvents();
     }, []);
 
     const fetchEvents = async () => {
         try {
+            const idToken = localStorage.getItem('accessToken');
+            if (!idToken) {
+                throw new Error('No access token found');
+            }
+
             const response = await fetch('http://localhost:5000/get_events', {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
                 }
             });
-            if (response.ok) {
-                const eventsData = await response.json();
-                setEvents(eventsData.map(event => ({
-                    ...event,
-                    start: new Date(event.startTime),
-                    end: moment(event.startTime).add(event.duration, 'minutes').toDate()
-                })));
-            } else {
-                console.error('Failed to fetch events:', response.statusText);
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch events');
             }
+
+            const data = await response.json();
+            setEvents(data.map(event => ({
+                ...event,
+                start: new Date(event.startTime),
+                end: moment(event.startTime).add(event.duration, 'minutes').toDate()
+            })));
         } catch (error) {
             console.error('Error fetching events:', error);
         }
     };
 
-    
-    const handleSelectEvent = (event) => {
-        setSelectedEvent(event);
-        setShowPopup(true);
-    };
-
-    const handleNavigate = (date, view) => {
-        setSelectedEvent(null); // Reset selected event when navigating
-    };
-
     const eventStyleGetter = (event, start, end, isSelected) => {
-        let backgroundColor = '#3174ad'; // Default color
+        let backgroundColor = '#3174ad';
         switch (event.importance) {
             case 'High':
-                backgroundColor = '#e53935'; // Red for high importance
+                backgroundColor = '#e53935';
                 break;
             case 'Medium':
-                backgroundColor = '#ffb74d'; // Orange for medium importance
+                backgroundColor = '#ffb74d';
                 break;
             case 'Low':
-                backgroundColor = '#81c784'; // Green for low importance
+                backgroundColor = '#81c784';
                 break;
             default:
-                backgroundColor = '#3174ad'; // Default color
+                backgroundColor = '#3174ad';
                 break;
         }
-    
+
         const style = {
             backgroundColor: backgroundColor,
-            borderRadius: '100px',
+            borderRadius: '4px',
             opacity: 0.8,
             color: 'white',
-            border: '0px',
-            display: 'block',
+            border: 'none',
+            padding: '2px 4px',
         };
-    
+
         return {
             style: style,
         };
     };
-    
 
     const handleSelectSlot = (slotInfo) => {
-        if (!slotInfo.action) {
-            // Only show popup if no action (i.e., clicking on an empty slot)
-            setNewEvent({ ...newEvent, startTime: slotInfo.start });
-            setShowPopup(false); // Hide popup when clicking outside an event
+        setSelectedSlot(slotInfo.start);
+        setSelectedEvent(null);
+        setShowEventForm(true);
+    };
+
+    const handleSelectEvent = (event) => {
+        setSelectedEvent(event);
+        setSelectedSlot(null);
+        setShowEventForm(true);
+    };
+
+    const handleCloseEventForm = () => {
+        setShowEventForm(false);
+        setSelectedEvent(null);
+        setSelectedSlot(null);
+    };
+
+    const handleSaveEvent = async (formData) => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            const requestOptions = {
+                method: formData.id ? 'PUT' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify(formData)
+            };
+
+            let url = formData.id ? `http://localhost:5000/update_event/${formData.id}` : 'http://localhost:5000/add_event';
+
+            const response = await fetch(url, requestOptions);
+            if (!response.ok) {
+                throw new Error(formData.id ? 'Failed to update event' : 'Failed to add event');
+            }
+
+            fetchEvents();
+            handleCloseEventForm();
+        } catch (error) {
+            console.error('Error saving or updating event:', error);
         }
     };
 
+    const handleRemoveEvent = async (eventId) => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            const requestOptions = {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`
+                },
+            };
+
+            const response = await fetch(`http://localhost:5000/remove_event/${eventId}`, requestOptions);
+            if (!response.ok) {
+                throw new Error('Failed to remove event');
+            }
+
+            fetchEvents();
+        } catch (error) {
+            console.error('Error removing event:', error);
+        }
+    };
 
     return (
         <div className="calendar-wrapper">
@@ -106,29 +152,18 @@ const CalendarComponent = () => {
                 endAccessor="end"
                 views={['month', 'week', 'day']}
                 selectable={true}
-                defaultDate={new Date()}
-                onSelectEvent={handleSelectEvent}
                 onSelectSlot={handleSelectSlot}
-                onView={(view) => console.log(view)}
-                onNavigate={handleNavigate}
+                onSelectEvent={handleSelectEvent}
+                style={{ height: 500 }}
                 eventPropGetter={eventStyleGetter}
             />
-            {showPopup && (
-                <div className="popup">
-                    <div className="popup-content">
-                        {selectedEvent && (
-                            <>
-                                <h3>{selectedEvent.title}</h3>
-                                <p><strong>Start Time:</strong> {moment(selectedEvent.startTime).format('MMMM DD, YYYY HH:mm')}</p>
-                                <p><strong>Duration:</strong> {selectedEvent.duration} minutes</p>
-                                <p><strong>Importance:</strong> {selectedEvent.importance}</p>
-                                <p><strong>Description:</strong> {selectedEvent.description}</p>
-                            </>
-                        )}
-                        <button onClick={() => setShowPopup(false)} className="popup-btn">Close</button>
-                    </div>
-                </div>
-            )}
+            <EventFormModal
+                isOpen={showEventForm}
+                onClose={handleCloseEventForm}
+                onSave={handleSaveEvent}
+                event={selectedEvent ? { ...selectedEvent, startTime: moment(selectedEvent.start).format('YYYY-MM-DDTHH:mm') } : null}
+                slot={selectedSlot ? { start: moment(selectedSlot).format('YYYY-MM-DDTHH:mm') } : null}
+            />
         </div>
     );
 };
