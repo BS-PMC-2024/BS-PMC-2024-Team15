@@ -14,11 +14,9 @@ CORS(app)  # Add this line
 if not firebase_admin._apps:
     # Initialize Firebase Admin SDK (replace with your service account key JSON file)
     # if need to run in the docker conteiner change to this: /Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json
-<<<<<<< HEAD
-    cred = credentials.Certificate('./Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
-=======
-    cred = credentials.Certificate('C:/Users/guyal/OneDrive/Desktop/Expenses/BS-PMC-2024-Team15/backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
->>>>>>> 7664a86b2d7d5322e1f28ed45c740f091d52856e
+
+    cred = credentials.Certificate('/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
+
     firebase_admin.initialize_app(cred)
 
 # Initialize Firebase using Pyrebase (authentication part)
@@ -56,6 +54,8 @@ def verify_firebase_token(id_token):
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+    print("Register data received:", data)
+
     email = data.get('email')
     password = data.get('password')
     dateOfBirth = data.get('dateOfBirth')
@@ -141,9 +141,9 @@ def add_event():
             'user_id': user_id,  # Associate the event with the user ID
             'createdAt': firestore.SERVER_TIMESTAMP  # Optional: Timestamp of creation
         }
-        firestore_db.collection('events').add(event_ref)
-
-        return jsonify({"message": "Event added successfully"}), 200
+        doc_ref = firestore_db.collection('events').add(event_ref)
+        event_id = doc_ref[1].id  # Get the generated document ID
+        return jsonify({"message": "Event added successfully","id":event_id}), 200
     except Exception as e:
         print("Error:", str(e))  # Debugging line
         return jsonify({"message": str(e)}), 400
@@ -210,4 +210,5 @@ def update_event(eventId):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True ,host="0.0.0.0", port=5000)
+
