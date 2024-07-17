@@ -5,7 +5,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     const [title, setTitle] = useState('');
     const [startTime, setStartTime] = useState('');
     const [duration, setDuration] = useState('0:15');
-    const [importance, setImportance] = useState('Medium');
+    const [importance, setImportance] = useState('Low');
     const [description, setDescription] = useState('');
     const [eventType, setEventType] = useState('Study');
     const [errors, setErrors] = useState({});
@@ -15,7 +15,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             setTitle(event.title || '');
             setStartTime(event.startTime || '');
             setDuration(event.duration || '0:15');
-            setImportance(event.importance || 'Medium');
+            setImportance(event.importance || 'Low');
             setDescription(event.description || '');
             setEventType(event.eventType || 'Study');
         } else if (slot) {
@@ -66,9 +66,9 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
 
     const resetForm = () => {
         setTitle('');
-        setStartTime('');
+        setStartTime(slot ? slot.start : '');
         setDuration('0:15');
-        setImportance('Medium');
+        setImportance('Low');
         setDescription('');
         setEventType('Study');
         setErrors({});

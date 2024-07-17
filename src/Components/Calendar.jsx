@@ -5,6 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css';
 import EventFormModal from './EventForm';
 
+
 const localizer = momentLocalizer(moment);
 
 const CalendarComponent = () => {
@@ -119,27 +120,6 @@ const CalendarComponent = () => {
             handleCloseEventForm();
         } catch (error) {
             console.error('Error saving or updating event:', error);
-        }
-    };
-
-    const handleRemoveEvent = async (eventId) => {
-        try {
-            const idToken = localStorage.getItem('accessToken');
-            const requestOptions = {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${idToken}`
-                },
-            };
-
-            const response = await fetch(`http://localhost:5000/remove_event/${eventId}`, requestOptions);
-            if (!response.ok) {
-                throw new Error('Failed to remove event');
-            }
-
-            fetchEvents();
-        } catch (error) {
-            console.error('Error removing event:', error);
         }
     };
 
