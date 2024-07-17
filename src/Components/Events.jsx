@@ -2,43 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './Events.css';
 import EventFormModal from './EventForm'; // Import the modal component
 
-const EventsComponent = () => {
-    const [events, setEvents] = useState([]);
+const EventsComponent = ({ events, loading, fetchEvents }) => {
     const [showEventForm, setShowEventForm] = useState(false); // State to manage modal visibility
     const [selectedEvent, setSelectedEvent] = useState(null); // State to store selected event for editing
-
-// Function to fetch events from Flask endpoint
-const fetchEvents = async () => {
-    try {
-        // Retrieve the ID token from local storage
-        const idToken = localStorage.getItem('accessToken'); // Ensure this matches where the token is stored
-
-        if (!idToken) {
-            throw new Error('No access token found');
-        }
-
-        const response = await fetch('http://localhost:5000/get_events', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${idToken}` // Include the ID token in the Authorization header
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch events');
-        }
-
-        const data = await response.json();
-        setEvents(data);
-    } catch (error) {
-        console.error('Error fetching events:', error);
-    }
-};
-
-useEffect(() => {
-    fetchEvents();
-}, []);
 
     // Function to toggle modal visibility and set selected event for editing
     const toggleEventForm = (event) => {
@@ -57,29 +23,30 @@ useEffect(() => {
         const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
         return `${days}d ${hours}h ${minutes}m`;
     };
-
-    // Handle adding a new event
-    const handleAddNewEvent = () => {
-        toggleEventForm(null); // Open the modal for adding new event
-    };
-
+    
     // Handle updating an existing event
-    const handleUpdateEvent = async (updatedEvent) => {
+    const handleSaveEvent = async (event) => {
         try {
-            const response = await fetch(`http://localhost:5000/update_event/${updatedEvent.id}`, {
-                method: 'PUT',
+            const method = event.id ? 'PUT' : 'POST';
+            const endpoint = event.id ? `update_event/${event.id}` : 'add_event';
+
+            const response = await fetch(`http://localhost:5000/${endpoint}`, {
+                method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updatedEvent),
+                body: JSON.stringify(event),
             });
+
             if (!response.ok) {
-                throw new Error('Failed to update event');
+                throw new Error(`Failed to ${event.id ? 'update' : 'add'} event`);
             }
-            // Refresh events after updating
+
+            // Refresh events after saving or updating
             fetchEvents();
+            setShowEventForm(false); // Close the modal after saving
         } catch (error) {
-            console.error('Error updating event:', error);
+            console.error(`Error ${event.id ? 'updating' : 'adding'} event:`, error);
         }
     };
 
@@ -98,9 +65,9 @@ useEffect(() => {
             console.error('Error removing event:', error);
         }
     };
-    
+
     // Function to determine row class based on event importance
-    function getRowClassName(importance) {
+    const getRowClassName = (importance) => {
         switch (importance) {
             case 'High':
                 return 'high-importance';
@@ -111,59 +78,57 @@ useEffect(() => {
             default:
                 return '';
         }
-    }
+    };
 
     return (
         <div className="events">
-            {events.length === 0 ? (
-                <h2>No Upcoming Events</h2>
+            {loading ? (
+                <p>Loading events...</p>
             ) : (
-                <>
-                    <h2>My Upcoming Events</h2>
-                    <table className="events-table">
-                        <thead>
-                            <tr>
-                                <th>Event Name</th>
-                                <th>Starting Time</th>
-                                <th>Time Left</th>
-                                <th>Duration</th>
-                                <th>Importance Level</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {events.map((event) => (
-                                <tr key={event.id} className={getRowClassName(event.importance)}>
-                                    <td>{event.title}</td>
-                                    <td>{new Date(event.startTime).toLocaleString()}</td>
-                                    <td>{calculateTimeLeft(event.startTime)}</td>
-                                    <td>{event.duration}</td>
-                                    <td>{event.importance}</td>
-                                    <td>
-                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}>Edit</button>
-                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>
-                                    </td>
+                events.length === 0 ? (
+                    <h2>No Upcoming Events</h2>
+                ) : (
+                    <>
+                        <h2>My Upcoming Events</h2>
+                        <table className="events-table">
+                            <thead>
+                                <tr>
+                                    <th>Event Name</th>
+                                    <th>Starting Time</th>
+                                    <th>Time Left</th>
+                                    <th>Duration</th>
+                                    <th>Type/Importance</th>
+                                    <th>Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </>
+                            </thead>
+                            <tbody>
+                                {events.map((event) => (
+                                    <tr key={event.id} className={getRowClassName(event.importance)}>
+                                        <td>{event.title}</td>
+                                        <td>{new Date(event.startTime).toLocaleString()}</td>
+                                        <td>{calculateTimeLeft(event.startTime)}</td>
+                                        <td>{event.duration}</td>
+                                        <td>{event.eventType}/{event.importance}</td>
+                                        <td>
+                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}>Edit</button>
+                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </>
+                )
             )}
             <EventFormModal 
                 isOpen={showEventForm} 
-                onClose={() => {
-                    toggleEventForm(null); // Close modal
-                    setSelectedEvent(null); // Clear selected event after closing
-                }} 
-                onSave={() => {
-                    fetchEvents(); // Refresh events after saving or updating
-                    setSelectedEvent(null); // Clear selected event after saving or updating
-                }} 
+                onClose={() => setShowEventForm(false)} 
+                onSave={handleSaveEvent} 
                 event={selectedEvent} 
-                onUpdate={handleUpdateEvent} // Pass update handler to modal
+                slot={null} 
             />
         </div>
     );
-}
+};
 
 export default EventsComponent;
