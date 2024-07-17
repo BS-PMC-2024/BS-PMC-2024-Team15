@@ -13,7 +13,7 @@ def client(app):
 
 def test_register(client):
     response = client.post('/register', json={
-        'email': 'test_user@example.com',
+        'email': 'testuser@example.com',
         'password': 'password123',
         'dateOfBirth': '2000-01-01',
         'type': 'student',
@@ -52,6 +52,7 @@ def test_add_event(client):
         'startTime': '2023-07-01T10:00:00Z',
         'duration': 60,
         'importance': 'High',
+        'eventType': 'eventType',
         'description': 'This is a test event'
     })
     assert response.status_code == 200
@@ -113,7 +114,8 @@ def test_update_event(client):
         'startTime': '2023-07-01T10:00:00Z',
         'duration': 60,
         'importance': 'Low',
-        'description': 'This event will be updated'
+        'description': 'This event will be updated',
+        'eventType': 'eventType'
     })
     print("Add Event Response Data:", add_event_response.get_json())  # Debugging line
     assert add_event_response.status_code == 200
