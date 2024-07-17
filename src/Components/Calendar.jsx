@@ -5,48 +5,19 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css';
 import EventFormModal from './EventForm';
 
-
 const localizer = momentLocalizer(moment);
 
-const CalendarComponent = () => {
-    const [events, setEvents] = useState([]);
+const CalendarComponent = ({ events, fetchEvents }) => {
     const [showEventForm, setShowEventForm] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
 
     useEffect(() => {
-        fetchEvents();
-    }, []);
-
-    const fetchEvents = async () => {
-        try {
-            const idToken = localStorage.getItem('accessToken');
-            if (!idToken) {
-                throw new Error('No access token found');
-            }
-
-            const response = await fetch('http://localhost:5000/get_events', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch events');
-            }
-
-            const data = await response.json();
-            setEvents(data.map(event => ({
-                ...event,
-                start: new Date(event.startTime),
-                end: moment(event.startTime).add(event.duration, 'minutes').toDate()
-            })));
-        } catch (error) {
-            console.error('Error fetching events:', error);
+        // Fetch events only if events are empty or null
+        if (!events || events.length === 0) {
+            fetchEvents();
         }
-    };
+    }, [events, fetchEvents]); 
 
     const eventStyleGetter = (event, start, end, isSelected) => {
         let backgroundColor = '#3174ad';
@@ -127,7 +98,11 @@ const CalendarComponent = () => {
         <div className="calendar-wrapper">
             <Calendar
                 localizer={localizer}
-                events={events}
+                events={events.map(event => ({
+                    ...event,
+                    start: new Date(event.startTime),
+                    end: moment(event.startTime).add(event.duration, 'minutes').toDate()
+                }))}
                 startAccessor="start"
                 endAccessor="end"
                 views={['month', 'week', 'day']}

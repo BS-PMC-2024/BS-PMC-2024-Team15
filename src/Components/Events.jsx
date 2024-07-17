@@ -2,48 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './Events.css';
 import EventFormModal from './EventForm'; // Import the modal component
 
-
-const EventsComponent = () => {
-    const [events, setEvents] = useState([]);
+const EventsComponent = ({ events, loading, fetchEvents }) => {
     const [showEventForm, setShowEventForm] = useState(false); // State to manage modal visibility
     const [selectedEvent, setSelectedEvent] = useState(null); // State to store selected event for editing
-    const [loading, setLoading] = useState(true); // Add loading state
-
-    // Function to fetch events from Flask endpoint
-    const fetchEvents = async () => {
-        setLoading(true); // Set loading to true before fetch
-        try {
-            // Retrieve the ID token from local storage
-            const idToken = localStorage.getItem('accessToken'); // Ensure this matches where the token is stored
-
-            if (!idToken) {
-                throw new Error('No access token found');
-            }
-
-            const response = await fetch('http://localhost:5000/get_events', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}` // Include the ID token in the Authorization header
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch events');
-            }
-
-            const data = await response.json();
-            setEvents(data);
-        } catch (error) {
-            console.error('Error fetching events:', error);
-        } finally {
-            setLoading(false); // Set loading to false after fetch
-        }
-    };
-
-    useEffect(() => {
-        fetchEvents();
-    }, []);
 
     // Function to toggle modal visibility and set selected event for editing
     const toggleEventForm = (event) => {
@@ -62,13 +23,7 @@ const EventsComponent = () => {
         const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
         return `${days}d ${hours}h ${minutes}m`;
     };
-
-    // Handle adding a new event
-    const handleAddNewEvent = () => {
-        setSelectedEvent(null); // Clear selected event for adding new event
-        setShowEventForm(true); // Open the modal for adding new event
-    };
-
+    
     // Handle updating an existing event
     const handleSaveEvent = async (event) => {
         try {
@@ -110,7 +65,7 @@ const EventsComponent = () => {
             console.error('Error removing event:', error);
         }
     };
-    
+
     // Function to determine row class based on event importance
     const getRowClassName = (importance) => {
         switch (importance) {
@@ -174,6 +129,6 @@ const EventsComponent = () => {
             />
         </div>
     );
-}
+};
 
 export default EventsComponent;

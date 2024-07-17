@@ -1,56 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import CanvasJSReact from '@canvasjs/react-charts';
 
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-class GraphComponent extends Component {
-    constructor() {
-        super();
-        this.state = {
-            eventStatistics: [],
-            loading: true // Add loading state
-        };
+class GraphComponent extends React.Component {
+    constructor(props) {
+        super(props);
         this.addSymbols = this.addSymbols.bind(this);
     }
-
-    componentDidMount() {
-        this.fetchEventStatistics();
-    }
-
-    fetchEventStatistics = async () => {
-        try {
-            const idToken = localStorage.getItem('accessToken');
-            const response = await fetch('http://localhost:5000/get_events', {
-                headers: {
-                    'Authorization': `Bearer ${idToken}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch events');
-            }
-
-            const events = await response.json();
-
-            // Filter events within the next 14 days
-            const today = new Date();
-            const next14Days = new Date();
-            next14Days.setDate(today.getDate() + 14);
-
-            const filteredEvents = events.filter(event => {
-                const eventDate = new Date(event.startTime);
-                return eventDate >= today && eventDate <= next14Days;
-            });
-
-            const eventStatistics = this.calculateEventStatistics(filteredEvents);
-            this.setState({ eventStatistics, loading: false }); // Set loading to false after fetch
-        } catch (error) {
-            console.error('Error fetching events:', error);
-            // Handle error (e.g., show error message)
-            this.setState({ loading: false }); // Set loading to false even if there is an error
-        }
-    };
 
     calculateEventStatistics = (events) => {
         const eventTypes = ['Study', 'Hobby', 'Social']; // Update with your event types
@@ -58,22 +16,23 @@ class GraphComponent extends Component {
 
         // Initialize statistics object
         eventTypes.forEach(type => {
-            statistics[type] = 0;
+            statistics[type] = { totalHours: 0, count: 0 }; // Example: Track total hours and count
         });
 
-        // Calculate total duration for each event type
+        // Calculate total duration and count for each event type
         events.forEach(event => {
             if (eventTypes.includes(event.eventType)) {
                 // Assuming duration is a string like '1:00' or '0:30'
                 const [hours, minutes] = event.duration.split(':').map(Number);
                 const durationInHours = hours + minutes / 60;
-                statistics[event.eventType] += durationInHours;
+                statistics[event.eventType].totalHours += durationInHours;
+                statistics[event.eventType].count++;
             }
         });
 
         return eventTypes.map(type => ({
             label: type,
-            y: statistics[type]
+            y: statistics[type].totalHours // Example: Use total hours for the chart data
         }));
     };
 
@@ -89,7 +48,9 @@ class GraphComponent extends Component {
     }
 
     render() {
-        const { eventStatistics, loading } = this.state;
+        const { events, loading } = this.props;
+
+        const eventStatistics = this.calculateEventStatistics(events);
 
         const options = {
             animationEnabled: true,
