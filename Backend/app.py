@@ -10,7 +10,7 @@ CORS(app)
 
 # Initialize Firebase Admin SDK
 if not firebase_admin._apps:
-    cred = credentials.Certificate('C:/Users/kehil/OneDrive/Desktop/StudyBuddy/BS-PMC-2024-Team15/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
+    cred = credentials.Certificate('./Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
     firebase_admin.initialize_app(cred)
 
 # Initialize Firebase using Pyrebase (authentication part)
@@ -156,6 +156,7 @@ def update_event(eventId):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+#get user doc-information 
 @app.route('/get_user', methods=['GET'])
 def get_user():
     try:
@@ -181,6 +182,8 @@ def get_user():
         print("Error:", str(e))
         return jsonify({"message": str(e)}), 400
 
+
+#update user information
 @app.route('/update_user', methods=['PUT'])
 def update_user():
     try:
