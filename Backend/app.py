@@ -10,7 +10,11 @@ CORS(app)
 
 # Initialize Firebase Admin SDK
 if not firebase_admin._apps:
+    # Initialize Firebase Admin SDK (replace with your service account key JSON file)
+    # if need to run in the docker conteiner change to this: /Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json
+
     cred = credentials.Certificate('./Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
+
     firebase_admin.initialize_app(cred)
 
 # Initialize Firebase using Pyrebase (authentication part)
@@ -82,6 +86,7 @@ def login():
 def logout():
     return jsonify({"message": "Logged out successfully"}), 200
 
+#new event
 @app.route('/add_event', methods=['POST'])
 def add_event():
     try:
@@ -89,6 +94,7 @@ def add_event():
         if not auth_header or not auth_header.startswith('Bearer '):
             return jsonify({"message": "Missing or invalid token"}), 401
 
+        id_token = auth_header.split(' ')[1]
         id_token = auth_header.split(' ')[1]
         decoded_token = verify_firebase_token(id_token)
         user_id = decoded_token['users'][0]['localId']
@@ -99,8 +105,9 @@ def add_event():
         duration = data.get('duration')
         importance = data.get('importance')
         description = data.get('description')
+        eventType = data.get('eventType')
 
-        if not title or not startTime or not duration or not importance or not description:
+        if not title or not startTime or not duration or not importance or not description or not eventType:
             return jsonify({"message": "Missing event data"}), 400
 
         event_ref = {
@@ -109,6 +116,7 @@ def add_event():
             'duration': duration,
             'importance': importance,
             'description': description,
+            'eventType': eventType,
             'user_id': user_id,
             'createdAt': firestore.SERVER_TIMESTAMP
         }
@@ -117,6 +125,7 @@ def add_event():
         return jsonify({"message": "Event added successfully","id":event_id}), 200
 
     except Exception as e:
+        print("Error:", str(e))
         return jsonify({"message": str(e)}), 400
 
 @app.route('/get_events', methods=['GET'])
