@@ -43,6 +43,8 @@ def verify_firebase_token(id_token):
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+    print("Register data received:", data)
+
     email = data.get('email')
     password = data.get('password')
     dateOfBirth = data.get('dateOfBirth')
@@ -110,8 +112,10 @@ def add_event():
             'user_id': user_id,
             'createdAt': firestore.SERVER_TIMESTAMP
         }
-        firestore_db.collection('events').add(event_ref)
-        return jsonify({"message": "Event added successfully"}), 200
+        doc_ref = firestore_db.collection('events').add(event_ref)
+        event_id = doc_ref[1].id  # Get the generated document ID
+        return jsonify({"message": "Event added successfully","id":event_id}), 200
+
     except Exception as e:
         return jsonify({"message": str(e)}), 400
 
@@ -206,4 +210,5 @@ def update_user():
         return jsonify({"message": str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True ,host="0.0.0.0", port=5000)
+
