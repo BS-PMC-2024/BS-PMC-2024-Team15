@@ -51,6 +51,24 @@ if you want to run the flask app with docker Container follow this steps:
 
     - go to app.py and change the cred to the path above . you want the path to the Backend directory and the json inside the Backend directory.-m
 
+    - 'cd Backend' : you want to be in the same directory as the docker file.
+
     - 'docker build -t flask-api /Users/guy/Desktop/Project-StutyBuddy/BS-PMC-2024-Team15/Backend' : make sure to change the path in this line to the path in your computer you want the path for the Backend directory which the Dockerfile in it. this command will build the image for you in the docker desktop.
 
     - 'docker run -dp 5000:5000 -w /Backend -v "$(pwd)/Backend:/Backend" -e FLASK_ENV=development flask-api' : this command will run the Docker image inside a Container in the docker app on the desktop. this command making sure that every time we change somthing on the code the image refresh so it will run the latest version of the code.
+
+if you want to test the flask server from the terminal use this command :
+' curl -X POST http://localhost:5000/login -d '{"username":"your user name from DB","password":"your password"}' -H "Content-Type: application/json" '
+this will test the login route with the data above.
+
+if you want to run tests follow this steps:
+
+    - 'cd Backend'
+
+? - mac:'source venv/Scripts/activate',windows:'venv\Scripts\activate' : used to activate a virtual environment in Python. A virtual environment is an isolated environment that allows you to manage dependencies for different projects separately. ?
+
+- 'pip install -r requirements.txt' : to make sure you have all the packges you need for the tests.
+
+- 'pytest'
+
+if you having issues in the register test make sure the the user name provided in the test is not already in the db.

@@ -27,11 +27,14 @@
 
 .modal-content h2 {
     margin-top: 0;
+    color: black;
 }
+
 
 .modal-content form label {
     display: block;
     margin-bottom: 15px;
+    color: black;
 }
 
 .modal-content form label input,
@@ -42,6 +45,7 @@
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    color: black;
 }
 
 /* Error message styling */
