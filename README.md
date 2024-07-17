@@ -53,7 +53,7 @@ if you want to run the flask app with docker Container follow this steps:
 
     - 'cd Backend' : you want to be in the same directory as the docker file.
 
-    - 'docker build -t flask-api .' : make sure to change the path in this line to the path in your computer you want the path for the Backend directory which the Dockerfile in it. this command will build the image for you in the docker desktop.
+    - 'docker build -t flask-api /Users/guy/Desktop/Project-StutyBuddy/BS-PMC-2024-Team15/Backend' : make sure to change the path in this line to the path in your computer you want the path for the Backend directory which the Dockerfile in it. this command will build the image for you in the docker desktop.
 
     - 'docker run -dp 5000:5000 -w /Backend -v "$(pwd)/Backend:/Backend" -e FLASK_ENV=development flask-api' : this command will run the Docker image inside a Container in the docker app on the desktop. this command making sure that every time we change somthing on the code the image refresh so it will run the latest version of the code.
 

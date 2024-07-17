@@ -52,8 +52,8 @@ def test_add_event(client):
         'startTime': '2023-07-01T10:00:00Z',
         'duration': 60,
         'importance': 'High',
-        'eventType': 'eventType',
-        'description': 'This is a test event'
+        'description': 'This is a test event',
+        'eventType': 'eventType'
     })
     assert response.status_code == 200
     assert response.get_json()['message'] == "Event added successfully"
@@ -86,7 +86,8 @@ def test_remove_event(client):
         'startTime': '2023-07-01T10:00:00Z',
         'duration': 60,
         'importance': 'Medium',
-        'description': 'This event will be removed'
+        'description': 'This event will be removed',
+        'eventType': 'eventType'
     })
     event_id = add_event_response.get_json().get('id')
     
@@ -130,9 +131,30 @@ def test_update_event(client):
         'startTime': '2023-07-01T11:00:00Z',
         'duration': 90,
         'importance': 'High',
-        'description': 'This event has been updated'
+        'description': 'This event has been updated',
+        'eventType': 'eventType1'
     })
     print("Update Event Response Data:", response.get_json())  # Debugging line
     assert response.status_code == 200
     assert response.get_json()['message'] == "Event updated successfully"
+
+
+def test_delete_account(client):
+    login_response = client.post('/login', json={
+        'username': 'testuser@example.com',
+        'password': 'password123'
+    })
+    id_token = login_response.get_json()['access_token']
+
+    # Delete the user account
+    delete_response = client.post('/delete_user',headers={
+        'Authorization': f'Bearer {id_token}'
+    }, json={
+        'email': 'testuser@example.com',
+        'password': 'password123'
+    })
+
+    assert delete_response.status_code == 200
+    assert delete_response.get_json()['message'] == "User account deleted successfully"
+
 

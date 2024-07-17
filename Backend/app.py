@@ -13,7 +13,7 @@ if not firebase_admin._apps:
     # Initialize Firebase Admin SDK (replace with your service account key JSON file)
     # if need to run in the docker conteiner change to this: /Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json
 
-    cred = credentials.Certificate('/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
+    cred = credentials.Certificate('/Users/guy/Desktop/Project-StutyBuddy/BS-PMC-2024-Team15/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
 
     firebase_admin.initialize_app(cred)
 
@@ -217,6 +217,39 @@ def update_user():
         return jsonify({"message": "User profile updated successfully"}), 200
     except Exception as e:
         return jsonify({"message": str(e)}), 400
+
+@app.route('/delete_user', methods=['POST'])
+def delete_user():
+    
+    data = request.get_json()
+    print("Delete account data received:", data)
+
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"message": "Email and password are required"}), 400
+
+    try:
+        # Sign in the user to get the user ID
+        user = auth.sign_in_with_email_and_password(email, password)
+        id = user['localId']
+
+        # Delete user from Firebase Authentication
+        firebase_admin.auth.delete_user(id)
+        
+        # Find the document with the user ID in Firestore
+        users_ref = firestore_db.collection('users')
+        user_docs = users_ref.where('user_id', '==', id).stream()
+
+        for doc in user_docs:
+            doc.reference.delete()
+
+        return jsonify({"message": "User account deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"message": f"Unexpected error: {str(e)}"}), 400
+
+
 
 if __name__ == '__main__':
     app.run(debug=True ,host="0.0.0.0", port=5000)
