@@ -139,6 +139,28 @@ def test_update_event(client):
     assert response.get_json()['message'] == "Event updated successfully"
 
 
+# validation tests 
+def test_register_invalid_email(client):
+    response = client.post('/register', json={
+        'email': 'invalidemail',
+        'password': 'password123',
+        'dateOfBirth': '2000-01-01',
+        'type': 'student',
+        'receiveNews': True
+    })
+    assert response.status_code == 400  
+    assert response.get_json()['message'] == "Something went wrong pleasr try again."
+
+def test_login_invalid_password(client):
+    response = client.post('/login', json={
+        'username': 'testuser@example.com',
+        'password': 'wrongpassword'
+    })
+    assert response.status_code == 400  
+    assert response.get_json()['message'] == "Invalid credentials."
+
+
+
 def test_delete_account(client):
     login_response = client.post('/login', json={
         'username': 'testuser@example.com',
@@ -156,5 +178,8 @@ def test_delete_account(client):
 
     assert delete_response.status_code == 200
     assert delete_response.get_json()['message'] == "User account deleted successfully"
+
+
+
 
 
