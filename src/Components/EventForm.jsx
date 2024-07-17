@@ -20,7 +20,6 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             setEventType(event.eventType || 'Study');
         } else if (slot) {
             setStartTime(slot.start); // Set startTime with the selected slot time
-            resetForm(); // Reset form fields for new event
         } else {
             resetForm();
         }

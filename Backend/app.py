@@ -13,7 +13,7 @@ if not firebase_admin._apps:
     # Initialize Firebase Admin SDK (replace with your service account key JSON file)
     # if need to run in the docker conteiner change to this: /Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json
 
-    cred = credentials.Certificate('/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
+    cred = credentials.Certificate('./Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
 
     firebase_admin.initialize_app(cred)
 
