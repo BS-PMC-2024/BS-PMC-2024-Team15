@@ -5,7 +5,7 @@ import { logout } from '../features/authSlice';  // Import the logout action
 import './Navbar.css';
 import MyProfileForm from './MyProfileForm';
 
-const Navbar = () => {
+const Navbar = ({ onOpenCourseModal }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // Add useState for profile modal
@@ -32,7 +32,8 @@ const Navbar = () => {
         <nav className="navbar">
             <h1>Study Buddy</h1>
             <div className="navbar-buttons">
-                <button className="nav-btn">About Us</button>
+                <button className="nav-btn" onClick={() => navigate('/about')}>About Us</button>
+                <button className="nav-btn" onClick={onOpenCourseModal}>Courses</button>
                 <button className="nav-btn" onClick={handleOpenProfile}>My Profile</button>
                 <button className="nav-btn" onClick={handleLogout}>Logout</button>
             </div>
