@@ -232,7 +232,7 @@ def get_event_posts():
         decoded_token = verify_firebase_token(id_token)
         user_id = decoded_token['users'][0]['localId']
 
-        events_ref = firestore_db.collection('events').where('user_id', '==', 'Admin')
+        events_ref = firestore_db.collection('posts').where('user_id', '==', 'Admin')
         events = events_ref.stream()
 
         events_list = []
@@ -243,6 +243,49 @@ def get_event_posts():
 
         return jsonify(events_list), 200
     except Exception as e:
+        return jsonify({"message": str(e)}), 400
+    
+
+#add Post
+#new event
+@app.route('/add_post', methods=['POST'])
+def add_post():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
+
+        id_token = auth_header.split(' ')[1]
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+
+        data = request.get_json()
+        title = data.get('title')
+        startTime = data.get('startTime')
+        duration = data.get('duration')
+        importance = data.get('importance')
+        description = data.get('description')
+        eventType = data.get('eventType')
+
+        if not title or not startTime or not duration or not importance or not description or not eventType:
+            return jsonify({"message": "Missing event data"}), 400
+
+        event_ref = {
+            'title': title,
+            'startTime': startTime,
+            'duration': duration,
+            'importance': importance,
+            'description': description,
+            'eventType': eventType,
+            'user_id': 'Admin',
+            'createdAt': firestore.SERVER_TIMESTAMP
+        }
+        doc_ref = firestore_db.collection('posts').add(event_ref)
+        event_id = doc_ref[1].id  # Get the generated document ID
+        return jsonify({"message": "Post added successfully","id":event_id}), 200
+
+    except Exception as e:
+        print("Error:", str(e))
         return jsonify({"message": str(e)}), 400
     
 
