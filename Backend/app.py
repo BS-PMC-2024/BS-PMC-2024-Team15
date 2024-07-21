@@ -298,6 +298,22 @@ def get_courses():
         print("Error:", str(e))  # Debug print
         return jsonify({"message": str(e)}), 400
 
+@app.route('/remove_course/<courseId>', methods=['DELETE'])
+def remove_course(courseId):
+    try:
+        firestore_db.collection('courses').document(courseId).delete()
+        return jsonify({"message": "Event removed successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/update_course/<courseId>', methods=['PUT'])
+def update_course(courseId):
+    try:
+        course_data = request.json
+        firestore_db.collection('events').document(courseId).update(course_data)
+        return jsonify({"message": "Event updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 
 if __name__ == '__main__':
