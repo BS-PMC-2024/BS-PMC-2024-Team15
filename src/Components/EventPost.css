@@ -1,0 +1,71 @@
+.event-post {
+    padding: 1rem;
+}
+
+.carousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel-slides {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.event-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1 0 calc(33.333% - 1rem); /* Adjusted to fit 3 cards */
+    box-sizing: border-box;
+    max-width: calc(33.333% - 1rem);
+    margin-right: 1rem; /* Optional space between cards */
+}
+
+.event-card h3 {
+    margin-top: 0;
+}
+
+.event-card p {
+    margin: 0.5rem 0;
+}
+
+.event-card img.event-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.carousel-control {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 0.5rem;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.carousel-control.prev {
+    left: 10px;
+}
+
+.carousel-control.next {
+    right: 10px;
+}
+
+.carousel-control:hover {
+    opacity: 0.8;
+}

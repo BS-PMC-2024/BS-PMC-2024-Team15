@@ -1,0 +1,63 @@
+/* ConfirmationDialog.css */
+.confirmation-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure the dialog is above other content */
+}
+
+.confirmation-dialog-content {
+    background: #fff; /* Slightly off-white background */
+    padding: 20px;
+    border-radius: 12px; /* Rounded corners for a modern look */
+    width: 90%;
+    max-width: 400px; /* Limit maximum width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    text-align: left; /* Align text to the left */
+}
+
+.confirmation-dialog-content h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.25rem; /* Slightly larger font size */
+    color: #333; /* Darker text color for better readability */
+}
+
+.event-details {
+    margin-bottom: 20px;
+    line-height: 1.6; /* Increased line height for readability */
+}
+
+.event-details p {
+    margin: 5px 0; /* Spacing between event details */
+    color: #555; /* Lighter text color */
+}
+
+button {
+    background-color: #007bff; /* Primary button color */
+    color: #fff; /* Text color for buttons */
+    border: none;
+    border-radius: 5px; /* Rounded corners for buttons */
+    padding: 10px 15px; /* Padding for buttons */
+    font-size: 1rem; /* Font size for buttons */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+button:nth-of-type(2) {
+    background-color: #6c757d; /* Secondary button color */
+}
+
+button:nth-of-type(2):hover {
+    background-color: #5a6268; /* Darker color on hover for secondary button */
+}

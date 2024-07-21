@@ -13,7 +13,7 @@ if not firebase_admin._apps:
     # Initialize Firebase Admin SDK (replace with your service account key JSON file)
     # if need to run in the docker conteiner change to this: /Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json
 
-    cred = credentials.Certificate('./Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
+    cred = credentials.Certificate('/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
 
     firebase_admin.initialize_app(cred)
 
@@ -217,6 +217,34 @@ def update_user():
         return jsonify({"message": "User profile updated successfully"}), 200
     except Exception as e:
         return jsonify({"message": str(e)}), 400
+
+
+
+#get event posts
+@app.route('/get_event_Posts', methods=['GET'])
+def get_event_posts():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
+
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        events_ref = firestore_db.collection('events').where('user_id', '==', 'Admin')
+        events = events_ref.stream()
+
+        events_list = []
+        for event in events:
+            event_data = event.to_dict()
+            event_data['id'] = event.id
+            events_list.append(event_data)
+
+        return jsonify(events_list), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
+    
 
 if __name__ == '__main__':
     app.run(debug=True ,host="0.0.0.0", port=5000)
