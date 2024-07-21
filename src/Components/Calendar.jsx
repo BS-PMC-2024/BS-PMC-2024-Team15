@@ -20,22 +20,30 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     }, [events, fetchEvents]); 
 
     const eventStyleGetter = (event, start, end, isSelected) => {
-        let backgroundColor = '#3174ad';
-        switch (event.importance) {
-            case 'High':
-                backgroundColor = '#e53935';
-                break;
-            case 'Medium':
-                backgroundColor = '#ffb74d';
-                break;
-            case 'Low':
-                backgroundColor = '#81c784';
-                break;
-            default:
-                backgroundColor = '#3174ad';
-                break;
+        const now = new Date(); // Current date and time
+        let backgroundColor = '#3174ad'; // Default color
+    
+        if (end < now) {
+            // Event has ended
+            backgroundColor = '#000000'; // Black color for ended events
+        } else {
+            // Event has not ended, apply color based on importance
+            switch (event.importance) {
+                case 'High':
+                    backgroundColor = '#e53935'; // Red
+                    break;
+                case 'Medium':
+                    backgroundColor = '#ffb74d'; // Orange
+                    break;
+                case 'Low':
+                    backgroundColor = '#81c784'; // Green
+                    break;
+                default:
+                    backgroundColor = '#3174ad'; // Default color
+                    break;
+            }
         }
-
+    
         const style = {
             backgroundColor: backgroundColor,
             borderRadius: '4px',
@@ -44,11 +52,12 @@ const CalendarComponent = ({ events, fetchEvents }) => {
             border: 'none',
             padding: '2px 4px',
         };
-
+    
         return {
             style: style,
         };
     };
+    
 
     const handleSelectSlot = (slotInfo) => {
         setSelectedSlot(slotInfo.start);

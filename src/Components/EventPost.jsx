@@ -183,7 +183,6 @@ const EventPost = () => {
 
     return (
         <div className="event-post">
-            <h2>Social Events</h2>
             {loading ? (
                 <p>Loading events...</p>
             ) : (

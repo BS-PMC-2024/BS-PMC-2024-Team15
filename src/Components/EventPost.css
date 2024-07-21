@@ -1,19 +1,23 @@
+/* General Event Post Styling */
 .event-post {
     padding: 1rem;
 }
 
+/* Carousel container */
 .carousel {
     position: relative;
     overflow: hidden;
     width: 100%;
 }
 
+/* Slide container within the carousel */
 .carousel-slides {
     display: flex;
     overflow: hidden;
     width: 100%;
 }
 
+/* Wrapper for the slides, allows horizontal scrolling */
 .carousel-wrapper {
     display: flex;
     transition: transform 0.5s ease-in-out;
@@ -26,7 +30,8 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
     padding: 20px;
     margin: 10px;
-    max-width: 300px; /* Limit card width */
+    flex: 1 0 calc(33.333% - 20px); /* Fit 3 cards in the carousel, accounting for margin */
+    max-width: calc(33.333% - 20px); /* Ensure each card does not exceed its calculated width */
     text-align: left; /* Align text to the left */
     box-sizing: border-box; /* Ensure padding and border are included in width */
 }
@@ -87,8 +92,7 @@
     background-color: #d32f2f; /* Darker red on hover */
 }
 
-
-
+/* Carousel control buttons */
 .carousel-control {
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
