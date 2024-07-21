@@ -1,4 +1,3 @@
-// EventPost.js
 import React, { useState, useEffect } from 'react';
 import './EventPost.css';
 import EventCard from './EventCard'; // Ensure this import is correct
@@ -42,6 +41,7 @@ const EventPost = () => {
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -52,8 +52,6 @@ const EventPost = () => {
                 }
 
                 const url = 'http://localhost:5000/get_event_Posts'; // Make sure this matches your backend endpoint
-                console.log('Fetching events from:', url);
-
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: {
@@ -61,9 +59,6 @@ const EventPost = () => {
                         'Content-Type': 'application/json'
                     }
                 });
-
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -81,7 +76,7 @@ const EventPost = () => {
         fetchEvents();
     }, []);
 
-    const handleAddToCalendar = async (event) => {
+    const handleAddToCalendar = (event) => {
         setSelectedEvent(event);
         setIsDialogOpen(true);
     };
@@ -93,21 +88,14 @@ const EventPost = () => {
                 throw new Error('No access token found');
             }
 
-            const url = 'http://localhost:5000/add_event'; // Backend endpoint
+            const url = 'http://localhost:5000/add_event';
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${idToken}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    title: event.title,
-                    startTime: event.startTime,
-                    duration: event.duration,
-                    importance: event.importance,
-                    description: event.description,
-                    eventType: event.eventType
-                })
+                body: JSON.stringify(event)
             });
 
             if (!response.ok) {
@@ -115,18 +103,82 @@ const EventPost = () => {
             }
 
             const result = await response.json();
-            console.log('Event added successfully:', result);
-
-            // Optionally, update local state to reflect the change
             setCalendarEvents((prevEvents) => [...prevEvents, { ...event, id: result.id }]);
-            setIsDialogOpen(false); // Close the dialog
+            setIsDialogOpen(false);
         } catch (error) {
             console.error('Error adding event to calendar:', error);
         }
     };
 
+    const handleEditPost = (event) => {
+        setSelectedEvent(event);
+        setEditMode(true);
+        setIsDialogOpen(true);
+    };
+
+    const handleRemovePost = async (postId) => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            if (!idToken) {
+                throw new Error('No access token found');
+            }
+
+            const url = `http://localhost:5000/remove_post/${postId}`;
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setEvents((prevEvents) => prevEvents.filter(event => event.id !== postId));
+        } catch (error) {
+            console.error('Error removing post:', error);
+        }
+    };
+
     const handleCloseDialog = () => {
         setIsDialogOpen(false);
+        setEditMode(false);
+    };
+
+    const handleSavePost = async (eventData) => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            if (!idToken) {
+                throw new Error('No access token found');
+            }
+
+            const url = editMode ? `http://localhost:5000/update_post/${selectedEvent.id}` : 'http://localhost:5000/add_event';
+            const method = editMode ? 'PUT' : 'POST';
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(eventData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            if (editMode) {
+                setEvents((prevEvents) => prevEvents.map(event => event.id === selectedEvent.id ? { ...event, ...eventData } : event));
+            } else {
+                setEvents((prevEvents) => [...prevEvents, { ...eventData, id: result.id }]);
+            }
+            setIsDialogOpen(false);
+        } catch (error) {
+            console.error('Error saving post:', error);
+        }
     };
 
     return (
@@ -141,6 +193,8 @@ const EventPost = () => {
                             key={event.id}
                             event={event}
                             onAddToCalendar={handleAddToCalendar}
+                            onEdit={handleEditPost}
+                            onRemove={handleRemovePost}
                         />
                     ))}
                 </Carousel>
@@ -148,8 +202,9 @@ const EventPost = () => {
             <ConfirmationDialog
                 isOpen={isDialogOpen}
                 onClose={handleCloseDialog}
-                onConfirm={handleConfirmAdd}
+                onConfirm={handleSavePost}
                 eventDetails={selectedEvent || {}}
+                isEditMode={editMode}
             />
         </div>
     );

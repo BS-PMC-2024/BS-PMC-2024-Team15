@@ -247,7 +247,6 @@ def get_event_posts():
     
 
 #add Post
-#new event
 @app.route('/add_post', methods=['POST'])
 def add_post():
     try:
@@ -288,6 +287,26 @@ def add_post():
         print("Error:", str(e))
         return jsonify({"message": str(e)}), 400
     
+#remove post
+@app.route('/remove_post/<postId>', methods=['DELETE'])
+def remove_post(postId):
+    try:
+        firestore_db.collection('posts').document(postId).delete()
+        return jsonify({"message": "Post removed successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+# update post
+@app.route('/update_post/<postId>', methods=['PUT'])
+def update_post(postId):
+    try:
+        post_data = request.json
+        firestore_db.collection('posts').document(postId).update(post_data)
+        return jsonify({"message": "Post updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 
 if __name__ == '__main__':
     app.run(debug=True ,host="0.0.0.0", port=5000)
