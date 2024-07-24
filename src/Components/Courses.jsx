@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './Courses.css';
 import CourseFormModal from './CourseForm'; // Import the modal component
 
-const CoursesComponent = ({ onOpenCourseModal }) => {
+const CoursesComponent = () => {
     const [showCourseForm, setShowCourseForm] = useState(false); // State to manage modal visibility
     const [selectedCourse, setSelectedCourse] = useState(null); // State to store selected course for editing
     const [courses, setCourses] = useState([]);
     const [loadingCourses, setLoadingCourses] = useState(true); // State to manage loading
 
-    const toggleCourseForm = (course) => {
-        setSelectedCourse(course); // Set selected course for editing
+    const toggleCourseForm = (course = null) => {
+        setSelectedCourse(course); // Set selected course for editing or null for new course
         setShowCourseForm(!showCourseForm); // Toggle modal visibility
     };
 

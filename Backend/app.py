@@ -255,6 +255,7 @@ def add_course():
             'level': level,
             'description': description,
             'days': eval(days),
+            'photo': photo,
             'createdAt': firestore.SERVER_TIMESTAMP
         }
 

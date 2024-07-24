@@ -96,7 +96,6 @@ const HomePage = () => {
             const method = course.id ? 'PUT' : 'POST';
             const endpoint = course.id ? `update_course/${course.id}` : 'add_course';
 
-            // Create a FormData object to handle file uploads
             const formData = new FormData();
             formData.append('name', course.name);
             formData.append('instructor', course.instructor);
@@ -104,7 +103,7 @@ const HomePage = () => {
             formData.append('duration', course.duration);
             formData.append('level', course.level);
             formData.append('description', course.description);
-            formData.append('days', course.description);
+            formData.append('days', JSON.stringify(course.days)); // Ensure days is a JSON string
             if (course.photo) {
                 formData.append('photo', course.photo);
             }
@@ -112,7 +111,8 @@ const HomePage = () => {
             const response = await fetch(`http://localhost:5000/${endpoint}`, {
                 method,
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`, // Ensure token is sent
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    // 'Content-Type': 'multipart/form-data' // Do not set this header; let the browser handle it
                 },
                 body: formData, // Use FormData for the body
             });
@@ -120,9 +120,9 @@ const HomePage = () => {
             if (!response.ok) {
                 throw new Error(`Failed to ${course.id ? 'update' : 'add'} course`);
             }
+            setIsCourseModalOpen(false);
+            setSelectedCourse(null);
 
-            // Refresh courses after saving or updating
-            setIsCourseModalOpen(false); // Close the modal after saving
         } catch (error) {
             console.error(`Error ${course.id ? 'updating' : 'adding'} course:`, error);
         }

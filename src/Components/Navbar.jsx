@@ -20,6 +20,7 @@ const Navbar = ({ onOpenCourseModal }) => {
         setIsProfileModalOpen(true); // Open profile modal
     };
 
+
     const handleCloseProfile = () => {
         setIsProfileModalOpen(false); // Close profile modal
     };

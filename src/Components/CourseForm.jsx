@@ -222,7 +222,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                         <input type="file" onChange={handlePhotoChange} />
                     </label>
                     <div className="modal-buttons">
-                        <button type="submit">{course ? 'Update Course' : 'Add Course'}</button>
+                        <button type="submit">{course.id ? 'Update Course' : 'Add Course'}</button>
                         <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
