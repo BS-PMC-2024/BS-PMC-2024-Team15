@@ -92,9 +92,7 @@ const CalendarComponent = ({ events, fetchEvents }) => {
             let url = formData.id ? `http://localhost:5000/update_event/${formData.id}` : 'http://localhost:5000/add_event';
 
             const response = await fetch(url, requestOptions);
-            if (!response.ok) {
-                throw new Error(formData.id ? 'Failed to update event' : 'Failed to add event');
-            }
+        
 
             fetchEvents();
             handleCloseEventForm();
