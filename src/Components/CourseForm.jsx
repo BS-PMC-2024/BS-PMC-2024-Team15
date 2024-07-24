@@ -9,7 +9,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
     const [level, setLevel] = useState('Beginner');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState(null);
-    const [days, setDays] = useState({}); // State to manage selected days and their times
+    const [days, setDays] = useState({});
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             setDuration(course.duration || '1 month');
             setLevel(course.level || 'Beginner');
             setDescription(course.description || '');
-            setDays(course.days || {}); // Initialize days if available
+            setDays(course.days || {});
         } else {
             resetForm();
         }
@@ -62,7 +62,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
     };
 
     const handleSave = (e) => {
-        e.preventDefault(); // Prevent form submission
+        e.preventDefault();
         if (!validateForm()) {
             return;
         }
@@ -78,28 +78,21 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         if (photo) {
             formData.append('photo', photo);
         }
-        const idToken = localStorage.getItem(`accessToken`);
-        fetch('http://localhost:5000/add_course', { // Update the URL to match your backend
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${idToken}`, // Add your token here
-            },
-            body: formData,
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    console.log(data.message);
-                    if (data.id) {
-                        console.log('Course ID:', data.id);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    };
 
+        const courseData = {
+            id: course ? course.id : undefined,
+            name,
+            instructor,
+            startDate,
+            duration,
+            level,
+            description,
+            days,
+            photo
+        };
+
+        onSave(courseData);
+    };
 
     const handleCheckboxChange = (day) => {
         setDays((prevDays) => {
@@ -107,7 +100,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             if (newDays[day]) {
                 delete newDays[day];
             } else {
-                newDays[day] = { start: '', end: '' }; // Initialize with empty times
+                newDays[day] = { start: '', end: '' };
             }
             return newDays;
         });
@@ -229,7 +222,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                         <input type="file" onChange={handlePhotoChange} />
                     </label>
                     <div className="modal-buttons">
-                        <button type="submit">{course.id ? 'Update Course' : 'Add Course'}</button>
+                        <button type="submit">{course ? 'Update Course' : 'Add Course'}</button>
                         <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
