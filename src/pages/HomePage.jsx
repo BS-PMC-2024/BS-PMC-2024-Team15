@@ -94,7 +94,7 @@ const HomePage = () => {
                     </div>
                     <div>
                         <h2>Recommended Events</h2>
-                        <EventPost />
+                        <EventPost fetchEvents={fetchEvents} />
                     </div>
                     <div ref={statisticsRef}>
                         <h2>Statistics</h2>

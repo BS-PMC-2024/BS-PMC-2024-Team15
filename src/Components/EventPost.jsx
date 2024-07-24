@@ -35,7 +35,7 @@ const Carousel = ({ children }) => {
     );
 };
 
-const EventPost = () => {
+const EventPost = ({ fetchEvents }) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [calendarEvents, setCalendarEvents] = useState([]);
@@ -176,6 +176,7 @@ const EventPost = () => {
                 setEvents((prevEvents) => [...prevEvents, { ...eventData, id: result.id }]);
             }
             setIsDialogOpen(false);
+            fetchEvents();
         } catch (error) {
             console.error('Error saving post:', error);
         }
