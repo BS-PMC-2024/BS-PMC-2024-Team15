@@ -279,6 +279,40 @@ def get_user():
         return jsonify({"message": str(e)}), 400
 
 
+#get user type
+@app.route('/get_user_type', methods=['POST'])
+def get_user_type():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
+
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        users_ref = firestore_db.collection('users')
+        query = users_ref.where('user_id', '==', user_id).limit(1).stream()
+        user_data = next(query, None)
+
+        if user_data:
+            user_info = user_data.to_dict()
+            user_type = user_info['type']
+            print (user_info)
+            return jsonify({'user_type': user_type}), 200
+        else:
+            return jsonify({"message": "User not found"}), 404
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"message": str(e)}), 400
+ 
+    
+  
+
+
+
+
 #update user information
 @app.route('/update_user', methods=['PUT'])
 def update_user():
