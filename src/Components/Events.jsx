@@ -35,7 +35,6 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
             const method = event.id ? 'PUT' : 'POST';
             const endpoint = event.id ? `update_event/${event.id}` : 'add_event';
             
-
             const response = await fetch(`http://localhost:5000/${endpoint}`, {
                 method,
                 headers: {
