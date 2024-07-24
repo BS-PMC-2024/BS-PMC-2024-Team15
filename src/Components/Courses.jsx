@@ -54,8 +54,8 @@ const CoursesComponent = ({ onOpenCourseModal }) => {
             const response = await fetch(`http://localhost:5000/${endpoint}`, {
                 method,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`, // Ensure token is sent
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json', // Add Content-Type header
                 },
                 body: JSON.stringify(course),
             });
