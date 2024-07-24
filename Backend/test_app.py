@@ -182,3 +182,19 @@ def test_edit_course():
     
     assert response.status_code == 200
     assert response.get_json()['message'] == "Course updated successfully"
+
+
+def test_remove_course():
+    login_response = client.post('/login', json={
+        'username': 'testuser@example.com',
+        'password': 'password123'
+    })
+    id_token = login_response.get_json()['access_token']
+    
+    # Assuming you have a course with id 1 that you want to remove
+    response = client.delete('/remove_course/1', headers={
+        'Authorization': f'Bearer {id_token}'
+    })
+    
+    assert response.status_code == 200
+    assert response.get_json()['message'] == "Course removed successfully"
