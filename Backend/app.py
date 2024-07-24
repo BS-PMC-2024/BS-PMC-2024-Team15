@@ -228,7 +228,7 @@ def add_course():
 
         id_token = auth_header.split(' ')[1]
         decoded_token = verify_firebase_token(id_token)
-        # user_id = decoded_token['user_id']
+        user_id = decoded_token['users'][0]['localId']
 
         data = request.form
         name = data.get('name')
@@ -238,7 +238,6 @@ def add_course():
         level = data.get('level')
         description = data.get('description')
         days = data.get('days')
-        photo = request.files.get('photo')
 
         if not name or not startDate or not duration or not level or not description or not instructor or not days:
             return jsonify({"message": "Missing course data"}), 400
@@ -255,7 +254,8 @@ def add_course():
             'level': level,
             'description': description,
             'days': eval(days),
-            'photo': photo,
+            'user_id': user_id,
+
             'createdAt': firestore.SERVER_TIMESTAMP
         }
 
@@ -281,9 +281,9 @@ def get_courses():
 
         id_token = auth_header.split(' ')[1]
         decoded_token = verify_firebase_token(id_token)
-        user_id = decoded_token.get('user_id')
+        user_id = decoded_token['users'][0]['localId']
 
-        courses_ref = firestore_db.collection('courses')
+        courses_ref = firestore_db.collection('courses').where('user_id', '==', user_id)
         courses_stream = courses_ref.stream()
 
         courses_list = []
@@ -306,6 +306,7 @@ def remove_course(courseId):
         return jsonify({"message": "Event removed successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 @app.route('/update_course/<courseId>', methods=['PUT'])
 def update_course(courseId):

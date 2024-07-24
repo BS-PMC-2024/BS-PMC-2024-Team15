@@ -8,7 +8,6 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
     const [duration, setDuration] = useState('1 month');
     const [level, setLevel] = useState('Beginner');
     const [description, setDescription] = useState('');
-    const [photo, setPhoto] = useState(null);
     const [days, setDays] = useState({});
     const [errors, setErrors] = useState({});
 
@@ -21,6 +20,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             setLevel(course.level || 'Beginner');
             setDescription(course.description || '');
             setDays(course.days || {});
+
         } else {
             resetForm();
         }
@@ -75,9 +75,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         formData.append('level', level);
         formData.append('description', description);
         formData.append('days', JSON.stringify(days));
-        if (photo) {
-            formData.append('photo', photo);
-        }
+
 
         const courseData = {
             id: course ? course.id : undefined,
@@ -88,7 +86,6 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             level,
             description,
             days,
-            photo
         };
 
         onSave(courseData);
@@ -116,11 +113,6 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         }));
     };
 
-    const handlePhotoChange = (e) => {
-        if (e.target.files.length > 0) {
-            setPhoto(e.target.files[0]);
-        }
-    };
 
     const resetForm = () => {
         setName('');
@@ -131,7 +123,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         setDescription('');
         setDays({});
         setErrors({});
-        setPhoto(null);
+
     };
 
     if (!isOpen) return null;
@@ -216,10 +208,6 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                             ))}
                         </div>
                         {errors.days && <p className="error">{errors.days}</p>}
-                    </label>
-                    <label>
-                        Photo:
-                        <input type="file" onChange={handlePhotoChange} />
                     </label>
                     <div className="modal-buttons">
                         <button type="submit">{course.id ? 'Update Course' : 'Add Course'}</button>

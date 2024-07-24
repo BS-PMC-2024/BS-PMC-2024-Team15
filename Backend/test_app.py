@@ -160,7 +160,7 @@ def test_add_course():
     assert response.status_code == 200
     assert response.get_json()['message'] == "Course added successfully"
 
-def test_edit_course():
+def test_update_course():
     login_response = client.post('/login', json={
         'username': 'testuser@example.com',
         'password': 'password123'
@@ -168,7 +168,7 @@ def test_edit_course():
     id_token = login_response.get_json()['access_token']
     
     # Assuming you have a course with id 1 that you want to edit
-    response = client.put('/edit_course/1', headers={
+    response = client.put('/update_course/1', headers={
         'Authorization': f'Bearer {id_token}'
     }, json={
         'name': 'Updated Test Course',
@@ -198,3 +198,17 @@ def test_remove_course():
     
     assert response.status_code == 200
     assert response.get_json()['message'] == "Course removed successfully"
+
+
+def test_get_course(client):
+    login_response = client.post('/login', json={
+        'username': 'testuser@example.com',
+        'password': 'password123'
+    })
+    id_token = login_response.get_json()['access_token']
+    
+    response = client.get('/get_course', headers={
+        'Authorization': f'Bearer {id_token}'
+    })
+    assert response.status_code == 200
+    assert isinstance(response.get_json(), list)
