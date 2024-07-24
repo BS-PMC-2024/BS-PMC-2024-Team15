@@ -136,3 +136,49 @@ def test_update_event(client):
     assert response.status_code == 200
     assert response.get_json()['message'] == "Event updated successfully"
 
+
+def test_add_course():
+    login_response = client.post('/login', json={
+        'username': 'testuser@example.com',
+        'password': 'password123'
+    })
+    id_token = login_response.get_json()['access_token']
+    
+    response = client.post('/add_course', headers={
+        'Authorization': f'Bearer {id_token}',
+        'Content-Type': 'application/json',
+    }, json={
+        'name': 'Test Course',
+        'instructor': 'John Doe',
+        'startDate': '2023-07-01T10:00:00Z',
+        'duration': 60,
+        'level': 'High',
+        'description': 'This is a test course',
+        'days': ['Monday', 'Wednesday', 'Friday']
+    })
+    
+    assert response.status_code == 200
+    assert response.get_json()['message'] == "Course added successfully"
+
+def test_edit_course():
+    login_response = client.post('/login', json={
+        'username': 'testuser@example.com',
+        'password': 'password123'
+    })
+    id_token = login_response.get_json()['access_token']
+    
+    # Assuming you have a course with id 1 that you want to edit
+    response = client.put('/edit_course/1', headers={
+        'Authorization': f'Bearer {id_token}'
+    }, json={
+        'name': 'Updated Test Course',
+        'instructor': 'Jane Doe',
+        'startDate': '2023-08-01T10:00:00Z',
+        'duration': 90,
+        'level': 'Medium',
+        'description': 'This is an updated test course',
+        'days': ['Tuesday', 'Thursday']
+    })
+    
+    assert response.status_code == 200
+    assert response.get_json()['message'] == "Course updated successfully"

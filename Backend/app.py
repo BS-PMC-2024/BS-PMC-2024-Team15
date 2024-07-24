@@ -310,8 +310,8 @@ def remove_course(courseId):
 def update_course(courseId):
     try:
         course_data = request.json
-        firestore_db.collection('events').document(courseId).update(course_data)
-        return jsonify({"message": "Event updated successfully"}), 200
+        firestore_db.collection('courses').document(courseId).update(course_data)
+        return jsonify({"message": "course updated successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
