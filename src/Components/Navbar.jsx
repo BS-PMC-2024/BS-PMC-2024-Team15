@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../features/authSlice';  // Import the logout action
-import './Navbar.css';
+import '../ComponentsCss/Navbar.css';
 import EventFormModal from './EventForm';  // Import EventFormModal
 import MyProfileForm from './MyProfileForm';
 

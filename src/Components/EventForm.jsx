@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './EventForm.css';
+import '../ComponentsCss/EventForm.css';
 
 const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     const [title, setTitle] = useState('');

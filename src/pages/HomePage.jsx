@@ -6,7 +6,7 @@ import Navbar from '../Components/Navbar';
 import Sidebar from '../Components/Sidebar';
 import AIAssistantComponent from '../Components/AiChatForm'; // Import AI Assistant Component
 import GraphComponent from '../Components/StatisticGraph';
-import EventPost from '../Components/EventPost';
+import PostCarousel from '../Components/PostCarousel';
 
 const HomePage = () => {
     const calendarRef = useRef(null);
@@ -94,7 +94,7 @@ const HomePage = () => {
                     </div>
                     <div>
                         <h2>Recommended Events</h2>
-                        <EventPost fetchEvents={fetchEvents} />
+                        <PostCarousel fetchEvents={fetchEvents} />
                     </div>
                     <div ref={statisticsRef}>
                         <h2>Statistics</h2>

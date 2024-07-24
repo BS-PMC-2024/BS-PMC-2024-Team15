@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './MyProfileForm.css';
+import '../ComponentsCss/MyProfileForm.css';
 import { getToken } from '../features/tokenUtils';
 
 const MyProfileForm = ({ isOpen, onClose, onSave }) => {

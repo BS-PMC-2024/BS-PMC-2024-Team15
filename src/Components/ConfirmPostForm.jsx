@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import './ConfirmationDialog.css'; // Ensure the CSS file is correct
+import '../ComponentsCss/ConfirmPostForm.css'; // Ensure the CSS file is correct
 
-const ConfirmationDialog = ({ isOpen, onClose, onConfirm, eventDetails, isEditMode }) => {
+const ConfirmPostForm = ({ isOpen, onClose, onConfirm, eventDetails, isEditMode }) => {
     const [formData, setFormData] = useState({
         title: '',
         startTime: '',
         duration: '',
         importance: '',
         description: '',
-        eventType: ''
+        eventType: '',
+        imageUrl: ''
     });
+
+    const [image, setImage] = useState(null);
 
     useEffect(() => {
         if (eventDetails) {
@@ -19,7 +22,8 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, eventDetails, isEditMo
                 duration: eventDetails.duration || '',
                 importance: eventDetails.importance || '',
                 description: eventDetails.description || '',
-                eventType: eventDetails.eventType || ''
+                eventType: eventDetails.eventType || '',
+                imageUrl: eventDetails.imageUrl || ''
             });
         }
     }, [eventDetails]);
@@ -32,9 +36,36 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, eventDetails, isEditMo
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onConfirm(formData);
+
+        let finalImageUrl = formData.imageUrl;
+        if (image) {
+            try {
+                const formData = new FormData();
+                formData.append('file', image);
+
+                const idToken = localStorage.getItem('accessToken');  // Get the access token
+                const response = await fetch('http://localhost:5000/upload_image', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`  // Include the Authorization header
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    finalImageUrl = result.file_url;
+                } else {
+                    console.error(result.message);
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+
+        onConfirm({ ...formData, imageUrl: finalImageUrl });
     };
 
     return (
@@ -44,6 +75,7 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, eventDetails, isEditMo
                     <h2>{isEditMode ? 'Edit Post' : 'View Post'}</h2>
                     {isEditMode ? (
                         <form onSubmit={handleSubmit}>
+                             {formData.imageUrl && <img src={formData.imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}
                             <label>
                                 Title:
                                 <input
@@ -117,6 +149,11 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, eventDetails, isEditMo
                                     required
                                 />
                             </label>
+                            <label>
+                                Upload Image:
+                                <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+                            </label>
+                           
                             <div className="dialog-actions">
                                 <button type="submit">Save Changes</button>
                                 <button type="button" onClick={onClose}>Cancel</button>
@@ -130,6 +167,7 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, eventDetails, isEditMo
                             <p><strong>Importance:</strong> {formData.importance}</p>
                             <p><strong>Description:</strong> {formData.description}</p>
                             <p><strong>Event Type:</strong> {formData.eventType}</p>
+                            {formData.imageUrl && <img src={formData.imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}
                             <div className="dialog-actions">
                                 <button type="button" onClick={() => onConfirm(formData)}>Confirm</button>
                                 <button type="button" onClick={onClose}>Close</button>
@@ -142,4 +180,4 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, eventDetails, isEditMo
     );
 };
 
-export default ConfirmationDialog;
+export default ConfirmPostForm;

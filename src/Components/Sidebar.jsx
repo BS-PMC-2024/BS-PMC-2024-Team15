@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Sidebar.css';
+import '../ComponentsCss/Sidebar.css';
 
 
 const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollToStatistics }) => {

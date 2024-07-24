@@ -215,7 +215,7 @@ def remove_event(eventId):
             # Example: "https://storage.googleapis.com/group15-c52b4.appspot.com/VQNrh6W2YyOEIpFjpKaezV5Lqto1/sce.png"
             file_path = image_url.split("group15-c52b4.appspot.com/")[1]
             blob = bucket.blob(file_path)
-            blob.delete()
+            #blob.delete()
 
         return jsonify({"message": "Event removed successfully"}), 200
 
@@ -329,7 +329,7 @@ def get_event_posts():
         return jsonify({"message": str(e)}), 400
     
 
-#add Post
+#add Post.
 @app.route('/add_post', methods=['POST'])
 def add_post():
     try:
@@ -337,7 +337,6 @@ def add_post():
         if not auth_header or not auth_header.startswith('Bearer '):
             return jsonify({"message": "Missing or invalid token"}), 401
 
-        id_token = auth_header.split(' ')[1]
         id_token = auth_header.split(' ')[1]
         decoded_token = verify_firebase_token(id_token)
 
@@ -348,7 +347,8 @@ def add_post():
         importance = data.get('importance')
         description = data.get('description')
         eventType = data.get('eventType')
-
+        imageUrl = data.get('imageUrl')  # Optional
+        
         if not title or not startTime or not duration or not importance or not description or not eventType:
             return jsonify({"message": "Missing event data"}), 400
 
@@ -360,7 +360,9 @@ def add_post():
             'description': description,
             'eventType': eventType,
             'user_id': 'Admin',
+            'imageUrl': imageUrl,
             'createdAt': firestore.SERVER_TIMESTAMP
+            
         }
         doc_ref = firestore_db.collection('posts').add(event_ref)
         event_id = doc_ref[1].id  # Get the generated document ID

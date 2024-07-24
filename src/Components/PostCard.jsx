@@ -1,7 +1,7 @@
 import React from 'react';
-import './EventPost.css'; // Ensure this import is correct
+import '../ComponentsCss/PostCarousel.css'; // Ensure this import is correct
 
-const EventCard = ({ event, onAddToCalendar, onEdit, onRemove }) => {
+const PostCard = ({ event, onAddToCalendar, onEdit, onRemove }) => {
     const handleAddClick = () => {
         onAddToCalendar(event);
     };
@@ -17,6 +17,7 @@ const EventCard = ({ event, onAddToCalendar, onEdit, onRemove }) => {
     return (
         <div className="event-card">
             <h3>{event.title}</h3>
+            {event.imageUrl && <img src={event.imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}
             <p>{event.startTime}</p>
             <p>{event.description}</p>
             <div className="button-container">
@@ -28,4 +29,4 @@ const EventCard = ({ event, onAddToCalendar, onEdit, onRemove }) => {
     );
 };
 
-export default EventCard;
+export default PostCard;

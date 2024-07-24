@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Events.css';
+import '../ComponentsCss/Events.css';
 import EventFormModal from './EventForm'; // Import the modal component
 
 const EventsComponent = ({ events, loading, fetchEvents }) => {
@@ -150,6 +150,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                     <td>{event.eventType}/{event.importance}</td>
                                                     <td>
                                                         <button className="edit-btn" onClick={() => toggleEventForm(event)}>Rank efficency</button>
+                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>
                                                     </td>
                                                 </tr>
                                             ))}

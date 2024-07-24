@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './EventPost.css';
-import EventCard from './EventCard'; // Ensure this import is correct
-import ConfirmationDialog from './ConfirmationDialog'; // Import the new dialog component
+import '../ComponentsCss/PostCarousel.css';
+import PostCard from './PostCard'; // Ensure this import is correct
+import ConfirmPostForm from './ConfirmPostForm'; // Import the new dialog component
 
 const Carousel = ({ children }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -35,7 +35,7 @@ const Carousel = ({ children }) => {
     );
 };
 
-const EventPost = ({ fetchEvents }) => {
+const PostCarousel = ({ fetchEvents }) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [calendarEvents, setCalendarEvents] = useState([]);
@@ -166,7 +166,7 @@ const EventPost = ({ fetchEvents }) => {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                //throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const result = await response.json();
@@ -189,7 +189,7 @@ const EventPost = ({ fetchEvents }) => {
             ) : (
                 <Carousel>
                     {events.map((event) => (
-                        <EventCard
+                        <PostCard
                             key={event.id}
                             event={event}
                             onAddToCalendar={handleAddToCalendar}
@@ -199,7 +199,7 @@ const EventPost = ({ fetchEvents }) => {
                     ))}
                 </Carousel>
             )}
-            <ConfirmationDialog
+            <ConfirmPostForm
                 isOpen={isDialogOpen}
                 onClose={handleCloseDialog}
                 onConfirm={handleSavePost}
@@ -210,4 +210,4 @@ const EventPost = ({ fetchEvents }) => {
     );
 };
 
-export default EventPost;
+export default PostCarousel;
