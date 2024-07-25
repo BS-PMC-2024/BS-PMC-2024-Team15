@@ -1,8 +1,5 @@
 /* EventsComponent.css */
 
-.events {
-    padding: 20px;
-}
 
 .events h2 {
     margin-bottom: 10px;
@@ -11,12 +8,10 @@
 .events-table {
     width: 100%;
     border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the table */
 }
 
 .events-table th,
 .events-table td {
-    border: 1px solid #ccc;
     padding: 12px; /* Increase padding for better spacing */
     text-align: left;
 }

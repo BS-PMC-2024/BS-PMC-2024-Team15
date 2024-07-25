@@ -1,6 +1,7 @@
 /* General Event Post Styling */
 .event-post {
     padding: 1rem;
+    display: none;
 }
 
 /* Carousel container */

@@ -1,29 +1,38 @@
 /* Calendar wrapper */
 .calendar-wrapper {
-    max-width: 1800px;
     margin: 0 auto;
-    padding: 20px;
     width: 100%;
 }
 
 /* Calendar styles */
 .rbc-calendar {
-    min-height: 500px;
+    min-height: 1100px;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 0;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rbc-month-view {
+    border: 0;
+
+    box-shadow: 0 10px 29px rgba(0, 0, 0, 0.08);
+    border-radius: 15px;
+    padding: 15px;
 }
 
 .rbc-header {
-    background-color: #f0f0f0;
-    border-bottom: 1px solid #ddd;
-    padding: 10px;
+    background-color: #121212;
+    border: 0;
+    padding: 15px 10px;
     text-align: center;
+    color: white;
+    margin: 5px;
+    border-radius: 8px;
+    font-size: 20px;
 }
 
-.rbc-toolbar {
-    margin-bottom: 10px;
+.rbc-header + .rbc-header {
+    border-left: 0;
 }
 
 .rbc-month-row,
@@ -45,11 +54,12 @@
 }
 
 .rbc-event {
-    background-color: #3174ad;
+    background-color: #FFF;
     color: #fff;
     border: none;
     border-radius: 4px;
-    padding: 2px 4px;
+    padding: 3px 4px;
+    font-size: 11px;
 }
 
 .rbc-today {
@@ -92,4 +102,76 @@
 
 .popup-btn:hover {
     background-color: #265c8a;
+}
+
+.rbc-toolbar {
+    margin-bottom:20px;
+}
+
+.rbc-toolbar button {
+    padding: 20px;
+    border-radius: 10px;
+    background: transparent;
+    border: 0;
+    box-shadow: unset;
+    font-weight: 600;
+    transition: 0.3s all;
+}
+
+.rbc-btn-group {
+    background: #f5f6f8;
+    border-radius: 15px;
+    padding: 6px;
+}
+
+.rbc-toolbar button:hover, .rbc-toolbar button:active, .rbc-toolbar button:focus, .rbc-toolbar button.rbc-active {
+    background-color: #fff;
+    border-radius: 10px !important;
+    font-weight: 900;
+    box-shadow: none;
+}
+
+span.rbc-toolbar-label {
+    font-size: 32px;
+    font-weight: 800;
+}
+
+
+.rbc-day-bg + .rbc-day-bg, .rbc-month-row, .rbc-week-row, .rbc-month-row + .rbc-month-row, .rbc-day-bg{
+    border: 0;
+}
+
+.rbc-month-row .rbc-day-bg {
+    border-radius: 10px;
+    margin: 8px 6px;
+    background-color: #f5f6f8;
+    transition: 0.3s all;
+}
+
+.rbc-month-row .rbc-day-bg:hover {
+    background: #9773dc1a;
+}
+
+button.rbc-button-link {
+    background: black;
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+    color: #fff;
+    font-weight: 900;
+    font-size: 12px;
+    margin: 20px 15px 0;
+}
+
+.rbc-row-segment {
+    padding: 3px 15px;
+}
+
+button.rbc-button-link.rbc-show-more {
+    width: fit-content;
+    border-radius: 5px;
+    height: fit-content;
+    padding: 5px 10px;
+    margin: 0 auto;
+    background: #9773dc;
 }

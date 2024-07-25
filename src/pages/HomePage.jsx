@@ -169,16 +169,19 @@ const HomePage = () => {
 
     return (
         <div className="homepage">
-            <Navbar />
             <div className="container">
-                <Sidebar
-                    scrollToCourses={scrollToCourses}
-                    scrollToCalendar={scrollToCalendar}
-                    scrollToEvents={scrollToEvents}
-                    scrollToStatistics={scrollToStatistics}
-                    toggleAIAssistant={toggleAIAssistant}
-                />
+                <div className="full_sidebar">
+                    <Navbar />
+                    <Sidebar
+                        scrollToCourses={scrollToCourses}
+                        scrollToCalendar={scrollToCalendar}
+                        scrollToEvents={scrollToEvents}
+                        scrollToStatistics={scrollToStatistics}
+                        toggleAIAssistant={toggleAIAssistant}
+                    />
+                </div>
                 <main className="main-content">
+                    <h1 class="main_logo">Study Buddy</h1>
                     <UserHomePage
                         calendarRef={calendarRef}
                         eventsRef={eventsRef}

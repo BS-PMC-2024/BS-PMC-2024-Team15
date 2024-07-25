@@ -14,15 +14,27 @@ const RegisterPage = () => {
 
     const [planDay, setPlanDay] = useState(0);
     const [stickSchedule, setStickSchedule] = useState(0);
-    const [controlTime, setControlTime] = useState(0);
-    const [meetDeadlines, setMeetDeadlines] = useState(0);
+    const [satesfiedTasks, setSatesfiedTasks] = useState(0);
+    const [deadlinedTasks, setnDeadlinedTasks] = useState(0);
     const [prioritizeTasks, setPrioritizeTasks] = useState(0);
-    const [feelProductive, setFeelProductive] = useState(0);
-    const [manageDistractions, setManageDistractions] = useState(0);
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch("http://localhost:5000/register", {
+        console.log(
+            'email:' +email+
+            '\npassword:' +password+
+            '\ndateOfBirth:' +dateOfBirth+
+            '\ntype:' +type+
+            '\nreceiveNews:' +receiveNews+
+            '\nfullName:' +fullName+
+            '\nplanDay:' +planDay+
+            '\nstickSchedule:' +stickSchedule+
+            '\nprioritizeTasks:' +prioritizeTasks+
+            '\nsatesfiedTasks:' +satesfiedTasks+ 
+            '\ndeadlinedTasks:' +deadlinedTasks
+        )
+        /*fetch("http://localhost:5000/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -52,8 +64,25 @@ const RegisterPage = () => {
         .catch((error) => {
             console.error("Error:", error);
             setMessage("An error occurred. Please try again.");
-        });
+        });*/
     };
+
+    const renderRatingOptions = (stateSetter, selectedValue, name) => (
+        <div className="rating-options">
+            {[0, 1, 2, 3, 4, 5].map((value) => (
+                <label key={value}>
+                    <input
+                        type="radio"
+                        name={name}
+                        value={value}
+                        checked={selectedValue === value}
+                        onChange={(e) => stateSetter(parseInt(e.target.value))}
+                    />
+                    {value}
+                </label>
+            ))}
+        </div>
+    );
 
     return (
         <section className="registration-section">
@@ -108,94 +137,16 @@ const RegisterPage = () => {
                             onChange={(e) => setFullName(e.target.value)}
                             required
                         />
-                        <label htmlFor="avgStudyHours">Estimated Avg Study Hours Per Week</label>
-                        <input
-                            type="number"
-                            id="avgStudyHours"
-                            value={avgStudyHours}
-                            onChange={(e) => setAvgStudyHours(e.target.value)}
-                            required
-                        />
-                        <label htmlFor="avgStudyEfficiency">Estimated Avg Study Efficiency (0-100%)</label>
-                        <input
-                            type="number"
-                            id="avgStudyEfficiency"
-                            value={avgStudyEfficiency}
-                            onChange={(e) => setAvgStudyEfficiency(e.target.value)}
-                            required
-                            min="0"
-                            max="100"
-                        />
-                        <label htmlFor="planDay">How often do you plan your day in advance?</label>
-                        <input
-                            type="number"
-                            id="planDay"
-                            value={planDay}
-                            onChange={(e) => setPlanDay(e.target.value)}
-                            required
-                            min="0"
-                            max="5"
-                        />
-                        <label htmlFor="stickSchedule">How well do you stick to your planned schedule?</label>
-                        <input
-                            type="number"
-                            id="stickSchedule"
-                            value={stickSchedule}
-                            onChange={(e) => setStickSchedule(e.target.value)}
-                            required
-                            min="0"
-                            max="5"
-                        />
-                        <label htmlFor="controlTime">How often do you feel in control of your time?</label>
-                        <input
-                            type="number"
-                            id="controlTime"
-                            value={controlTime}
-                            onChange={(e) => setControlTime(e.target.value)}
-                            required
-                            min="0"
-                            max="5"
-                        />
-                        <label htmlFor="meetDeadlines">How often do you meet deadlines without stress?</label>
-                        <input
-                            type="number"
-                            id="meetDeadlines"
-                            value={meetDeadlines}
-                            onChange={(e) => setMeetDeadlines(e.target.value)}
-                            required
-                            min="0"
-                            max="5"
-                        />
-                        <label htmlFor="prioritizeTasks">How effectively do you prioritize your tasks?</label>
-                        <input
-                            type="number"
-                            id="prioritizeTasks"
-                            value={prioritizeTasks}
-                            onChange={(e) => setPrioritizeTasks(e.target.value)}
-                            required
-                            min="0"
-                            max="5"
-                        />
-                        <label htmlFor="feelProductive">How often do you feel productive during your work/study sessions?</label>
-                        <input
-                            type="number"
-                            id="feelProductive"
-                            value={feelProductive}
-                            onChange={(e) => setFeelProductive(e.target.value)}
-                            required
-                            min="0"
-                            max="5"
-                        />
-                        <label htmlFor="manageDistractions">How well do you manage distractions?</label>
-                        <input
-                            type="number"
-                            id="manageDistractions"
-                            value={manageDistractions}
-                            onChange={(e) => setManageDistractions(e.target.value)}
-                            required
-                            min="0"
-                            max="5"
-                        />
+                        <label>How often do you plan your day in advance?</label>
+                        {renderRatingOptions(setPlanDay, planDay, "planDay")}
+                        <label>How well do you stick to your planned schedule?</label>
+                        {renderRatingOptions(setStickSchedule, stickSchedule, "stickSchedule")}
+                        <label>How effectively do you prioritize your tasks?</label>
+                        {renderRatingOptions(setPrioritizeTasks, prioritizeTasks, "prioritizeTasks")}
+                        <label>How often do you meet deadlines?</label>
+                        {renderRatingOptions(setnDeadlinedTasks, deadlinedTasks, "deadlinedTasks")}
+                        <label>How satisfied are you with your current time management skills?</label>
+                        {renderRatingOptions(setSatesfiedTasks, satesfiedTasks, "satesfiedTasks")}
                         <div className="receive-emails">
                             <input
                                 type="checkbox"

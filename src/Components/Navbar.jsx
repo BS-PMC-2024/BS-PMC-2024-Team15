@@ -120,7 +120,6 @@ const Navbar = () => {
 
     return (
         <nav className="navbar">
-            <h1>Study Buddy</h1>
             <div className="navbar-buttons">
                 <button className="nav-btn" onClick={handleOpenCourseModal}>Courses</button>
                 <button className="nav-btn" onClick={handleOpenEventForm}>Post Event-admin </button>

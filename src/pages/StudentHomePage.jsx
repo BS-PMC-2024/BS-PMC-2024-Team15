@@ -9,7 +9,7 @@ const StudentHomePage = ({ onOpenCourseModal, calendarRef, eventsRef, statistics
     return (
         <>
             <div className="calendar" ref={calendarRef}>
-                <h2>Calendar</h2>
+               
                 <div className="calendar-container">
                     <CalendarComponent events={events} loading={loading} fetchEvents={fetchEvents} />
                 </div>

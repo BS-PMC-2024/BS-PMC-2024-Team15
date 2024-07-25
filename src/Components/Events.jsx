@@ -97,7 +97,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                         <>
                             {upcomingEvents.length > 0 && (
                                 <>
-                                    <h2>My Upcoming Events</h2>
+                                    <h3>My Upcoming Events</h3>
                                     <table className="events-table">
                                         <thead>
                                             <tr>

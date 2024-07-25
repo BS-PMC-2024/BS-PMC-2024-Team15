@@ -73,7 +73,6 @@ button {
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); /* Text shadow for contrast */
 
     /* Blue button */
     background-color: #4285f4;

@@ -9,7 +9,6 @@ const LecturerHomePage = ({ calendarRef, eventsRef, statisticsRef, events, loadi
     return (
         <>
             <div className="calendar" ref={calendarRef}>
-                <h2>Calendar</h2>
                 <div className="calendar-container">
                     <CalendarComponent events={events} loading={loading} fetchEvents={fetchEvents} />
                 </div>
