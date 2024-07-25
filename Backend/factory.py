@@ -3,28 +3,27 @@ from flask_smorest import Api
 from flask_cors import CORS
 import pyrebase
 import firebase_admin
-from firebase_admin import credentials, firestore, auth
+from firebase_admin import credentials, firestore, storage,auth
 import requests
 import os
 from dotenv import load_dotenv
 import json
 
-
 def create_app():
     app = Flask(__name__)
     CORS(app)
     
-
     load_dotenv()
 
     if not firebase_admin._apps:
         cred = credentials.Certificate(os.getenv('guy_path'))
-        firebase_admin.initialize_app(cred)
-        print(cred)
+        firebase_admin.initialize_app(cred,{
+        'storageBucket': os.getenv('FIREBASE_STORAGE_BUCKET')})
 
     # get the fireBase config from the .env file 
     firebaseConfig_str = os.getenv('firebase_config')
     firebaseConfig = json.loads(firebaseConfig_str)
+    app.config['FIREBASE_CONFIG'] = firebaseConfig
 
     # Initialize Firebase using Pyrebase (authentication part)
     firebase = pyrebase.initialize_app(firebaseConfig)
@@ -33,6 +32,10 @@ def create_app():
     # Initialize Firestore client
     firestore_db = firestore.client()
     app.config["FIRESTORE_DB"] = firestore_db
+
+    # Initialize Storage Bucket
+    bucket = storage.bucket()
+    app.config['STORAGE_BUCKET'] = bucket
 
     app.config["API_TITLE"] = "Study Buddy API"
     app.config["API_VERSION"] = "v1"
@@ -44,7 +47,15 @@ def create_app():
     api = Api(app)
 
     from resources.users import blp as UserBlueprint
+    from resources.events import blp as EventsBlueprint
+    from resources.courses import blp as CourseBlueprint
+    from resources.posts import blp as PostBlueprint
+
     app.firestore_db = firestore_db
     api.register_blueprint(UserBlueprint)
+    api.register_blueprint(EventsBlueprint)
+    api.register_blueprint(CourseBlueprint)
+    api.register_blueprint(PostBlueprint)
+
     
     return app
