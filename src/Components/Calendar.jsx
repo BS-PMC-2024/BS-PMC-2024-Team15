@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './Calendar.css';
+import '../ComponentsCss/Calendar.css';
 import EventFormModal from './EventForm';
+import CustomEventComponent from './CustomEventCalendarComponent'; // Import the custom component
 
 const localizer = momentLocalizer(moment);
 
@@ -13,29 +14,34 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     const [selectedSlot, setSelectedSlot] = useState(null);
 
     useEffect(() => {
-        // Fetch events only if events are empty or null
         if (!events || events.length === 0) {
             fetchEvents();
         }
-    }, [events, fetchEvents]); 
+    }, [events, fetchEvents]);
 
     const eventStyleGetter = (event, start, end, isSelected) => {
+        const now = new Date();
         let backgroundColor = '#3174ad';
-        switch (event.importance) {
-            case 'High':
-                backgroundColor = '#e53935';
-                break;
-            case 'Medium':
-                backgroundColor = '#ffb74d';
-                break;
-            case 'Low':
-                backgroundColor = '#81c784';
-                break;
-            default:
-                backgroundColor = '#3174ad';
-                break;
+    
+        if (end < now) {
+            backgroundColor = '#000000';
+        } else {
+            switch (event.importance) {
+                case 'High':
+                    backgroundColor = '#e53935';
+                    break;
+                case 'Medium':
+                    backgroundColor = '#ffb74d';
+                    break;
+                case 'Low':
+                    backgroundColor = '#81c784';
+                    break;
+                default:
+                    backgroundColor = '#3174ad';
+                    break;
+            }
         }
-
+    
         const style = {
             backgroundColor: backgroundColor,
             borderRadius: '4px',
@@ -44,12 +50,14 @@ const CalendarComponent = ({ events, fetchEvents }) => {
             border: 'none',
             padding: '2px 4px',
         };
-
+    
         return {
             style: style,
+            tooltip: event.additionalInfo // Set tooltip text or other details
         };
     };
-
+    
+    
     const handleSelectSlot = (slotInfo) => {
         setSelectedSlot(slotInfo.start);
         setSelectedEvent(null);
@@ -81,11 +89,7 @@ const CalendarComponent = ({ events, fetchEvents }) => {
             };
 
             let url = formData.id ? `http://localhost:5000/update_event/${formData.id}` : 'http://localhost:5000/add_event';
-
             const response = await fetch(url, requestOptions);
-            if (!response.ok) {
-                throw new Error(formData.id ? 'Failed to update event' : 'Failed to add event');
-            }
 
             fetchEvents();
             handleCloseEventForm();
@@ -111,6 +115,9 @@ const CalendarComponent = ({ events, fetchEvents }) => {
                 onSelectEvent={handleSelectEvent}
                 style={{ height: 500 }}
                 eventPropGetter={eventStyleGetter}
+                components={{
+                    event: CustomEventComponent, // Use the custom event component
+                }}
             />
             <EventFormModal
                 isOpen={showEventForm}

@@ -1,0 +1,119 @@
+/* General Event Post Styling */
+.event-post {
+    padding: 1rem;
+}
+
+/* Carousel container */
+.carousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Slide container within the carousel */
+.carousel-slides {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Wrapper for the slides, allows horizontal scrolling */
+.carousel-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Card container */
+.event-card {
+    background: #fff; /* White background for the card */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    padding: 20px;
+    margin: 10px;
+    flex: 1 0 calc(33.333% - 20px); /* Fit 3 cards in the carousel, accounting for margin */
+    max-width: calc(33.333% - 20px); /* Ensure each card does not exceed its calculated width */
+    text-align: left; /* Align text to the left */
+    box-sizing: border-box; /* Ensure padding and border are included in width */
+}
+
+/* Card header */
+.event-card h3 {
+    margin-top: 0;
+    font-size: 1.25rem; /* Larger font size for header */
+    color: #333; /* Darker text color */
+}
+
+/* Card content */
+.event-card p {
+    margin: 5px 0; /* Spacing between paragraphs */
+    color: #555; /* Lighter text color */
+}
+
+/* Button container */
+.event-card .button-container {
+    display: flex; /* Align buttons in a row */
+    justify-content: space-between; /* Distribute space between buttons */
+    margin-top: 15px; /* Space above the button container */
+}
+
+/* Button styles */
+.event-card button {
+    background-color: #007bff; /* Primary button color */
+    color: #fff; /* Text color for buttons */
+    border: none;
+    border-radius: 5px; /* Rounded corners for buttons */
+    padding: 10px 15px; /* Padding for buttons */
+    font-size: 1rem; /* Font size for buttons */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    margin: 0 5px; /* Space between buttons */
+}
+
+/* Hover effects for buttons */
+.event-card button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+/* Style for "Edit Post" button */
+.event-card button.edit {
+    background-color: #6c757d; /* Secondary button color */
+}
+
+.event-card button.edit:hover {
+    background-color: #5a6268; /* Darker color on hover for secondary button */
+}
+
+/* Style for "Remove Post" button */
+.event-card button.remove {
+    background-color: #f44336; /* Red color for Remove Post button */
+}
+
+.event-card button.remove:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+/* Carousel control buttons */
+.carousel-control {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 0.5rem;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.carousel-control.prev {
+    left: 10px;
+}
+
+.carousel-control.next {
+    right: 10px;
+}
+
+.carousel-control:hover {
+    opacity: 0.8;
+}

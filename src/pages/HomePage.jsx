@@ -4,20 +4,26 @@ import CalendarComponent from '../Components/Calendar';
 import EventsComponent from '../Components/Events';
 import Navbar from '../Components/Navbar';
 import Sidebar from '../Components/Sidebar';
-import AIAssistantComponent from '../Components/AiChatForm'; // Import AI Assistant Component
+import AIAssistantComponent from '../Components/AiChatForm';
 import GraphComponent from '../Components/StatisticGraph';
+import PostCarousel from '../Components/PostCarousel';
+import StudentHomePage from './StudentHomePage';
+import LecturerHomePage from './LecturerHomePage';
+import AdminHomePage from './AdminHomePage';
 
 const HomePage = () => {
     const calendarRef = useRef(null);
     const eventsRef = useRef(null);
-    const statisticsRef = useRef(null); // Ref for statistics section
+    const statisticsRef = useRef(null);
 
     const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true); // Loading state for events
-    const [showAIAssistant, setShowAIAssistant] = useState(false); // State for AI Assistant visibility
+    const [loading, setLoading] = useState(true);
+    const [showAIAssistant, setShowAIAssistant] = useState(false);
+    const [userType, setUserType] = useState(null);
 
     useEffect(() => {
         fetchEvents();
+        fetchUserType();
     }, []);
 
     const fetchEvents = async () => {
@@ -48,6 +54,33 @@ const HomePage = () => {
         }
     };
 
+    const fetchUserType = async () => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            if (!idToken) {
+                throw new Error('No access token found');
+            }
+
+            const response = await fetch('http://localhost:5000/get_user_type', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify({ token: idToken })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user type');
+            }
+
+            const data = await response.json();
+            setUserType(data.user_type);
+        } catch (error) {
+            console.error('Error fetching user type:', error);
+        }
+    };
+
     const scrollToCalendar = () => {
         if (calendarRef.current) {
             calendarRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -70,6 +103,25 @@ const HomePage = () => {
         setShowAIAssistant(!showAIAssistant);
     };
 
+    if (!userType) {
+        return <div>Loading...</div>;
+    }
+
+    let UserHomePage;
+    switch (userType) {
+        case 'student':
+            UserHomePage = StudentHomePage;
+            break;
+        case 'lecturer':
+            UserHomePage = LecturerHomePage;
+            break;
+        case 'admin':
+            UserHomePage = AdminHomePage;
+            break;
+        default:
+            UserHomePage = () => <div>Unknown user type</div>;
+    }
+
     return (
         <div className="homepage">
             <Navbar />
@@ -81,24 +133,19 @@ const HomePage = () => {
                     toggleAIAssistant={toggleAIAssistant}
                 />
                 <main className="main-content">
-                    <div className="calendar" ref={calendarRef}>
-                        <h2>Calendar</h2>
-                        <div className="calendar-container">
-                            <CalendarComponent events={events} loading={loading} fetchEvents={fetchEvents} />
-                        </div>
-                    </div>
-                    <div className="events-section" ref={eventsRef}>
-                        <h2>Events</h2>
-                        <EventsComponent events={events} loading={loading} fetchEvents={fetchEvents} />
-                    </div>
-                    <div ref={statisticsRef}>
-                        <h2>Statistics</h2>
-                        <GraphComponent events={events} loading={loading} fetchEvents={fetchEvents} />
-                    </div>
+                    <UserHomePage
+                        calendarRef={calendarRef}
+                        eventsRef={eventsRef}
+                        statisticsRef={statisticsRef}
+                        events={events}
+                        loading={loading}
+                        fetchEvents={fetchEvents}
+                        showAIAssistant={showAIAssistant}
+                        toggleAIAssistant={toggleAIAssistant}
+                    />
                 </main>
             </div>
 
-            {/* AI Assistant component */}
             {showAIAssistant && (
                 <AIAssistantComponent
                     isOpen={showAIAssistant}
