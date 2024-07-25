@@ -1,0 +1,115 @@
+/* CoursesComponent.css */
+
+.courses {
+    padding: 20px;
+}
+
+.courses h2 {
+    margin-bottom: 10px;
+}
+
+.courses-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the table */
+}
+
+.courses-table th,
+.courses-table td {
+    border: 1px solid #ccc;
+    padding: 12px; /* Increase padding for better spacing */
+    text-align: left;
+}
+
+.courses-table th {
+    background-color: #f4f4f4;
+}
+
+.courses-table td button {
+    margin-right: 5px;
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text color */
+    border: none; /* No border */
+    padding: 8px 12px; /* Padding inside the button */
+    font-size: 14px; /* Font size */
+    cursor: pointer; /* Cursor style on hover */
+    border-radius: 3px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.courses-table td button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.courses-table td button:focus {
+    outline: none; /* Remove outline on focus */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Add a blue border on focus */
+}
+
+.courses-table td button:active {
+    background-color: #004d99; /* Darker blue when button is clicked */
+}
+
+.courses-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternate row background color */
+}
+
+.Newcourse-btn {
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text color */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding inside the button */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Cursor style on hover */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.Newcourse-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.Newcourse-btn:focus {
+    outline: none; /* Remove outline on focus */
+    box-shadow: 0 0 0 2px #0056b3; /* Add a blue border on focus */
+}
+
+.Newcourse-btn:active {
+    background-color: #004d99; /* Darker blue when button is clicked */
+}
+
+.courses-table td .remove-btn {
+    background-color: #dc3545; /* Red background color */
+    color: white; /* White text color */
+    border: none; /* No border */
+    padding: 8px 12px; /* Padding inside the button */
+    font-size: 14px; /* Font size */
+    cursor: pointer; /* Cursor style on hover */
+    border-radius: 3px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.courses-table td .remove-btn:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+.courses-table td .remove-btn:focus {
+    outline: none; /* Remove outline on focus */
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.5); /* Add a red border on focus */
+}
+
+.courses-table td .remove-btn:active {
+    background-color: #bd2130; /* Darker red when button is clicked */
+}
+
+/* Conditional row colors based on course level */
+.courses-table .advanced-level {
+    background-color: rgba(255, 205, 210, 0.7) !important; /* Light red with 70% opacity */
+}
+
+.courses-table .intermediate-level {
+    background-color: rgba(255, 224, 178, 0.7) !important; /* Light orange with 70% opacity */
+}
+
+.courses-table .beginner-level {
+    background-color: rgba(220, 237, 200, 0.7) !important; /* Light green with 70% opacity */
+}

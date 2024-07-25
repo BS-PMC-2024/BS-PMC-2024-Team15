@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './EventForm.css';
+import '../ComponentsCss/EventForm.css';
 
 const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     const [title, setTitle] = useState('');
@@ -9,6 +9,8 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     const [description, setDescription] = useState('');
     const [eventType, setEventType] = useState('Study');
     const [errors, setErrors] = useState({});
+    const [image, setImage] = useState(null);
+    const [imageUrl, setImageUrl] = useState('');
 
     useEffect(() => {
         if (event) {
@@ -18,9 +20,9 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             setImportance(event.importance || 'Low');
             setDescription(event.description || '');
             setEventType(event.eventType || 'Study');
+            setImageUrl(event.imageUrl || '');
         } else if (slot) {
             setStartTime(slot.start); // Set startTime with the selected slot time
-            resetForm(); // Reset form fields for new event
         } else {
             resetForm();
         }
@@ -46,11 +48,37 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
         return Object.keys(errors).length === 0;
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!validateForm()) {
             return;
         }
-
+    
+        let finalImageUrl = imageUrl;
+        if (image) {
+            try {
+                const formData = new FormData();
+                formData.append('file', image);
+    
+                const idToken = localStorage.getItem('accessToken');  // Get the access token
+                const response = await fetch('http://localhost:5000/upload_image', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`  // Include the Authorization header
+                    },
+                    body: formData
+                });
+    
+                const result = await response.json();
+                if (response.ok) {
+                    finalImageUrl = result.file_url;
+                } else {
+                    console.error(result.message);
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+    
         const formData = {
             id: event ? event.id : null,
             title,
@@ -58,11 +86,13 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             duration,
             importance,
             description,
-            eventType
+            eventType,
+            imageUrl: finalImageUrl
         };
-
+    
         onSave(formData);
     };
+    
 
     const resetForm = () => {
         setTitle('');
@@ -71,6 +101,8 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
         setImportance('Low');
         setDescription('');
         setEventType('Study');
+        setImage(null);
+        setImageUrl('');
         setErrors({});
     };
 
@@ -81,7 +113,9 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             <div className="modal-content">
                 <h2>{event ? 'Edit Event' : 'Add New Event'}</h2>
                 <form>
+
                     <label>
+                    {imageUrl && <img src={imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}    
                         Event Name:
                         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                         {errors.title && <p className="error">{errors.title}</p>}
@@ -125,6 +159,11 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                         <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                         {errors.description && <p className="error">{errors.description}</p>}
                     </label>
+                    <label>
+                        Upload Image:
+                        <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+                    </label>
+                 
                     <div className="modal-buttons">
                         <button type="button" onClick={handleSave}>{event ? 'Update Event' : 'Add Event'}</button>
                         <button type="button" onClick={onClose}>Cancel</button>
