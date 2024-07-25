@@ -2,49 +2,16 @@ import React, { useState, useEffect } from 'react';
 import './Courses.css';
 import CourseFormModal from './CourseForm'; // Import the modal component
 
-const CoursesComponent = () => {
+const CoursesComponent = ({ courses, fetchCourses, loadingCourses }) => {
     const [showCourseForm, setShowCourseForm] = useState(false); // State to manage modal visibility
     const [selectedCourse, setSelectedCourse] = useState(null); // State to store selected course for editing
-    const [courses, setCourses] = useState([]);
-    const [loadingCourses, setLoadingCourses] = useState(true); // State to manage loading
 
-    const toggleCourseForm = (course = null) => {
+
+    const toggleCourseForm = (course) => {
         setSelectedCourse(course); // Set selected course for editing or null for new course
         setShowCourseForm(!showCourseForm); // Toggle modal visibility
     };
 
-    const fetchCourses = async () => {
-        try {
-            const idToken = localStorage.getItem('accessToken');
-            if (!idToken) {
-                throw new Error('No access token found');
-            }
-
-            const response = await fetch('http://localhost:5000/get_courses', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch courses');
-            }
-
-            const data = await response.json();
-            console.log('Fetched courses:', data); // Debug print
-            setCourses(data);
-            setLoadingCourses(false); // Set loadingCourses to false after fetching courses
-        } catch (error) {
-            console.error('Error fetching courses:', error);
-            setLoadingCourses(false); // Set loadingCourses to false if there's an error
-        }
-    };
-
-    useEffect(() => {
-        fetchCourses();
-    }, []);
 
     const handleSaveCourse = async (course) => {
         try {
@@ -63,9 +30,9 @@ const CoursesComponent = () => {
             if (!response.ok) {
                 throw new Error(`Failed to ${course.id ? 'update' : 'add'} course`);
             }
+            fetchCourses(); // Refresh the courses list
 
             setShowCourseForm(false); // Close the modal after saving
-            fetchCourses(); // Refresh the courses list
         } catch (error) {
             console.error(`Error ${course.id ? 'updating' : 'adding'} course:`, error);
         }

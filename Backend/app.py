@@ -5,7 +5,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth ,storage
 import requests
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app)
 
 # Initialize Firebase Admin SDK
@@ -425,6 +425,8 @@ def update_post(postId):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
+
 #Add course to the system
 @app.route('/add_course', methods=['POST'])
 def add_course():
@@ -437,21 +439,18 @@ def add_course():
         decoded_token = verify_firebase_token(id_token)
         user_id = decoded_token['users'][0]['localId']
 
-        data = request.form
-        name = data.get('name')
-        instructor = data.get('instructor')
-        startDate = data.get('startDate')
-        duration = data.get('duration')
-        level = data.get('level')
-        description = data.get('description')
-        days = data.get('days')
+        name = request.form.get('name')
+        instructor = request.form.get('instructor')
+        startDate = request.form.get('startDate')
+        duration = request.form.get('duration')
+        level = request.form.get('level')
+        description = request.form.get('description')
+        days = request.form.get('days')
 
         if not name or not startDate or not duration or not level or not description or not instructor or not days:
             return jsonify({"message": "Missing course data"}), 400
 
-        # Ensure days is in the correct format
-        if not isinstance(eval(days), dict):
-            return jsonify({"message": "Invalid format for days"}), 400
+        days = eval(days)  # Convert the days from string to dictionary
 
         course_ref = {
             'name': name,
@@ -460,16 +459,10 @@ def add_course():
             'duration': duration,
             'level': level,
             'description': description,
-            'days': eval(days),
+            'days': days,
             'user_id': user_id,
-
             'createdAt': firestore.SERVER_TIMESTAMP
         }
-
-        # if photo:
-        #     filename = secure_filename(photo.filename)
-        #     photo.save(f'./uploads/{filename}')  # Save the photo to the server
-        #     course_ref['photo'] = filename
 
         doc_ref = firestore_db.collection('courses').add(course_ref)
         course_id = doc_ref[1].id  # Get the generated document ID
@@ -477,6 +470,7 @@ def add_course():
 
     except Exception as e:
         return jsonify({"message": f"An error occurred: {str(e)}"}), 500
+
 
 
 @app.route('/get_courses', methods=['GET'])
@@ -525,5 +519,8 @@ def update_course(courseId):
         return jsonify({"error": str(e)}), 400
 
 
-if _name_ == '_main_':
-    app.run(debug=True ,host="0.0.0.0", port=5000)
+
+if __name__ == '__main__':
+    app.run(debug=True ,host="0.0.0.0", port=5000)
+
+

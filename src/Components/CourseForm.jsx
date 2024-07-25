@@ -20,7 +20,6 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             setLevel(course.level || 'Beginner');
             setDescription(course.description || '');
             setDays(course.days || {});
-
         } else {
             resetForm();
         }
@@ -61,23 +60,12 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         return Object.keys(errors).length === 0;
     };
 
-    const handleSave = (e) => {
-        e.preventDefault();
+    const handleSave = async () => {
         if (!validateForm()) {
             return;
         }
 
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('instructor', instructor);
-        formData.append('startDate', startDate);
-        formData.append('duration', duration);
-        formData.append('level', level);
-        formData.append('description', description);
-        formData.append('days', JSON.stringify(days));
-
-
-        const courseData = {
+        const formData = {
             id: course ? course.id : undefined,
             name,
             instructor,
@@ -85,10 +73,11 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             duration,
             level,
             description,
-            days,
+            days
         };
 
-        onSave(courseData);
+        onSave(formData);
+
     };
 
     const handleCheckboxChange = (day) => {
@@ -113,7 +102,6 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         }));
     };
 
-
     const resetForm = () => {
         setName('');
         setInstructor('');
@@ -123,7 +111,6 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         setDescription('');
         setDays({});
         setErrors({});
-
     };
 
     if (!isOpen) return null;
@@ -132,7 +119,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         <div className="modal-overlay">
             <div className="modal-content">
                 <h2>{course ? 'Edit Course' : 'Add New Course'}</h2>
-                <form onSubmit={handleSave}>
+                <form >
                     <label>
                         Course Name:
                         <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
@@ -210,7 +197,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                         {errors.days && <p className="error">{errors.days}</p>}
                     </label>
                     <div className="modal-buttons">
-                        <button type="submit">{course.id ? 'Update Course' : 'Add Course'}</button>
+                        <button onClick={handleSave}>{course ? 'Update Course' : 'Add Course'}</button>
                         <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>

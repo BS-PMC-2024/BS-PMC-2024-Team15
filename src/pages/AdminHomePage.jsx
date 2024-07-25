@@ -4,7 +4,8 @@ import EventsComponent from '../Components/Events';
 import GraphComponent from '../Components/StatisticGraph';
 import PostCarousel from '../Components/PostCarousel';
 
-const AdminHomePage = ({ calendarRef, eventsRef, statisticsRef, events, loading, fetchEvents, showAIAssistant, toggleAIAssistant }) => {
+
+const AdminHomePage = ({ onOpenCourseModal, calendarRef, eventsRef, statisticsRef, events, loading, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
     return (
         <>
             <div className="calendar" ref={calendarRef}>
