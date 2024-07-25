@@ -14,7 +14,8 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     const [selectedSlot, setSelectedSlot] = useState(null);
 
     useEffect(() => {
-        if (!events || events.length === 0) {
+        //Fetch events only if events are empty or null
+        if (!events) {
             fetchEvents();
         }
     }, [events, fetchEvents]);
