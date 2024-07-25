@@ -4,34 +4,33 @@ import pyrebase
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 import requests
+import os
+from dotenv import load_dotenv
+import json
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
+
 # Initialize Firebase Admin SDK
 if not firebase_admin._apps:
     # Initialize Firebase Admin SDK (replace with your service account key JSON file)
-    # if need to run in the docker conteiner change to this: /Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json
+    # if need to run in the docker conteiner change to this: docker_path
 
-    cred = credentials.Certificate('/Users/guy/Desktop/Project-StutyBuddy/BS-PMC-2024-Team15/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
-
+    cred = credentials.Certificate(os.getenv('guy_path'))
     firebase_admin.initialize_app(cred)
 
-# Initialize Firebase using Pyrebase (authentication part)
-firebaseConfig = {
-    "apiKey": "AIzaSyDi-_EhOOe1eRXJ3k85TSxn9S_IlH9DsME",
-    "authDomain": "group15-c52b4.firebaseapp.com",
-    "databaseURL": "https://group15-c52b4.firebaseio.com",
-    "projectId": "group15-c52b4",
-    "storageBucket": "group15-c52b4.appspot.com",
-    "messagingSenderId": "236992549934",
-    "appId": "1:236992549934:web:6bffbe0112d39dacb73bbf",
-    "measurementId": "G-T4CMSJXL1F"
-}
+# get the fireBase config from the .env file 
+firebaseConfig_str = os.getenv('firebase_config')
+firebaseConfig = json.loads(firebaseConfig_str)
 
+# Initialize Firebase using Pyrebase (authentication part)
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 db = firebase.database()
+
 
 # Initialize Firestore client
 firestore_db = firestore.client()
