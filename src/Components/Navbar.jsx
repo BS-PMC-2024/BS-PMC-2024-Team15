@@ -79,48 +79,34 @@ const Navbar = () => {
         handleCloseEventForm();
     };
 
-
-
-
     const handleSaveCourse = async (course) => {
         try {
-            const method = course.id ? 'PUT' : 'POST';
-            const endpoint = course.id ? `update_course/${course.id}` : 'add_course';
-
-            // Create a FormData object to handle file uploads
-            const formData = new FormData();
-            formData.append('name', course.name);
-            formData.append('instructor', course.instructor);
-            formData.append('startDate', course.startDate);
-            formData.append('duration', course.duration);
-            formData.append('level', course.level);
-            formData.append('description', course.description);
-            formData.append('days', JSON.stringify(course.days));
-            if (course.photo) {
-                formData.append('photo', course.photo);
-            }
-
-            const response = await fetch(`http://localhost:5000/${endpoint}`, {
-                method,
+            console.log(course);
+            const url = 'http://127.0.0.1:5000/add_course';
+    
+            const response = await fetch(url, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}` // Ensure token is sent
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                 },
-                body: course, // Use FormData for the body
+                body: JSON.stringify(course),
             });
-
-            if (!response.ok) {
-                throw new Error(`Failed to ${course.id ? 'update' : 'add'} course`);
+    
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Course added successfully:', result);
+            } else {
+                const error = await response.json();
+                console.error('Error adding course:', error);
             }
-            handleCloseCourseModal();
-
-
         } catch (error) {
-            console.error(`Error ${course.id ? 'updating' : 'adding'} course:`, error);
+            console.error('Network error:', error);
         }
-
+    
+        handleCloseCourseModal();
     };
-
+    
     const handleOpenCourseModal = (course) => {
         setSelectedCourse(course);
         setIsCourseModalOpen(true); // Open Course modal

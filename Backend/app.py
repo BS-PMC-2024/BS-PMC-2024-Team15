@@ -8,6 +8,9 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
+
+
+####### Initializing FireBase! #######
 # Initialize Firebase Admin SDK
 if not firebase_admin._apps:
     cred = credentials.Certificate('/Backend/group15-c52b4-firebase-adminsdk-9fzt0-4e6545fa15.json')
@@ -32,11 +35,10 @@ firebaseConfig = {
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 db = firebase.database()
-bucket = storage.bucket()
-
-# Initialize Firestore client
+bucket = storage.bucket() 
 firestore_db = firestore.client()
 
+####### Token Verification and User Type actions #######
 def verify_firebase_token(id_token):
     verify_url = f"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={firebaseConfig['apiKey']}"
     response = requests.post(verify_url, json={'idToken': id_token})
@@ -44,7 +46,37 @@ def verify_firebase_token(id_token):
         return response.json()
     else:
         raise Exception("Token verification failed")
+    
+#get user type
+@app.route('/get_user_type', methods=['POST'])
+def get_user_type():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
 
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        users_ref = firestore_db.collection('users')
+        query = users_ref.where('user_id', '==', user_id).limit(1).stream()
+        user_data = next(query, None)
+
+        if user_data:
+            user_info = user_data.to_dict()
+            user_type = user_info['type']
+            print (user_info)
+            return jsonify({'user_type': user_type}), 200
+        else:
+            return jsonify({"message": "User not found"}), 404
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"message": str(e)}), 400
+ 
+####### Register and Auth Functions#######
+#register
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -70,7 +102,7 @@ def register():
         return jsonify({"message": "User registered successfully"}), 200
     except Exception as e:
         return jsonify({"message": str(e)}), 400
-
+#login
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -82,13 +114,12 @@ def login():
         return jsonify({"message": "Login Successful", "access_token": id_token}), 200
     except Exception as e:
         return jsonify({"message": "Invalid credentials."}), 400
-
+#logout
 @app.route('/logout', methods=['POST'])
 def logout():
     return jsonify({"message": "Logged out successfully"}), 200
 
-
-#upload image
+####### Upload image func#######
 @app.route('/upload_image', methods=['POST'])
 def upload_image():
     try:
@@ -121,9 +152,8 @@ def upload_image():
         print("Error:", str(e))
         return jsonify({'message': str(e)}), 400
 
-
-
-#new event
+###### User Functions #######
+#add new event
 @app.route('/add_event', methods=['POST'])
 def add_event():
     try:
@@ -168,9 +198,7 @@ def add_event():
     except Exception as e:
         print("Error:", str(e))
         return jsonify({"message": str(e)}), 400
-
-
-
+#get event
 @app.route('/get_events', methods=['GET'])
 def get_events():
     try:
@@ -194,7 +222,7 @@ def get_events():
         return jsonify(events_list), 200
     except Exception as e:
         return jsonify({"message": str(e)}), 400
-
+#remove event
 @app.route('/remove_event/<eventId>', methods=['DELETE'])
 def remove_event(eventId):
     try:
@@ -222,7 +250,7 @@ def remove_event(eventId):
     except Exception as e:
         print("Error:", str(e))
         return jsonify({"error": str(e)}), 400
-
+#update event
 @app.route('/update_event/<eventId>', methods=['PUT'])
 def update_event(eventId):
     try:
@@ -252,6 +280,7 @@ def update_event(eventId):
         print("Error:", str(e))
         return jsonify({"error": str(e)}), 400
 
+###### User Functions #######
 #get user doc-information 
 @app.route('/get_user', methods=['GET'])
 def get_user():
@@ -278,41 +307,6 @@ def get_user():
         print("Error:", str(e))
         return jsonify({"message": str(e)}), 400
 
-
-#get user type
-@app.route('/get_user_type', methods=['POST'])
-def get_user_type():
-    try:
-        auth_header = request.headers.get('Authorization')
-        if not auth_header or not auth_header.startswith('Bearer '):
-            return jsonify({"message": "Missing or invalid token"}), 401
-
-        id_token = auth_header.split(' ')[1]
-        decoded_token = verify_firebase_token(id_token)
-        user_id = decoded_token['users'][0]['localId']
-
-        users_ref = firestore_db.collection('users')
-        query = users_ref.where('user_id', '==', user_id).limit(1).stream()
-        user_data = next(query, None)
-
-        if user_data:
-            user_info = user_data.to_dict()
-            user_type = user_info['type']
-            print (user_info)
-            return jsonify({'user_type': user_type}), 200
-        else:
-            return jsonify({"message": "User not found"}), 404
-
-    except Exception as e:
-        print("Error:", str(e))
-        return jsonify({"message": str(e)}), 400
- 
-    
-  
-
-
-
-
 #update user information
 @app.route('/update_user', methods=['PUT'])
 def update_user():
@@ -335,8 +329,7 @@ def update_user():
     except Exception as e:
         return jsonify({"message": str(e)}), 400
 
-
-
+###### Post Functions #######
 #get event posts
 @app.route('/get_event_Posts', methods=['GET'])
 def get_event_posts():
@@ -362,7 +355,6 @@ def get_event_posts():
     except Exception as e:
         return jsonify({"message": str(e)}), 400
     
-
 #add Post.
 @app.route('/add_post', methods=['POST'])
 def add_post():
@@ -425,8 +417,7 @@ def update_post(postId):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-
-
+###### Courses Functions #######
 #Add course to the system
 @app.route('/add_course', methods=['POST'])
 def add_course():
@@ -439,18 +430,18 @@ def add_course():
         decoded_token = verify_firebase_token(id_token)
         user_id = decoded_token['users'][0]['localId']
 
-        name = request.form.get('name')
-        instructor = request.form.get('instructor')
-        startDate = request.form.get('startDate')
-        duration = request.form.get('duration')
-        level = request.form.get('level')
-        description = request.form.get('description')
-        days = request.form.get('days')
+        data = request.get_json()  # Parse JSON data from request body
+
+        name = data.get('name')
+        instructor = data.get('instructor')
+        startDate = data.get('startDate')
+        duration = data.get('duration')
+        level = data.get('level')
+        description = data.get('description')
+        days = data.get('days')
 
         if not name or not startDate or not duration or not level or not description or not instructor or not days:
             return jsonify({"message": "Missing course data"}), 400
-
-        days = eval(days)  # Convert the days from string to dictionary
 
         course_ref = {
             'name': name,
@@ -470,8 +461,6 @@ def add_course():
 
     except Exception as e:
         return jsonify({"message": f"An error occurred: {str(e)}"}), 500
-
-
 
 @app.route('/get_courses', methods=['GET'])
 def get_courses():
@@ -508,7 +497,6 @@ def remove_course(courseId):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-
 @app.route('/update_course/<courseId>', methods=['PUT'])
 def update_course(courseId):
     try:
@@ -518,8 +506,7 @@ def update_course(courseId):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-
-
+###### returning main #######
 if __name__ == '__main__':
     app.run(debug=True ,host="0.0.0.0", port=5000)
 

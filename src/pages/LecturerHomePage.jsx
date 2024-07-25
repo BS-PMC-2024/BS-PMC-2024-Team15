@@ -3,8 +3,7 @@ import CalendarComponent from '../Components/Calendar';
 import EventsComponent from '../Components/Events';
 import GraphComponent from '../Components/StatisticGraph';
 import PostCarousel from '../Components/PostCarousel';
-import CourseFormModal from '../Components/CourseForm'; // Import Course Form Modal
-import CoursesComponent from '../Components/Courses'; // Import Courses Component
+import CoursesComponent from '../Components/Courses'; 
 
 const LecturerHomePage = ({ calendarRef, eventsRef, statisticsRef, events, loading, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
     return (

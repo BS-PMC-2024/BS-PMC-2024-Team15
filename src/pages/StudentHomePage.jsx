@@ -3,8 +3,7 @@ import CalendarComponent from '../Components/Calendar';
 import EventsComponent from '../Components/Events';
 import GraphComponent from '../Components/StatisticGraph';
 import PostCarousel from '../Components/PostCarousel';
-import CourseFormModal from '../Components/CourseForm'; // Import Course Form Modal
-import CoursesComponent from '../Components/Courses'; // Import Courses Component
+
 
 const StudentHomePage = ({ onOpenCourseModal, calendarRef, eventsRef, statisticsRef, events, loading, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
     return (
@@ -19,10 +18,13 @@ const StudentHomePage = ({ onOpenCourseModal, calendarRef, eventsRef, statistics
                 <h2>Events</h2>
                 <EventsComponent events={events} loading={loading} fetchEvents={fetchEvents} />
             </div>
-
             <div ref={statisticsRef}>
                 <h2>Statistics</h2>
                 <GraphComponent events={events} loading={loading} fetchEvents={fetchEvents} />
+            </div>
+            <div>
+                <h2>Recommended Events</h2>
+                <PostCarousel fetchEvents={fetchEvents} />
             </div>
         </>
     );

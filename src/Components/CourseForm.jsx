@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './CourseForm.css';
+import '../ComponentsCss/CourseForm.css';
 
 const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
     const [name, setName] = useState('');
@@ -77,7 +77,6 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         };
 
         onSave(formData);
-
     };
 
     const handleCheckboxChange = (day) => {
@@ -119,7 +118,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         <div className="modal-overlay">
             <div className="modal-content">
                 <h2>{course ? 'Edit Course' : 'Add New Course'}</h2>
-                <form >
+                <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
                     <label>
                         Course Name:
                         <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
@@ -182,7 +181,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                                                 />
                                             </label>
                                             <label>
-                                                Finish:
+                                                End:
                                                 <input
                                                     type="time"
                                                     value={days[day].end}
@@ -197,7 +196,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                         {errors.days && <p className="error">{errors.days}</p>}
                     </label>
                     <div className="modal-buttons">
-                        <button onClick={handleSave}>{course ? 'Update Course' : 'Add Course'}</button>
+                        <button type="submit">{course ? 'Update Course' : 'Add Course'}</button>
                         <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>

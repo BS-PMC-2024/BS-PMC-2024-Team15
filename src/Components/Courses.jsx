@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Courses.css';
+import '../ComponentsCss/Courses.css';
 import CourseFormModal from './CourseForm'; // Import the modal component
 
 const CoursesComponent = ({ courses, fetchCourses, loadingCourses }) => {
