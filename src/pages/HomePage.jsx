@@ -4,10 +4,15 @@ import CalendarComponent from '../Components/Calendar';
 import EventsComponent from '../Components/Events';
 import Navbar from '../Components/Navbar';
 import Sidebar from '../Components/Sidebar';
-import AIAssistantComponent from '../Components/AiChatForm'; // Import AI Assistant Component
+import AIAssistantComponent from '../Components/AiChatForm';
 import GraphComponent from '../Components/StatisticGraph';
 import CourseFormModal from '../Components/CourseForm'; // Import Course Form Modal
 import CoursesComponent from '../Components/Courses'; // Import Courses Component
+
+import PostCarousel from '../Components/PostCarousel';
+import StudentHomePage from './StudentHomePage';
+import LecturerHomePage from './LecturerHomePage';
+import AdminHomePage from './AdminHomePage';
 
 const HomePage = () => {
     const calendarRef = useRef(null);
@@ -21,8 +26,16 @@ const HomePage = () => {
     const [isCourseModalOpen, setIsCourseModalOpen] = useState(false); // State for Course modal
     const [selectedCourse, setSelectedCourse] = useState(null); // State for selected course
 
+    const statisticsRef = useRef(null);
+
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showAIAssistant, setShowAIAssistant] = useState(false);
+    const [userType, setUserType] = useState(null);
+
     useEffect(() => {
         fetchEvents();
+        fetchUserType();
     }, []);
 
     const fetchEvents = async () => {
@@ -50,6 +63,33 @@ const HomePage = () => {
         } catch (error) {
             console.error('Error fetching events:', error);
             setLoadingEvents(false);
+        }
+    };
+
+    const fetchUserType = async () => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            if (!idToken) {
+                throw new Error('No access token found');
+            }
+
+            const response = await fetch('http://localhost:5000/get_user_type', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify({ token: idToken })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user type');
+            }
+
+            const data = await response.json();
+            setUserType(data.user_type);
+        } catch (error) {
+            console.error('Error fetching user type:', error);
         }
     };
 
@@ -127,6 +167,24 @@ const HomePage = () => {
             console.error(`Error ${course.id ? 'updating' : 'adding'} course:`, error);
         }
     };
+    if (!userType) {
+        return <div>Loading...</div>;
+    }
+
+    let UserHomePage;
+    switch (userType) {
+        case 'student':
+            UserHomePage = StudentHomePage;
+            break;
+        case 'lecturer':
+            UserHomePage = LecturerHomePage;
+            break;
+        case 'admin':
+            UserHomePage = AdminHomePage;
+            break;
+        default:
+            UserHomePage = () => <div>Unknown user type</div>;
+    }
 
     return (
         <div className="homepage">
@@ -163,17 +221,23 @@ const HomePage = () => {
                 </main>
             </div>
 
-            {/* Course Form modal */}
-            {isCourseModalOpen && (
-                <CourseFormModal
-                    isOpen={isCourseModalOpen}
-                    onClose={handleCloseCourseModal}
-                    onSave={handleSaveCourse}
-                    course={selectedCourse}
-                />
-            )}
+         
 
             {/* AI Assistant component */}
+
+                    <UserHomePage
+                        calendarRef={calendarRef}
+                        eventsRef={eventsRef}
+                        statisticsRef={statisticsRef}
+                        events={events}
+                        loading={loading}
+                        fetchEvents={fetchEvents}
+                        showAIAssistant={showAIAssistant}
+                        toggleAIAssistant={toggleAIAssistant}
+                    />
+                </main>
+            </div>
+
             {showAIAssistant && (
                 <AIAssistantComponent
                     isOpen={showAIAssistant}

@@ -1,5 +1,5 @@
 import React from 'react';
-import './AiChatForm.css';
+import '../ComponentsCss/AiChatForm.css';
 
 const AIAssistantComponent = ({ isOpen, onClose }) => {
     return (
