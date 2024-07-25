@@ -6,7 +6,7 @@ import '../ComponentsCss/Navbar.css';
 import EventFormModal from './EventForm';  // Import EventFormModal
 import MyProfileForm from './MyProfileForm';
 
-const Navbar = () => {
+const Navbar = ({ onOpenCourseModal }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -21,6 +21,7 @@ const Navbar = () => {
     const handleOpenProfile = () => {
         setIsProfileModalOpen(true); // Open profile modal
     };
+
 
     const handleCloseProfile = () => {
         setIsProfileModalOpen(false); // Close profile modal
@@ -79,6 +80,7 @@ const Navbar = () => {
         <nav className="navbar">
             <h1>Study Buddy</h1>
             <div className="navbar-buttons">
+                <button className="nav-btn" onClick={onOpenCourseModal}>Courses</button>
                 <button className="nav-btn" onClick={handleOpenEventForm}>Post Event-admin </button>
                 <button className="nav-btn">About Us</button>
                 <button className="nav-btn" onClick={handleOpenProfile}>My Profile</button>

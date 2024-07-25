@@ -1,0 +1,17 @@
+.checkbox-group {
+    display: flex;
+    flex-direction: center;
+    gap: 10px;
+}
+
+.day-time {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.day-time label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

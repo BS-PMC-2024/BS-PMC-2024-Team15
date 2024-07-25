@@ -5,7 +5,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth ,storage
 import requests
 
-app = Flask(__name__)
+app = Flask(_name_)
 CORS(app)
 
 # Initialize Firebase Admin SDK
@@ -425,8 +425,105 @@ def update_post(postId):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+#Add course to the system
+@app.route('/add_course', methods=['POST'])
+def add_course():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
+
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        data = request.form
+        name = data.get('name')
+        instructor = data.get('instructor')
+        startDate = data.get('startDate')
+        duration = data.get('duration')
+        level = data.get('level')
+        description = data.get('description')
+        days = data.get('days')
+
+        if not name or not startDate or not duration or not level or not description or not instructor or not days:
+            return jsonify({"message": "Missing course data"}), 400
+
+        # Ensure days is in the correct format
+        if not isinstance(eval(days), dict):
+            return jsonify({"message": "Invalid format for days"}), 400
+
+        course_ref = {
+            'name': name,
+            'instructor': instructor,
+            'startDate': startDate,
+            'duration': duration,
+            'level': level,
+            'description': description,
+            'days': eval(days),
+            'user_id': user_id,
+
+            'createdAt': firestore.SERVER_TIMESTAMP
+        }
+
+        # if photo:
+        #     filename = secure_filename(photo.filename)
+        #     photo.save(f'./uploads/{filename}')  # Save the photo to the server
+        #     course_ref['photo'] = filename
+
+        doc_ref = firestore_db.collection('courses').add(course_ref)
+        course_id = doc_ref[1].id  # Get the generated document ID
+        return jsonify({"message": "Course added successfully", "id": course_id}), 200
+
+    except Exception as e:
+        return jsonify({"message": f"An error occurred: {str(e)}"}), 500
 
 
-if __name__ == '__main__':
-    app.run(debug=True ,host="0.0.0.0", port=5000)
+@app.route('/get_courses', methods=['GET'])
+def get_courses():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
 
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        courses_ref = firestore_db.collection('courses').where('user_id', '==', user_id)
+        courses_stream = courses_ref.stream()
+
+        courses_list = []
+        for course in courses_stream:
+            course_data = course.to_dict()
+            course_data['id'] = course.id
+            courses_list.append(course_data)
+
+        print("Courses fetched from DB:", courses_list)  # Debug print
+
+        return jsonify(courses_list), 200
+    except Exception as e:
+        print("Error:", str(e))  # Debug print
+        return jsonify({"message": str(e)}), 400
+
+@app.route('/remove_course/<courseId>', methods=['DELETE'])
+def remove_course(courseId):
+    try:
+        firestore_db.collection('courses').document(courseId).delete()
+        return jsonify({"message": "Event removed successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route('/update_course/<courseId>', methods=['PUT'])
+def update_course(courseId):
+    try:
+        course_data = request.json
+        firestore_db.collection('courses').document(courseId).update(course_data)
+        return jsonify({"message": "course updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+if _name_ == '_main_':
+    app.run(debug=True ,host="0.0.0.0", port=5000)
