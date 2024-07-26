@@ -139,7 +139,6 @@ def test_update_event(client):
     assert response.get_json()['message'] == "Event updated successfully"
 
 
-
 def test_add_course():
     login_response = client.post('/login', json={
         'username': 'testuser@example.com',
@@ -163,38 +162,13 @@ def test_add_course():
     assert response.status_code == 200
     assert response.get_json()['message'] == "Course added successfully"
 
+
 def test_update_course():
-=======
-# validation tests 
-def test_register_invalid_email(client):
-    response = client.post('/register', json={
-        'email': 'invalidemail',
-        'password': 'password123',
-        'dateOfBirth': '2000-01-01',
-        'type': 'student',
-        'receiveNews': True
-    })
-    assert response.status_code == 400  
-    assert response.get_json()['message'] == "Something went wrong pleasr try again."
-
-def test_login_invalid_password(client):
-    response = client.post('/login', json={
-        'username': 'testuser@example.com',
-        'password': 'wrongpassword'
-    })
-    assert response.status_code == 400  
-    assert response.get_json()['message'] == "Invalid credentials."
-
-
-
-def test_delete_account(client):
     login_response = client.post('/login', json={
         'username': 'testuser@example.com',
         'password': 'password123'
     })
     id_token = login_response.get_json()['access_token']
-
-    
     # Assuming you have a course with id 1 that you want to edit
     response = client.put('/update_course/1', headers={
         'Authorization': f'Bearer {id_token}'
@@ -210,6 +184,47 @@ def test_delete_account(client):
     
     assert response.status_code == 200
     assert response.get_json()['message'] == "Course updated successfully"
+
+
+# validation tests 
+def test_register_invalid_email(client):
+    response = client.post('/register', json={
+        'email': 'invalidemail',
+        'password': 'password123',
+        'dateOfBirth': '2000-01-01',
+        'type': 'student',
+        'receiveNews': True
+    })
+    assert response.status_code == 400  
+    assert response.get_json()['message'] == "Something went wrong pleasr try again."
+
+
+def test_login_invalid_password(client):
+    response = client.post('/login', json={
+        'username': 'testuser@example.com',
+        'password': 'wrongpassword'
+    })
+    assert response.status_code == 400  
+    assert response.get_json()['message'] == "Invalid credentials."
+
+
+def test_delete_account(client):
+    # Delete the user account
+    login_response = client.post('/login', json={
+        'username': 'testuser@example.com',
+        'password': 'password123'
+    })
+    id_token = login_response.get_json()['access_token']
+
+    delete_response = client.post('/delete_user',headers={
+        'Authorization': f'Bearer {id_token}'
+    }, json={
+        'email': 'testuser@example.com',
+        'password': 'password123'
+    })
+
+    assert delete_response.status_code == 200
+    assert delete_response.get_json()['message'] == "User account deleted successfully"
 
 
 def test_remove_course():
@@ -240,18 +255,8 @@ def test_get_course(client):
     })
     assert response.status_code == 200
     assert isinstance(response.get_json(), list)
-=======
 
-    # Delete the user account
-    delete_response = client.post('/delete_user',headers={
-        'Authorization': f'Bearer {id_token}'
-    }, json={
-        'email': 'testuser@example.com',
-        'password': 'password123'
-    })
-
-    assert delete_response.status_code == 200
-    assert delete_response.get_json()['message'] == "User account deleted successfully"
+    
 
 
 
