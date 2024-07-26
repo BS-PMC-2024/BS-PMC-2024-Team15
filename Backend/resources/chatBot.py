@@ -138,7 +138,7 @@ For example:
     """}
 ]
 
-    
+# route the response from the openAI API to the client side 
 @blp.route("/aibot", methods=["POST"])
 class AIassistant(MethodView):
     def post(self):
