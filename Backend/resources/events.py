@@ -19,7 +19,6 @@ def verify_firebase_token(id_token):
         raise Exception("Token verification failed")
     
 
-
 @blp.route('/add_event', methods=['POST'])
 class addEvent(MethodView):
     def post(self):
@@ -160,3 +159,39 @@ class updateEvent(MethodView):
         except Exception as e:
             print("Error:", str(e))
             return jsonify({"error": str(e)}), 400
+        
+
+@blp.route('/upload_image', methods=['POST'])
+class uploudImage(MethodView):
+    def post(self):
+        try:
+            auth_header = request.headers.get('Authorization')
+            print(f"Authorization Header: {auth_header}")  # Log the Authorization header
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return jsonify({"message": "Missing or invalid token"}), 401
+
+            id_token = auth_header.split(' ')[1]
+            decoded_token = verify_firebase_token(id_token)
+            print(f"Decoded Token: {decoded_token}")  # Log the decoded token
+            user_id = decoded_token['users'][0]['localId']
+
+            if 'file' not in request.files:
+                return jsonify({'message': 'No file part'}), 400
+
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({'message': 'No selected file'}), 400
+            
+            bucket = current_app.config['STORAGE_BUCKET']
+            
+            # Create a blob object with the file name
+            blob = bucket.blob(user_id + '/' + file.filename)
+            blob.upload_from_file(file)
+
+            # Make the blob publicly accessible
+            blob.make_public()
+
+            return jsonify({'file_url': blob.public_url}), 200
+        except Exception as e:
+            print("Error:", str(e))
+            return jsonify({'message': str(e)}), 400
