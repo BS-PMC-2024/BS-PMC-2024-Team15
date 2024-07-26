@@ -134,10 +134,6 @@ For example:
 
 6. **Detailed Task Planning**:
    - Ensure that the time is correctly split and clearly indicate the start and end times for each task.
-
-
-     
-    
     
     """}
 ]
