@@ -52,6 +52,7 @@ def create_app():
 
     api = Api(app)
 
+    # assign the blueprint routes to the port app.
     from resources.users import blp as UserBlueprint
     from resources.events import blp as EventsBlueprint
     from resources.courses import blp as CourseBlueprint
