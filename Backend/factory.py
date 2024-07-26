@@ -37,6 +37,12 @@ def create_app():
     bucket = storage.bucket()
     app.config['STORAGE_BUCKET'] = bucket
 
+    # Get the OpenAI API key from the .env file
+    openai_api_key = os.getenv('openAI_API_KEY')
+    if openai_api_key:
+        app.config['OPENAI_API_KEY'] = openai_api_key
+
+
     app.config["API_TITLE"] = "Study Buddy API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.2"
@@ -50,12 +56,14 @@ def create_app():
     from resources.events import blp as EventsBlueprint
     from resources.courses import blp as CourseBlueprint
     from resources.posts import blp as PostBlueprint
+    from resources.chatBot import blp as AIBotBlueprint
 
     app.firestore_db = firestore_db
     api.register_blueprint(UserBlueprint)
     api.register_blueprint(EventsBlueprint)
     api.register_blueprint(CourseBlueprint)
     api.register_blueprint(PostBlueprint)
+    api.register_blueprint(AIBotBlueprint)
 
     
     return app
