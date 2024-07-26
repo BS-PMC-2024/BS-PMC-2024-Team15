@@ -112,3 +112,6 @@ class updateCourse(MethodView):
             return jsonify({"message": "course updated successfully"}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 400
+        
+
+        
