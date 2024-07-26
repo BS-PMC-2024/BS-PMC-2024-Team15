@@ -118,8 +118,8 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                     <td>{event.duration}</td>
                                                     <td>{event.eventType}/{event.importance}</td>
                                                     <td>
-                                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}>Edit</button>
-                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>
+                                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}><i class="fa-solid fa-pencil"></i> Edit</button>
+                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i class="fa-solid fa-trash"></i> Remove</button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -130,7 +130,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                             
                             {completedEvents.length > 0 && (
                                 <>
-                                    <h2>Completed Events</h2>
+                                    <h3>Completed Events</h3>
                                     <table className="events-table completed-events-table">
                                         <thead>
                                             <tr>
@@ -149,8 +149,8 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                     <td>{event.duration}</td>
                                                     <td>{event.eventType}/{event.importance}</td>
                                                     <td>
-                                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}>Rank efficency</button>
-                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}>Remove</button>
+                                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}><i class="fa-solid fa-ranking-star"></i> Rank efficency</button>
+                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i class="fa-solid fa-trash"></i> Remove</button>
                                                     </td>
                                                 </tr>
                                             ))}

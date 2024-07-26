@@ -37,7 +37,8 @@ const LoginPage = () => {
             setMessage("An error occurred. Please try again.");
         });
     };
-
+// <p>"Choose our cutting-edge calendar application designed specifically for students and lecturers to enhance your time management efficiency. With integrated AI, our platform provides personalized scheduling, task prioritization, and productivity insights tailored to your needs. Experience seamless collaboration, real-time updates, and smart reminders to stay on top of your academic and professional commitments. Simplify your planning, reduce stress, and achieve your goals with our user-friendly and innovative time management solution. Elevate your productivity with our AI-powered calendar and make every moment count."</p>
+                      
     return (
         <section className="form-section">
             <div className="form-container login-container">
@@ -50,7 +51,7 @@ const LoginPage = () => {
                 <div className="form-content login-form-container">
                     <form onSubmit={handleSubmit}>
                         <h2>Sign in</h2>
-                        <label htmlFor="username">Username</label>
+                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
                             id="username"

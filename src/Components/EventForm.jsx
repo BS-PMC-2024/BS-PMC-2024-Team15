@@ -11,6 +11,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     const [errors, setErrors] = useState({});
     const [image, setImage] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
+    const [closing, setClosing] = useState(false);
 
     useEffect(() => {
         if (event) {
@@ -22,7 +23,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             setEventType(event.eventType || 'Study');
             setImageUrl(event.imageUrl || '');
         } else if (slot) {
-            setStartTime(slot.start); // Set startTime with the selected slot time
+            setStartTime(slot.start);
         } else {
             resetForm();
         }
@@ -59,11 +60,11 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                 const formData = new FormData();
                 formData.append('file', image);
     
-                const idToken = localStorage.getItem('accessToken');  // Get the access token
+                const idToken = localStorage.getItem('accessToken');
                 const response = await fetch('http://localhost:5000/upload_image', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${idToken}`  // Include the Authorization header
+                        'Authorization': `Bearer ${idToken}`
                     },
                     body: formData
                 });
@@ -91,8 +92,8 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
         };
     
         onSave(formData);
+        handleFadeOutAndClose(); // Trigger fade-out and close after saving
     };
-    
 
     const resetForm = () => {
         setTitle('');
@@ -106,16 +107,27 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
         setErrors({});
     };
 
-    if (!isOpen) return null;
+    const handleClose = () => {
+        handleFadeOutAndClose(); // Use the same fade-out function for closing
+    };
+
+    const handleFadeOutAndClose = () => {
+        setClosing(true);
+        setTimeout(() => {
+            setClosing(false);
+            onClose();
+        }, 500);
+    };
+
+    if (!isOpen && !closing) return null;
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className={`modal-overlay ${closing ? 'fade-out' : ''}`}>
+            <div className={`modal-content ${closing ? 'fade-out' : ''}`}>
                 <h2>{event ? 'Edit Event' : 'Add New Event'}</h2>
                 <form>
-
-                    <label>
                     {imageUrl && <img src={imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}    
+                    <label>
                         Event Name:
                         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                         {errors.title && <p className="error">{errors.title}</p>}
@@ -141,32 +153,34 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                     <label>
                         Importance:
                         <select value={importance} onChange={(e) => setImportance(e.target.value)}>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
                             <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
                         </select>
                     </label>
                     <label>
                         Event Type:
                         <select value={eventType} onChange={(e) => setEventType(e.target.value)}>
                             <option value="Study">Study</option>
-                            <option value="Social">Social</option>
-                            <option value="Hobby">Hobby</option>
+                            <option value="Work">Work</option>
+                            <option value="Exercise">Exercise</option>
+                            <option value="Leisure">Leisure</option>
                         </select>
                     </label>
                     <label>
                         Description:
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
                         {errors.description && <p className="error">{errors.description}</p>}
                     </label>
                     <label>
                         Upload Image:
-                        <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+                        <input type="file" onChange={(e) => setImage(e.target.files[0])} />
                     </label>
-                 
                     <div className="modal-buttons">
-                        <button type="button" onClick={handleSave}>{event ? 'Update Event' : 'Add Event'}</button>
-                        <button type="button" onClick={onClose}>Cancel</button>
+                        <button type="button" onClick={handleSave}>
+                            {event ? 'Update Event' : 'Add Event'}
+                        </button>
+                        <button type="button" onClick={handleClose}>Cancel</button>
                     </div>
                 </form>
             </div>

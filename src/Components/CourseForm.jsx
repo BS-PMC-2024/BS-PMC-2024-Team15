@@ -152,14 +152,9 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                         </select>
                     </label>
                     <label>
-                        Description:
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
-                        {errors.description && <p className="error">{errors.description}</p>}
-                    </label>
-                    <label>
                         Days and Times:
                         <div className="checkbox-group">
-                            {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day) => (
+                            {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'].map((day) => (
                                 <div key={day} className="day-time">
                                     <label>
                                         <input
@@ -194,6 +189,11 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                             ))}
                         </div>
                         {errors.days && <p className="error">{errors.days}</p>}
+                    </label>
+                    <label>
+                        Description:
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+                        {errors.description && <p className="error">{errors.description}</p>}
                     </label>
                     <div className="modal-buttons">
                         <button type="submit">{course ? 'Update Course' : 'Add Course'}</button>

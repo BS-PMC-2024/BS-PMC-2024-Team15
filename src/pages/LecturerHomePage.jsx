@@ -21,13 +21,13 @@ const LecturerHomePage = ({ calendarRef, eventsRef, statisticsRef, events, loadi
                 <h2>Recommended Events</h2>
                 <PostCarousel fetchEvents={fetchEvents} />
             </div>
-            <div ref={statisticsRef}>
-                <h2>Statistics</h2>
-                <GraphComponent events={events} loading={loading} fetchEvents={fetchEvents} />
-            </div>
             <div ref={coursesRef}>
                 <h2>Courses</h2>
                 <CoursesComponent courses={courses} loadingCourses={loadingCourses} fetchCourses={fetchCourses} />
+            </div>
+            <div ref={statisticsRef}>
+                <h2>Statistics</h2>
+                <GraphComponent events={events} loading={loading} fetchEvents={fetchEvents} />
             </div>
         </>
     );

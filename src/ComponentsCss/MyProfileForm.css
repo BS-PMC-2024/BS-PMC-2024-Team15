@@ -17,14 +17,12 @@
 
 /* Modal content styles */
 .modal-content {
-    background-color: #fefefe;
-    margin: 10% auto; /* Adjusted margin for centering */
-    padding: 20px;
-    border: 1px solid #ccc;
-    width: 80%;
-    max-width: 600px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow */
-    border-radius: 10px; /* Rounded corners */
+    margin: 10% auto;
+    position: absolute;
+    padding: 25px;
+    width: 650px;
+    box-shadow: 0 14px 70px rgba(0, 0, 0, 0.25);
+    border-radius: 24px;
 }
 
 /* Close button styles */
@@ -46,9 +44,11 @@
 /* Form styles */
 form {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     color: black;
     background: white;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 label {

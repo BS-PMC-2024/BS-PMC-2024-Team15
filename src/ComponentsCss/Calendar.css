@@ -148,9 +148,6 @@ span.rbc-toolbar-label {
     transition: 0.3s all;
 }
 
-.rbc-month-row .rbc-day-bg:hover {
-    background: #9773dc1a;
-}
 
 button.rbc-button-link {
     background: black;
