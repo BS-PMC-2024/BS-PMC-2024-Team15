@@ -120,12 +120,11 @@ const Navbar = () => {
 
     return (
         <nav className="navbar">
-            <h1>Study Buddy</h1>
             <div className="navbar-buttons">
-                <button className="nav-btn" onClick={handleOpenCourseModal}>Courses</button>
-                <button className="nav-btn" onClick={handleOpenEventForm}>Post Event-admin </button>
-                <button className="nav-btn">About Us</button>
                 <button className="nav-btn" onClick={handleOpenProfile}>My Profile</button>
+                <button className="nav-btn" onClick={handleOpenCourseModal}>Add Course</button>
+                <button className="nav-btn" onClick={handleOpenEventForm}>Post Event - admin </button>
+                <button className="nav-btn">About Us</button>
                 <button className="nav-btn" onClick={handleLogout}>Logout</button>
             </div>
             <EventFormModal

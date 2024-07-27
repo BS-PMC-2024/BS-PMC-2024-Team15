@@ -23,33 +23,47 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     const eventStyleGetter = (event, start, end, isSelected) => {
         const now = new Date();
         let backgroundColor = '#3174ad';
+        let borderLeft = '';
     
+
         if (end < now) {
+           //if event has been ranked, return white color
             backgroundColor = '#000000';
-        } else {
-            switch (event.importance) {
-                case 'High':
-                    backgroundColor = '#e53935';
-                    break;
-                case 'Medium':
-                    backgroundColor = '#ffb74d';
-                    break;
-                case 'Low':
-                    backgroundColor = '#81c784';
-                    break;
-                default:
-                    backgroundColor = '#3174ad';
-                    break;
-            }
+
+        } else { switch (event.eventType) {
+            case 'Study':
+                backgroundColor = 'purple';
+                break;
+            case 'Social':
+                backgroundColor = 'orange';
+                break;
+            case 'Hobby':
+                backgroundColor = 'green';
+                break;
+            default:
+                backgroundColor = '#3174ad';
+                break;
+        }
+        }
+
+        switch (event.importance) {
+            case 'High':
+                borderLeft = '8px solid #ff8888';
+                break;
+            case 'Medium':
+                borderLeft = '8px solid yellow';
+                break;
+            case 'Low':
+                borderLeft = '8px solid green';
+                break;
+            default:
+                backgroundColor = '#3174ad';
+                break;
         }
     
         const style = {
             backgroundColor: backgroundColor,
-            borderRadius: '4px',
-            opacity: 0.8,
-            color: 'white',
-            border: 'none',
-            padding: '2px 4px',
+            borderLeft: borderLeft
         };
     
         return {

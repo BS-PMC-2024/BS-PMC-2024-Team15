@@ -77,7 +77,6 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses }) => {
                     <h2>No Available Courses</h2>
                 ) : (
                     <>
-                        <h2>My Courses</h2>
                         <table className="courses-table">
                             <thead>
                                 <tr>
