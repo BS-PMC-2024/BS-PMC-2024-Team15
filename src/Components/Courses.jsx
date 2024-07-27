@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../ComponentsCss/Courses.css';
 import CourseFormModal from './CourseForm'; // Import the modal component
+import UploadModal from './UploadModal'; // Import the UploadModal component
 
 const CoursesComponent = ({ courses, fetchCourses, loadingCourses }) => {
     const [showCourseForm, setShowCourseForm] = useState(false); // State to manage modal visibility
+    const [showUploadModal, setShowUploadModal] = useState(false); // State to manage upload modal visibility
     const [selectedCourse, setSelectedCourse] = useState(null); // State to store selected course for editing
-
 
     const toggleCourseForm = (course) => {
         setSelectedCourse(course); // Set selected course for editing or null for new course
         setShowCourseForm(!showCourseForm); // Toggle modal visibility
     };
 
+    const toggleUploadModal = (course) => {
+        setSelectedCourse(course); // Set selected course for file upload
+        setShowUploadModal(!showUploadModal); // Toggle upload modal visibility
+    };
 
     const handleSaveCourse = async (course) => {
         try {
@@ -99,6 +104,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses }) => {
                                         <td>
                                             <button className="edit-btn" onClick={() => toggleCourseForm(course)}>Edit</button>
                                             <button className="remove-btn" onClick={() => handleRemoveCourse(course.id)}>Remove</button>
+                                            <button className="upload-btn" onClick={() => toggleUploadModal(course)}>Upload</button>
                                         </td>
                                     </tr>
                                 ))}
@@ -113,6 +119,12 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses }) => {
                 onSave={handleSaveCourse}
                 course={selectedCourse}
             />
+            {showUploadModal && (
+                <UploadModal
+                    course={selectedCourse}
+                    onClose={() => setShowUploadModal(false)}
+                />
+            )}
         </div>
     );
 };

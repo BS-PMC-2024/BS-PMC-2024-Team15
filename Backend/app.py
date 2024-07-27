@@ -6,7 +6,7 @@ from firebase_admin import credentials, firestore, auth ,storage
 import requests
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins for simplicity
 
 
 
@@ -518,6 +518,51 @@ def update_course(courseId):
         return jsonify({"message": "course updated successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+
+####### Upload File Endpoint #######
+@app.route('/upload_file/<courseId>', methods=['POST'])
+def upload_file(courseId):
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
+
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        if 'file' not in request.files:
+            return jsonify({'message': 'No file part'}), 400
+
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'message': 'No selected file'}), 400
+
+        # Create a blob object with the file name
+        blob = bucket.blob(f'{user_id}/{file.filename}')
+        blob.upload_from_file(file)
+
+        # Make the blob publicly accessible
+        blob.make_public()
+
+        # Save file metadata to Firestore if needed
+        file_metadata = {
+            'course_id': courseId,
+            'user_id': user_id,
+            'file_name': file.filename,
+            'file_url': blob.public_url,
+            'description': request.form.get('description')
+        }
+        firestore_db.collection('files').add(file_metadata)
+
+        return jsonify({'file_url': blob.public_url}), 200
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({'message': str(e)}), 400
+
+
+
 
 ###### returning main #######
 if __name__ == '__main__':
