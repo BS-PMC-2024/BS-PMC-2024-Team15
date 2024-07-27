@@ -156,26 +156,23 @@ class AIassistant(MethodView):
             context.append({'role': 'user', 'content': f"{prompt}"})
             response = get_completion_from_messages(context)
             context.append({'role': 'assistant', 'content': response.replace('**', '<br>')})
-            return jsonify({'content': response.replace('**', '<br>')})
+            return jsonify({'content': response.replace('\n', '<br>').replace('**','')})
         
-        elif action == "Finish Order":
+        elif action == "Create Events":
             context.append(
                 {'role': 'system', 'content':
                  "return the study plan in the JSON format like the example you have. "},
             )
             response = get_completion_from_messages(context)
-            # Extract the JSON part from the message
+            # seprate the JSON part from the response.
             start = response.find('{')
             end = response.rfind('}') + 1
             json_string = response[start:end]
 
-            # Parse the JSON string
+            # parse the JSON string
             summaryData = json.loads(json_string)
-        # Parse the JSON string
-            summaryData = json.loads(json_string)
-            summary_num_of_days = summaryData["num_of_days"]
-            summary_days = summaryData['days']
-            # Iterate through the days and their tasks
+            
+            # iterate through the days and their tasks to create the data from the response
             for offset, day in enumerate(summaryData['days']):
               day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
               print(f"Date: {day['date']}")
