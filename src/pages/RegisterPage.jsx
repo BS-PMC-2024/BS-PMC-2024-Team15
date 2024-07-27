@@ -8,10 +8,6 @@ const RegisterPage = () => {
     const [type, setType] = useState('student');
     const [receiveNews, setReceiveNews] = useState(false);
     const [fullName, setFullName] = useState('');
-    const [avgStudyHours, setAvgStudyHours] = useState('');
-    const [avgStudyEfficiency, setAvgStudyEfficiency] = useState('');
-    const [message, setMessage] = useState('');
-
     const [planDay, setPlanDay] = useState(0);
     const [stickSchedule, setStickSchedule] = useState(0);
     const [satesfiedTasks, setSatesfiedTasks] = useState(0);
@@ -21,20 +17,7 @@ const RegisterPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(
-            'email:' +email+
-            '\npassword:' +password+
-            '\ndateOfBirth:' +dateOfBirth+
-            '\ntype:' +type+
-            '\nreceiveNews:' +receiveNews+
-            '\nfullName:' +fullName+
-            '\nplanDay:' +planDay+
-            '\nstickSchedule:' +stickSchedule+
-            '\nprioritizeTasks:' +prioritizeTasks+
-            '\nsatesfiedTasks:' +satesfiedTasks+ 
-            '\ndeadlinedTasks:' +deadlinedTasks
-        )
-        /*fetch("http://localhost:5000/register", {
+        fetch("http://localhost:5000/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -46,25 +29,20 @@ const RegisterPage = () => {
                 type,
                 receiveNews,
                 fullName,
-                avgStudyHours,
-                avgStudyEfficiency,
                 planDay,
                 stickSchedule,
-                controlTime,
-                meetDeadlines,
-                prioritizeTasks,
-                feelProductive,
-                manageDistractions,
+                satesfiedTasks,
+                deadlinedTasks,
+                prioritizeTasks
             }),
         })
         .then((response) => response.json())
         .then((data) => {
-            setMessage(data.message);
+            console.log(data.message);
         })
         .catch((error) => {
             console.error("Error:", error);
-            setMessage("An error occurred. Please try again.");
-        });*/
+        });
     };
 
     const renderRatingOptions = (stateSetter, selectedValue, name) => (
@@ -161,7 +139,6 @@ const RegisterPage = () => {
                             Have an account? 
                             <a href="http://localhost:3000/login#!" className="register-link"> Login</a>
                         </p>
-                        {message && <p className="error-message">{message}</p>}
                     </form>
                 </div>
             </div>

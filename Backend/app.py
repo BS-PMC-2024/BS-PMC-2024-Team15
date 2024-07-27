@@ -87,17 +87,30 @@ def register():
     dateOfBirth = data.get('dateOfBirth')
     userType = data.get('type')
     receiveNews = data.get('receiveNews')
+    fullName = data.get('fullName')
+    planDay = data.get('planDay')
+    stickSchedule = data.get('stickSchedule')
+    satesfiedTasks = data.get('satesfiedTasks')
+    deadlinedTasks = data.get('deadlinedTasks')
+    prioritizeTasks = data.get('prioritizeTasks')
 
     try:
-        user = auth.create_user_with_email_and_password(email, password)
-        id = user['localId']
+        user = auth.create_user_with_email_and_password( email,password)
+        id = user ['localId']
         user_data = {
             'user_id': id,
             'email': email,
             'dateOfBirth': dateOfBirth,
             'type': userType,
-            'receiveNews': receiveNews
-        }
+            'receiveNews': receiveNews,
+            'fullName': fullName,
+            'planDay': planDay,
+            'stickSchedule': stickSchedule,
+            'satesfiedTasks': satesfiedTasks,
+            'deadlinedTasks': deadlinedTasks,
+            'prioritizeTasks': prioritizeTasks
+            }
+        
         firestore_db.collection('users').add(user_data)
         return jsonify({"message": "User registered successfully"}), 200
     except Exception as e:
