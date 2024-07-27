@@ -68,7 +68,7 @@ const LoginPage = () => {
                             required
                         />
                         <button type="submit">Login</button>
-                        {message && <p>{message}</p>}
+                        {message && <p>{message}</p>}n
                         <p>
                             Don't have an account?
                             <a href="http://localhost:3000/Register#!" className="register-link"> Register</a>
