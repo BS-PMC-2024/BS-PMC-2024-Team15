@@ -156,7 +156,10 @@ class AIassistant(MethodView):
             context.append({'role': 'user', 'content': f"{prompt}"})
             response = get_completion_from_messages(context)
             context.append({'role': 'assistant', 'content': response.replace('**', '<br>')})
-            return jsonify({'content': response.replace('\n', '<br>').replace('**','')})
+            return jsonify({'content': response.replace('\n', '<br>')
+                            .replace('**','')
+                            .replace('###','')
+                            .replace('####','')})
         
         elif action == "Create Events":
             context.append(
@@ -183,6 +186,14 @@ class AIassistant(MethodView):
                   print(f"  Importance Level: {task['importance_level']}")
                   print(f"  Event Type: {task['event_type']}")
                   print("")
-            return jsonify(summaryData)
+            studyPlan = jsonify(summaryData)
+            createEventsFromChat(studyPlan)
+            return jsonify(message='events created succssefully')
         
         return jsonify({'content': 'Invalid action'}), 400
+    
+
+def createEventsFromChat(studyPlan):
+    print('i am the study plan from func')
+    print(studyPlan)
+    
