@@ -2,20 +2,36 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 90vh;
 }
 
 .registration-container {
   display: flex;
-  flex-direction: row;
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   overflow: hidden;
+  max-width: 900px;
+  width: 100%;
+}
+
+.left-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f0f0;
+  padding: 10px;
+}
+
+.left-column img {
+  max-width: 100%;
+  border-radius: 8px;
 }
 
 .registration-form-container {
-  padding: 20px;
+  flex: 1;
+  padding: 90px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -23,24 +39,27 @@
 
 .registration-form-container h2 {
   margin-bottom: 20px;
+  color: #333;
 }
 
 .registration-form-container label {
-  margin-bottom: 5px;
+  margin-bottom: 1px;
   font-weight: bold;
 }
 
 .registration-form-container input,
 .registration-form-container select {
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 3px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: 100%;
 }
 
-.registration-form-container select {
-  width: 100%;
-  padding: 10px;
+.registration-form-container .rating-options {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2px;
 }
 
 .registration-form-container .receive-emails {
@@ -49,8 +68,16 @@
   margin-bottom: 10px;
 }
 
+.registration-form-container .receive-emails label {
+  margin-right: auto;
+}
+
+.registration-form-container .receive-emails input {
+  margin-left: 10px;
+}
+
 .registration-form-container button {
-  padding: 10px;
+  padding: 10px; /* Reduced padding for a smaller button */
   background-color: #007bff;
   color: white;
   border: none;
@@ -60,4 +87,18 @@
 
 .registration-form-container button:hover {
   background-color: #0056b3;
+}
+
+.registration-form-container p {
+  margin-top: 10px;
+  font-size: 19px;
+}
+
+.registration-form-container .register-link {
+  color: #dc3545;
+  text-decoration: none;
+}
+
+.registration-form-container .register-link:hover {
+  text-decoration: underline;
 }

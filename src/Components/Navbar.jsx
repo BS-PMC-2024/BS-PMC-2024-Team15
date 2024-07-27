@@ -121,8 +121,9 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className="navbar-buttons">
-                <button className="nav-btn" onClick={handleOpenProfile}>My Profile</button>
-                <button className="nav-btn" onClick={handleOpenCourseModal}>Add Course</button>
+                <button className="nav-btn" onClick={handleOpenProfile}>My profile</button>
+                <button className="nav-btn" onClick={handleOpenCourseModal}>Add course</button>
+                <button className="nav-btn" onClick={handleOpenCourseModal}>Course materials</button>
                 <button className="nav-btn" onClick={handleOpenEventForm}>Post Event - admin </button>
                 <button className="nav-btn">About Us</button>
                 <button className="nav-btn" onClick={handleLogout}>Logout</button>

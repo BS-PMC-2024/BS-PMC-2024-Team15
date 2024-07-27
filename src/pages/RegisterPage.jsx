@@ -14,7 +14,6 @@ const RegisterPage = () => {
     const [deadlinedTasks, setnDeadlinedTasks] = useState(0);
     const [prioritizeTasks, setPrioritizeTasks] = useState(0);
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch("http://localhost:5000/register", {
@@ -68,7 +67,6 @@ const RegisterPage = () => {
                 <div className="left-column">
                     <img
                         src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                        className="w-full"
                         alt="Sample image"
                     />
                 </div>
@@ -126,13 +124,13 @@ const RegisterPage = () => {
                         <label>How satisfied are you with your current time management skills?</label>
                         {renderRatingOptions(setSatesfiedTasks, satesfiedTasks, "satesfiedTasks")}
                         <div className="receive-emails">
+                            <label htmlFor="receiveNews">Interested in receiving news</label>
                             <input
                                 type="checkbox"
                                 id="receiveNews"
                                 checked={receiveNews}
                                 onChange={(e) => setReceiveNews(e.target.checked)}
                             />
-                            <label htmlFor="receiveNews">Interested in receiving news</label>
                         </div>
                         <button type="submit">Register</button>
                         <p>
