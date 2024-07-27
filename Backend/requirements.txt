@@ -7,3 +7,4 @@ firebase-admin
 requests>=2.26.0
 pytest
 pytest-flask
+openai==0.28

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../ComponentsCss/AiChatForm.css';
-
+import { ThreeDots } from 'react-loader-spinner'
 const AIAssistantComponent = ({ isOpen, onClose }) => {
     const [userInput, setUserInput] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
@@ -89,7 +89,19 @@ const AIAssistantComponent = ({ isOpen, onClose }) => {
                             <strong>{message.role}:</strong> {message.content}
                         </p>
                     ))}
-                    {isLoading && <p className="message assistant">Loading...</p>}
+                    {isLoading &&   <div className="chat-loading">
+                        <ThreeDots
+  visible={true}
+  height="80"
+  width="80"
+  color="#007aff"
+  position="center"
+  radius="9"
+  ariaLabel="three-dots-loading"
+  wrapperStyle={{}}
+  wrapperClass=""
+  />
+   </div>}
                 </div>
 
                 {/* Chat input */}

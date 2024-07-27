@@ -18,7 +18,7 @@
 /* Modal content styles */
 .modal-content {
     background-color: #fefefe;
-    margin: 10% auto; /* Adjusted margin for centering */
+    margin: 0% auto; /* Adjusted margin for centering */
     padding: 20px;
     border: 1px solid #ccc;
     width: 80%;

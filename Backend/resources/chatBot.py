@@ -13,6 +13,9 @@ blp = Blueprint('chatBot', __name__, description='AI assistant')
 def get_current_date():
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
+def get_date_with_offset(offset):
+    return (datetime.datetime.now() + datetime.timedelta(days=offset)).strftime("%Y-%m-%d")
+
 
 def get_completion(prompt, model="gpt-4o-mini"):
     openai.api_key = current_app.config.get('OPENAI_API_KEY')
@@ -77,7 +80,7 @@ For example:
   "num_of_days": 2,
   "days": [
     {
-      "date": "2024-07-21",
+      "date": "{get_current_date()}",
       "tasks": [
         {
           "time": "8:00-10:00",
@@ -103,7 +106,7 @@ For example:
       ]
     },
     {
-      "date": "2024-07-22",
+      "date": "{get_current_date()}",
       "tasks": [
         {
           "time": "8:00-10:00",
@@ -131,6 +134,8 @@ For example:
   ]
 }
 ```
+
+remember to use the get_current_date function for the date value in the JSON format
 
 6. **Detailed Task Planning**:
    - Ensure that the time is correctly split and clearly indicate the start and end times for each task.
@@ -171,22 +176,16 @@ class AIassistant(MethodView):
             summary_num_of_days = summaryData["num_of_days"]
             summary_days = summaryData['days']
             # Iterate through the days and their tasks
-            for day in summary_days:
-                date = day["date"]
-                tasks = day["tasks"]
-                print(f"Date: {date}")
-                for task in tasks:
-                    time = task["time"]
-                    mission = task["mission"]
-                    event_name = task["event_name"]
-                    importance_level = task["importance_level"]
-                    event_type = task["event_type"]
-                    print(f"  Time: {time}")
-                    print(f"  Mission: {mission}")
-                    print(f"  Event Name: {event_name}")
-                    print(f"  Importance Level: {importance_level}")
-                    print(f"  Event Type: {event_type}")
-                    print("")    
+            for offset, day in enumerate(summaryData['days']):
+              day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
+              print(f"Date: {day['date']}")
+              for task in day["tasks"]:
+                  print(f"  Time: {task['time']}")
+                  print(f"  Mission: {task['mission']}")
+                  print(f"  Event Name: {task['event_name']}")
+                  print(f"  Importance Level: {task['importance_level']}")
+                  print(f"  Event Type: {task['event_type']}")
+                  print("")
             return jsonify(summaryData)
         
         return jsonify({'content': 'Invalid action'}), 400

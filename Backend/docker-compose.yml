@@ -8,6 +8,8 @@ services:
     ports:
       # "port in local machine":"port in the container"
       - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
     volumes:
       # keep the image in sync with changes made in the code
       # thet way every time we make changes on the code it will refresh the image
