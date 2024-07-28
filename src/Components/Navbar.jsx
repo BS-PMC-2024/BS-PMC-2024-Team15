@@ -7,7 +7,7 @@ import EventFormModal from './EventForm';  // Import EventFormModal
 import MyProfileForm from './MyProfileForm';
 import CourseFormModal from './CourseForm';
 
-const Navbar = () => {
+const Navbar = ({userType}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -123,7 +123,7 @@ const Navbar = () => {
             <div className="navbar-buttons">
                 <button className="nav-btn" onClick={handleOpenProfile}>My Profile</button>
                 <button className="nav-btn" onClick={handleOpenCourseModal}>Add Course</button>
-                <button className="nav-btn" onClick={handleOpenEventForm}>Post Event - admin </button>
+                {userType=="admin" && <button className="nav-btn" onClick={handleOpenEventForm}>Post Event </button>}
                 <button className="nav-btn">About Us</button>
                 <button className="nav-btn" onClick={handleLogout}>Logout</button>
             </div>

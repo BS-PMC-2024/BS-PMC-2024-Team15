@@ -6,19 +6,15 @@ import AIAssistantComponent from '../Components/AiChatForm';
 import StudentHomePage from './StudentHomePage';
 import LecturerHomePage from './LecturerHomePage';
 import AdminHomePage from './AdminHomePage';
-import CourseFormModal from '../Components/CourseForm';
+
 
 const HomePage = () => {
     const calendarRef = useRef(null);
     const eventsRef = useRef(null);
     const statisticsRef = useRef(null);
     const coursesRef = useRef(null); // Ref for courses section
-
-
-
     const [courses, setCourses] = useState([]);
     const [loadingCourses, setLoadingCourses] = useState(true);
-
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAIAssistant, setShowAIAssistant] = useState(false);
@@ -36,7 +32,9 @@ const HomePage = () => {
             if (!idToken) {
                 throw new Error('No access token found');
             }
+            if (userType == 'admin'){
 
+            }
             const response = await fetch('http://localhost:5000/get_courses', {
                 method: 'GET',
                 headers: {
@@ -145,17 +143,15 @@ const HomePage = () => {
         setShowAIAssistant(!showAIAssistant);
     };
 
-
-
     let UserHomePage;
     switch (userType) {
-        case 'student':
+        case 'student':  //Calendar, Events, Posts, Statistics ,COURSES?
             UserHomePage = StudentHomePage;
             break;
-        case 'lecturer':
+        case 'lecturer': //Calendar, Events , Courses, Statistics ,posts
             UserHomePage = LecturerHomePage;
             break;
-        case 'admin':
+        case 'admin':  // Courses, posts - add post
             UserHomePage = AdminHomePage;
             break;
         default:
@@ -171,7 +167,7 @@ const HomePage = () => {
         <div className="homepage">
             <div className="container">
                 <div className="full_sidebar">
-                    <Navbar />
+                    <Navbar userType={userType}/>
                     <Sidebar
                         scrollToCourses={scrollToCourses}
                         scrollToCalendar={scrollToCalendar}
@@ -195,6 +191,7 @@ const HomePage = () => {
                         coursesRef={coursesRef}
                         loadingCourses={loadingCourses}
                         courses={courses}
+                        userType={userType}
                     />
                 </main>
             </div>

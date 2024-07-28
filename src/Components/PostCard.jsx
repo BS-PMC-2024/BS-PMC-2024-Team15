@@ -1,7 +1,7 @@
 import React from 'react';
 import '../ComponentsCss/PostCarousel.css'; // Ensure this import is correct
 
-const PostCard = ({ event, onAddToCalendar, onEdit, onRemove }) => {
+const PostCard = ({ event, onAddToCalendar, onEdit, onRemove ,userType }) => {
     const handleAddClick = () => {
         onAddToCalendar(event);
     };
@@ -21,9 +21,9 @@ const PostCard = ({ event, onAddToCalendar, onEdit, onRemove }) => {
             <p>{event.startTime}</p>
             <p>{event.description}</p>
             <div className="button-container">
-                <button onClick={handleAddClick}>Add to Calendar</button>
-                <button className="edit" onClick={handleEditClick}>Edit Post -admin</button>
-                <button className="remove" onClick={handleRemoveClick}>Remove Post -admin</button>
+                {userType!="admin" && <button onClick={handleAddClick}>Add to Calendar</button>}
+                {userType=="admin" && <button className="edit" onClick={handleEditClick}>Edit Post</button>}
+                {userType=="admin" && <button className="remove" onClick={handleRemoveClick}>Remove Post</button>}
             </div>
         </div>
     );

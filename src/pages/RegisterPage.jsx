@@ -14,7 +14,6 @@ const RegisterPage = () => {
     const [deadlinedTasks, setnDeadlinedTasks] = useState(0);
     const [prioritizeTasks, setPrioritizeTasks] = useState(0);
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch("http://localhost:5000/register", {
@@ -65,15 +64,8 @@ const RegisterPage = () => {
     return (
         <section className="registration-section">
             <div className="registration-container">
-                <div className="left-column">
-                    <img
-                        src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                        className="w-full"
-                        alt="Sample image"
-                    />
-                </div>
+                <h2>Register</h2>
                 <div className="registration-form-container">
-                    <h2>Register</h2>
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="email">Email</label>
                         <input

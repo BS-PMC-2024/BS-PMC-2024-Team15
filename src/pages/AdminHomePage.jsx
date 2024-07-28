@@ -3,7 +3,7 @@ import PostCarousel from '../Components/PostCarousel';
 import CoursesComponent from '../Components/Courses'; // Import Courses Component
 
 
-const AdminHomePage = ({ onOpenCourseModal, calendarRef, eventsRef, statisticsRef, events, loading, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
+const AdminHomePage = ({userType,  loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
     return (
         <>
              <div ref={coursesRef}>
@@ -12,7 +12,7 @@ const AdminHomePage = ({ onOpenCourseModal, calendarRef, eventsRef, statisticsRe
             </div>
             <div>
                 <h2>Recommended Events</h2>
-                <PostCarousel fetchEvents={fetchEvents} />
+                <PostCarousel fetchEvents={fetchEvents} userType={userType}/>
             </div>
         </>
     );

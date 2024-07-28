@@ -6,7 +6,6 @@ import ConfirmPostForm from './ConfirmPostForm'; // Import the new dialog compon
 const Carousel = ({ children }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const slidesToShow = 3; // Number of slides to show at once
-
     const nextSlide = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.ceil(children.length / slidesToShow));
     };
@@ -35,7 +34,7 @@ const Carousel = ({ children }) => {
     );
 };
 
-const PostCarousel = ({ fetchEvents }) => {
+const PostCarousel = ({ fetchEvents ,userType}) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [calendarEvents, setCalendarEvents] = useState([]);
@@ -81,35 +80,7 @@ const PostCarousel = ({ fetchEvents }) => {
         setIsDialogOpen(true);
     };
 
-    const handleConfirmAdd = async (event) => {
-        try {
-            const idToken = localStorage.getItem('accessToken');
-            if (!idToken) {
-                throw new Error('No access token found');
-            }
-
-            const url = 'http://localhost:5000/add_event';
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${idToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(event)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            setCalendarEvents((prevEvents) => [...prevEvents, { ...event, id: result.id }]);
-            setIsDialogOpen(false);
-        } catch (error) {
-            console.error('Error adding event to calendar:', error);
-        }
-    };
-
+    
     const handleEditPost = (event) => {
         setSelectedEvent(event);
         setEditMode(true);
@@ -195,6 +166,7 @@ const PostCarousel = ({ fetchEvents }) => {
                             onAddToCalendar={handleAddToCalendar}
                             onEdit={handleEditPost}
                             onRemove={handleRemovePost}
+                            userType={userType}
                         />
                     ))}
                 </Carousel>

@@ -474,6 +474,7 @@ def add_course():
 
     except Exception as e:
         return jsonify({"message": f"An error occurred: {str(e)}"}), 500
+    
 
 @app.route('/get_courses', methods=['GET'])
 def get_courses():
@@ -486,7 +487,11 @@ def get_courses():
         decoded_token = verify_firebase_token(id_token)
         user_id = decoded_token['users'][0]['localId']
 
-        courses_ref = firestore_db.collection('courses').where('user_id', '==', user_id)
+        if (user_id == 'eShnRFj6KQYlaAKdJpZlp7MSpwd2'):#admin
+            courses_ref = firestore_db.collection('courses')
+        else:
+            courses_ref = firestore_db.collection('courses').where('user_id', '==', user_id)
+            
         courses_stream = courses_ref.stream()
 
         courses_list = []
