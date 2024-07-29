@@ -17,6 +17,8 @@
 }
 
 .navbar-buttons .nav-btn {
+    display: flex;
+    align-items: center;
     border: none;
     color: white;
     cursor: pointer;
@@ -39,5 +41,13 @@
     color:#9773dc;
     transition: 0.3s all;
     
-
 }
+
+.profile-img {
+    width: 30px; /* Adjust size as needed */
+    height: 30px; /* Adjust size as needed */
+    border-radius: 50%;
+    margin-right: 10px; /* Space between image and text */
+}
+
+

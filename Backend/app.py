@@ -108,7 +108,8 @@ def register():
             'stickSchedule': stickSchedule,
             'satesfiedTasks': satesfiedTasks,
             'deadlinedTasks': deadlinedTasks,
-            'prioritizeTasks': prioritizeTasks
+            'prioritizeTasks': prioritizeTasks,
+            'createdAt': firestore.SERVER_TIMESTAMP
             }
         
         firestore_db.collection('users').add(user_data)

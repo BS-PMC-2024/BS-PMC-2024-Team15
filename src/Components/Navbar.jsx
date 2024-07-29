@@ -121,7 +121,10 @@ const Navbar = ({userType}) => {
     return (
         <nav className="navbar">
             <div className="navbar-buttons">
-                <button className="nav-btn" onClick={handleOpenProfile}>My Profile</button>
+                <button className="nav-btn" onClick={handleOpenProfile}>
+                <img src="https://media.istockphoto.com/id/517998264/vector/male-user-icon.jpg?s=612x612&w=0&k=20&c=4RMhqIXcJMcFkRJPq6K8h7ozuUoZhPwKniEke6KYa_k=" alt="Profile" className="profile-img" />
+                My Profile
+                </button>
                 <button className="nav-btn" onClick={handleOpenCourseModal}>Add Course</button>
                 {userType=="admin" && <button className="nav-btn" onClick={handleOpenEventForm}>Post Event </button>}
                 <button className="nav-btn">About Us</button>
