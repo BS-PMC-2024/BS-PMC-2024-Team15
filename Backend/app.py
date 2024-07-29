@@ -401,7 +401,8 @@ def add_post():
             'eventType': eventType,
             'user_id': 'Admin',
             'imageUrl': imageUrl,
-            'createdAt': firestore.SERVER_TIMESTAMP
+            'createdAt': firestore.SERVER_TIMESTAMP,
+            'Joined': '0'
             
         }
         doc_ref = firestore_db.collection('posts').add(event_ref)
@@ -430,6 +431,22 @@ def update_post(postId):
         return jsonify({"message": "Post updated successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+@app.route('/user_joined_post', methods=['POST'])
+def user_joined_post():
+    data = request.json
+    event_id = data.get('event_id')
+    if not event_id:
+        return jsonify({'error': 'Event ID is required'}), 400
+
+    try:
+        event_ref = db.collection('events').document(event_id)
+        event_ref.update({'Joined': firestore.Increment(1)})
+        return jsonify({'message': 'Joined counter incremented successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+
 
 ###### Courses Functions #######
 #Add course to the system

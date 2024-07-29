@@ -126,7 +126,7 @@ const Navbar = ({userType}) => {
                 My Profile
                 </button>
                 <button className="nav-btn" onClick={handleOpenCourseModal}>Add Course</button>
-                {userType=="admin" && <button className="nav-btn" onClick={handleOpenEventForm}>Post Event </button>}
+                {userType==="admin" && <button className="nav-btn" onClick={handleOpenEventForm}>Post Event </button>}
                 <button className="nav-btn">About Us</button>
                 <button className="nav-btn" onClick={handleLogout}>Logout</button>
             </div>
