@@ -98,64 +98,68 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                             {upcomingEvents.length > 0 && (
                                 <>
                                     <h3>My Upcoming Events</h3>
-                                    <table className="events-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Event Name</th>
-                                                <th>Starting Time</th>
-                                                <th>Time Left</th>
-                                                <th>Duration</th>
-                                                <th>Type/Importance</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {upcomingEvents.map((event) => (
-                                                <tr key={event.id} className={getRowClassName(event.importance)}>
-                                                    <td>{event.title}</td>
-                                                    <td>{new Date(event.startTime).toLocaleString()}</td>
-                                                    <td>{calculateTimeLeft(event.startTime)}</td>
-                                                    <td>{event.duration}</td>
-                                                    <td>{event.eventType}/{event.importance}</td>
-                                                    <td>
-                                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}><i class="fa-solid fa-pencil"></i> Edit</button>
-                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i class="fa-solid fa-trash"></i> Remove</button>
-                                                    </td>
+                                    <div className="events-table-container">
+                                        <table className="events-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Event Name</th>
+                                                    <th>Starting Time</th>
+                                                    <th>Time Left</th>
+                                                    <th>Duration</th>
+                                                    <th>Type/Importance</th>
+                                                    <th>Actions</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {upcomingEvents.map((event) => (
+                                                    <tr key={event.id} className={getRowClassName(event.importance)}>
+                                                        <td>{event.title}</td>
+                                                        <td>{new Date(event.startTime).toLocaleString()}</td>
+                                                        <td>{calculateTimeLeft(event.startTime)}</td>
+                                                        <td>{event.duration}</td>
+                                                        <td>{event.eventType}/{event.importance}</td>
+                                                        <td>
+                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i class="fa-solid fa-pencil"></i> Edit</button>
+                                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i class="fa-solid fa-trash"></i> Remove</button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </>
                             )}
                             
                             {completedEvents.length > 0 && (
                                 <>
                                     <h3>Completed Events</h3>
-                                    <table className="events-table completed-events-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Event Name</th>
-                                                <th>Starting Time</th>
-                                                <th>Duration</th>
-                                                <th>Type/Importance</th>
-                                                <th>summary</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {completedEvents.map((event) => (
-                                                <tr key={event.id} className={getRowClassName(event.importance)}>
-                                                    <td>{event.title}</td>
-                                                    <td>{new Date(event.startTime).toLocaleString()}</td>
-                                                    <td>{event.duration}</td>
-                                                    <td>{event.eventType}/{event.importance}</td>
-                                                    <td>
-                                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}><i class="fa-solid fa-ranking-star"></i> Rank efficency</button>
-                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i class="fa-solid fa-trash"></i> Remove</button>
-                                                    </td>
+                                    <div className="events-table-container">
+                                        <table className="events-table completed-events-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Event Name</th>
+                                                    <th>Starting Time</th>
+                                                    <th>Duration</th>
+                                                    <th>Type/Importance</th>
+                                                    <th>summary</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {completedEvents.map((event) => (
+                                                    <tr key={event.id} className={getRowClassName(event.importance)}>
+                                                        <td>{event.title}</td>
+                                                        <td>{new Date(event.startTime).toLocaleString()}</td>
+                                                        <td>{event.duration}</td>
+                                                        <td>{event.eventType}/{event.importance}</td>
+                                                        <td>
+                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i class="fa-solid fa-ranking-star"></i> Rank efficency</button>
+                                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i class="fa-solid fa-trash"></i> Remove</button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </>
                             )}
                         </>

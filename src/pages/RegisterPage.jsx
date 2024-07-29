@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 const RegisterPage = () => {
@@ -13,7 +14,8 @@ const RegisterPage = () => {
     const [satesfiedTasks, setSatesfiedTasks] = useState(0);
     const [deadlinedTasks, setnDeadlinedTasks] = useState(0);
     const [prioritizeTasks, setPrioritizeTasks] = useState(0);
-
+    const navigate = useNavigate();
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch("http://localhost:5000/register", {
@@ -42,6 +44,7 @@ const RegisterPage = () => {
         .catch((error) => {
             console.error("Error:", error);
         });
+        navigate('/Login');
     };
 
     const renderRatingOptions = (stateSetter, selectedValue, name) => (

@@ -13,15 +13,22 @@ class GraphComponent extends React.Component {
     calculateEventStatistics = (events) => {
         const eventTypes = ['Study', 'Hobby', 'Social']; // Update with your event types
         const statistics = {};
-
+    
         // Initialize statistics object
         eventTypes.forEach(type => {
             statistics[type] = { totalHours: 0, count: 0 }; // Example: Track total hours and count
         });
-
-        // Calculate total duration and count for each event type
+    
+        // Get today's date and the date two weeks from now
+        const today = new Date();
+        const twoWeeksFromNow = new Date(today);
+        twoWeeksFromNow.setDate(today.getDate() + 14);
+    
+        // Calculate total duration and count for each event type within the date range
         events.forEach(event => {
-            if (eventTypes.includes(event.eventType)) {
+            const eventDate = new Date(event.startTime);
+    
+            if (eventDate >= today && eventDate <= twoWeeksFromNow && eventTypes.includes(event.eventType)) {
                 // Assuming duration is a string like '1:00' or '0:30'
                 const [hours, minutes] = event.duration.split(':').map(Number);
                 const durationInHours = hours + minutes / 60;
@@ -29,12 +36,13 @@ class GraphComponent extends React.Component {
                 statistics[event.eventType].count++;
             }
         });
-
+    
         return eventTypes.map(type => ({
             label: type,
             y: statistics[type].totalHours // Example: Use total hours for the chart data
         }));
     };
+    
 
     addSymbols(e) {
         var suffixes = ["", "K", "M", "B"];

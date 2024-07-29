@@ -1,6 +1,5 @@
 /* EventsComponent.css */
 
-
 .events h2 {
     margin-bottom: 10px;
 }
@@ -12,6 +11,15 @@
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     margin-bottom: 50px;
+    max-height: calc(10 * 44px); /* Assuming each row is 44px high */
+    display: block;
+    overflow-y: auto; /* Add vertical scrollbar if more than 7 rows */
+}
+
+.events-table thead, .events-table tbody {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
 .events-table th, .events-table td {
@@ -31,7 +39,7 @@
 }
 
 .events-table td button {
-    width:50%;
+    width: 50%;
     height: 44px;
     background-color: #bd9cfd;
     color: black;
@@ -54,7 +62,6 @@
     transition: 0.2s all;
 }
 
-
 .events-table tbody tr:nth-child(even) {
     background-color: #f9f9f9; /* Alternate row background color */
 }
@@ -67,7 +74,6 @@
     font-size: 16px; /* Font size */
     cursor: pointer; /* Cursor style on hover */
     border-radius: 5px; /* Rounded corners */
-
 }
 
 .Newevent-btn:hover {
@@ -112,8 +118,8 @@
 }
 
 /* Conditional row colors based on importance level */
-.events-table .high-importance{
-border-left: 6px solid #fea9a9;
+.events-table .high-importance {
+    border-left: 6px solid #fea9a9;
 }
 
 .events-table .medium-importance {
@@ -128,6 +134,30 @@ border-left: 6px solid #fea9a9;
     background-clip: padding-box;
 }
 
-.events-table tr:hover{
+.events-table tr:hover {
     background-color: #9773dc1a !important;
+}
+
+/* Custom scrollbar styles for .events-table */
+.events-table::-webkit-scrollbar {
+    width: 30px;
+    background: transparent;
+}
+
+.events-table::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 20px;
+}
+
+.events-table::-webkit-scrollbar-thumb {
+    background: #c2c2c2;
+    border-radius: 20px;
+    border: 10px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+}
+
+.events-table::-webkit-scrollbar-thumb:hover {
+    background: #9773dc;
+    border: 10px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
 }
