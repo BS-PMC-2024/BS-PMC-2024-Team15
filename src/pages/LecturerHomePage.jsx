@@ -3,14 +3,14 @@ import CalendarComponent from '../Components/Calendar';
 import EventsComponent from '../Components/Events';
 import GraphComponent from '../Components/StatisticGraph';
 import PostCarousel from '../Components/PostCarousel';
-import CoursesComponent from '../Components/Courses'; 
+import CoursesComponent from '../Components/Courses';
 
-const LecturerHomePage = ({ userType,calendarRef, eventsRef, statisticsRef, events, loading, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
+const LecturerHomePage = ({ userType, calendarRef, eventsRef, statisticsRef, events, loading, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
     return (
         <>
             <div className="calendar" ref={calendarRef}>
                 <div className="calendar-container">
-                    <CalendarComponent events={events} loading={loading} fetchEvents={fetchEvents} />
+                    <CalendarComponent events={events} loading={loading} fetchEvents={fetchEvents} fetchCourses={fetchCourses} courses={courses} />
                 </div>
             </div>
             <div className="events-section" ref={eventsRef}>
