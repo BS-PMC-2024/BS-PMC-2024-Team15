@@ -168,7 +168,7 @@ const CalendarComponent = ({ events, fetchEvents, courses, fetchCourses }) => {
             type: 'course',
             start: new Date(course.startDate),
             end: moment(course.startDate).add(course.duration, 'minutes').toDate(),
-            title: course.name // Ensure the title field is set for courses
+            title: course.name
         }))
     ];
 
