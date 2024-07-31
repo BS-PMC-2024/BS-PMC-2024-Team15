@@ -23,7 +23,7 @@ const CalendarComponent = ({ events, fetchEvents, courses, fetchCourses }) => {
         if (!events || events.length === 0) {
             fetchEvents();
         }
-        if (!courses || courses.length === 0) {
+        if (!courses.length === 0) {
             fetchCourses();
         }
     }, [events, fetchEvents, courses, fetchCourses]);
@@ -83,6 +83,13 @@ const CalendarComponent = ({ events, fetchEvents, courses, fetchCourses }) => {
         setSelectedEvent(null);
         setSelectedCourse(null);
         setShowEventForm(true);
+    };
+
+    const handleSelectCourseSlot = (slotInfo) => {
+        setSelectedCourseSlot(slotInfo.start);
+        setSelectedEvent(null);
+        setSelectedCourse(null);
+        setShowCourseForm(true);
     };
 
     const handleSelectEvent = (event) => {
@@ -148,7 +155,9 @@ const CalendarComponent = ({ events, fetchEvents, courses, fetchCourses }) => {
             let url = formData.id ? `http://localhost:5000/update_course/${formData.id}` : 'http://localhost:5000/add_course';
             const response = await fetch(url, requestOptions);
 
-            fetchCourses();
+            if (response.ok) {
+                fetchCourses();
+            }
             handleCloseCourseForm();
         } catch (error) {
             console.error('Error saving or updating course:', error);
@@ -168,7 +177,7 @@ const CalendarComponent = ({ events, fetchEvents, courses, fetchCourses }) => {
             type: 'course',
             start: new Date(course.startDate),
             end: moment(course.startDate).add(course.duration, 'minutes').toDate(),
-            title: course.name
+            title: course.name // Ensure the title field is set for courses
         }))
     ];
 
@@ -183,7 +192,24 @@ const CalendarComponent = ({ events, fetchEvents, courses, fetchCourses }) => {
                 views={['month', 'week', 'day']}
                 selectable={true}
                 onSelectSlot={handleSelectSlot}
-                onSelectEvent={handleSelectEvent}
+                onDoubleClickEvent={(event) => {
+                    if (event.type === 'course') {
+                        setSelectedCourse(event);
+                        setShowCourseForm(true);
+                    } else {
+                        setSelectedEvent(event);
+                        setShowEventForm(true);
+                    }
+                }}
+                onSelectEvent={(event) => {
+                    if (event.type === 'course') {
+                        setSelectedCourse(event);
+                        setShowCourseForm(true);
+                    } else {
+                        setSelectedEvent(event);
+                        setShowEventForm(true);
+                    }
+                }}
                 style={{ height: 500 }}
                 eventPropGetter={eventStyleGetter}
                 components={{
@@ -201,7 +227,7 @@ const CalendarComponent = ({ events, fetchEvents, courses, fetchCourses }) => {
                 isOpen={showCourseForm}
                 onClose={handleCloseCourseForm}
                 onSave={handleSaveCourse}
-                course={selectedCourse ? { ...selectedCourse, startTime: moment(selectedCourse.start).format('YYYY-MM-DDTHH:mm') } : null}
+                course={selectedCourse ? { ...selectedCourse, startTime: moment(selectedCourse.start).format('YYYY-MM-DDTHH:mm') } : {}}
                 slot={selectedCourseSlot ? { start: moment(selectedCourseSlot).format('YYYY-MM-DDTHH:mm') } : null}
             />
         </div>
