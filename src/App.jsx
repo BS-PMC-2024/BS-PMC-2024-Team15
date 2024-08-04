@@ -15,7 +15,7 @@ function App() {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
 
-        console.log("User logged in."+ accessToken); 
+        console.log("User logged in."); 
     } else {
         console.log("No user logged in.");
     }
