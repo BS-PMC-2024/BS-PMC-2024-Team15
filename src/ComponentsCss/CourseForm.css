@@ -1,18 +1,20 @@
-.checkbox-group {
-    display: flex;
-    flex-direction: center;
-    gap: 10px;
+.modal-content h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
-.day-time {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-direction: column;
+.pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-.day-time label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+.pdf-table th, .pdf-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.pdf-table th {
+    background-color: #f2f2f2;
 }

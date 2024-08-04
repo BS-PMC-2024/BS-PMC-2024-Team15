@@ -10,6 +10,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
     const [description, setDescription] = useState('');
     const [days, setDays] = useState({});
     const [errors, setErrors] = useState({});
+    const [pdfUrls, setPdfUrls] = useState([]);
 
     useEffect(() => {
         if (course) {
@@ -20,6 +21,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             setLevel(course.level || 'Beginner');
             setDescription(course.description || '');
             setDays(course.days || {});
+            setPdfUrls(course.pdfUrls || []); 
         } else {
             resetForm();
         }
@@ -27,43 +29,47 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
 
     const validateForm = () => {
         let errors = {};
-
-        if (name.length < 3) {
-            errors.name = 'Course name must be at least 3 characters long';
-        }
-
-        if (instructor.length < 3) {
-            errors.instructor = 'Instructor name must be at least 3 characters long';
-        }
-
-        const isValidDate = !isNaN(new Date(startDate).getTime());
-        if (!isValidDate) {
-            errors.startDate = 'Please enter a valid date';
-        }
-
-        if (description.length < 3) {
-            errors.description = 'Description must be at least 3 characters long';
-        }
-
-        if (Object.keys(days).length === 0) {
-            errors.days = 'Please select at least one day';
-        } else {
-            for (let day in days) {
-                if (days[day].start === '' || days[day].end === '') {
-                    errors.days = 'Please set start and finish times for each selected day';
-                    break;
-                }
-            }
-        }
-
+        if (name.length < 3) errors.name = 'Course name must be at least 3 characters long';
+        if (instructor.length < 3) errors.instructor = 'Instructor name must be at least 3 characters long';
+        if (!startDate) errors.startDate = 'Please enter a valid date';
+        if (description.length < 3) errors.description = 'Description must be at least 3 characters long';
+        if (Object.keys(days).length === 0) errors.days = 'Please select at least one day';
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
 
-    const handleSave = async () => {
-        if (!validateForm()) {
+    const handlePdfUpload = async (file) => {
+        if (!course?.id) {
+            alert('Please save the course before uploading files.');
             return;
         }
+
+        const idToken = localStorage.getItem('accessToken');
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch(`http://localhost:5000/upload_file/${course.id}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${idToken}`
+            },
+            body: formData
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            setPdfUrls([...pdfUrls, result.file_url]); 
+        } else {
+            console.error('Failed to upload PDF:', response.statusText);
+        }
+    };
+
+    const handleDeletePdf = (fileUrl) => {
+        setPdfUrls(pdfUrls.filter(url => url !== fileUrl));
+    };
+
+    const handleSave = async () => {
+        if (!validateForm()) return;
 
         const formData = {
             id: course ? course.id : undefined,
@@ -73,20 +79,17 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             duration,
             level,
             description,
-            days
+            days,
+            pdfUrls
         };
-
         onSave(formData);
     };
 
     const handleCheckboxChange = (day) => {
         setDays((prevDays) => {
             const newDays = { ...prevDays };
-            if (newDays[day]) {
-                delete newDays[day];
-            } else {
-                newDays[day] = { start: '', end: '' };
-            }
+            if (newDays[day]) delete newDays[day];
+            else newDays[day] = { start: '', end: '' };
             return newDays;
         });
     };
@@ -94,10 +97,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
     const handleTimeChange = (day, type, time) => {
         setDays((prevDays) => ({
             ...prevDays,
-            [day]: {
-                ...prevDays[day],
-                [type]: time,
-            },
+            [day]: { ...prevDays[day], [type]: time }
         }));
     };
 
@@ -110,6 +110,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
         setDescription('');
         setDays({});
         setErrors({});
+        setPdfUrls([]);
     };
 
     if (!isOpen) return null;
@@ -195,6 +196,30 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                         <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                         {errors.description && <p className="error">{errors.description}</p>}
                     </label>
+                    <label>
+                        Upload PDF:
+                        <input type="file" accept=".pdf" onChange={(e) => handlePdfUpload(e.target.files[0])} />
+                    </label>
+                    <h3>Uploaded Files</h3>
+                    <table className="pdf-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {pdfUrls.map((pdfUrl, index) => {
+                                const fileName = decodeURIComponent(pdfUrl.split('/').pop()); // Extract the file name from the URL
+                                return (
+                                    <tr key={index}>
+                                        <td><a href={pdfUrl} target="_blank" rel="noopener noreferrer">{fileName}</a></td>
+                                        <td><button type="button" onClick={() => handleDeletePdf(pdfUrl)}>Delete</button></td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
                     <div className="modal-buttons">
                         <button type="submit">{course ? 'Update Course' : 'Add Course'}</button>
                         <button type="button" onClick={onClose}>Cancel</button>
