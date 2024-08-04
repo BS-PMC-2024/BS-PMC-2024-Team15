@@ -21,13 +21,25 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
         const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
         const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
-        return `${days}d ${hours}h ${minutes}m`;
+        return { days, hours, minutes, total: timeLeft }; // Return total milliseconds for sorting
     };
 
     // Separate events into upcoming and completed
     const now = new Date();
     const upcomingEvents = events.filter(event => new Date(event.startTime) > now);
     const completedEvents = events.filter(event => new Date(event.startTime) <= now);
+
+    // Function to sort events by time left
+    const sortEventsByTimeLeft = (events) => {
+        return events.slice().sort((a, b) => {
+            const timeLeftA = calculateTimeLeft(a.startTime).total;
+            const timeLeftB = calculateTimeLeft(b.startTime).total;
+            return timeLeftA - timeLeftB; // Sort in ascending order of time left
+        });
+    };
+
+    // Get sorted upcoming events
+    const sortedUpcomingEvents = sortEventsByTimeLeft(upcomingEvents);
 
     // Handle updating an existing event
     const handleSaveEvent = async (event) => {
@@ -95,67 +107,71 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                         <h2>No Events</h2>
                     ) : (
                         <>
-                            {upcomingEvents.length > 0 && (
+                            {sortedUpcomingEvents.length > 0 && (
                                 <>
                                     <h3>My Upcoming Events</h3>
-                                    <table className="events-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Event Name</th>
-                                                <th>Starting Time</th>
-                                                <th>Time Left</th>
-                                                <th>Duration</th>
-                                                <th>Type/Importance</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {upcomingEvents.map((event) => (
-                                                <tr key={event.id} className={getRowClassName(event.importance)}>
-                                                    <td>{event.title}</td>
-                                                    <td>{new Date(event.startTime).toLocaleString()}</td>
-                                                    <td>{calculateTimeLeft(event.startTime)}</td>
-                                                    <td>{event.duration}</td>
-                                                    <td>{event.eventType}/{event.importance}</td>
-                                                    <td>
-                                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}><i class="fa-solid fa-pencil"></i> Edit</button>
-                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i class="fa-solid fa-trash"></i> Remove</button>
-                                                    </td>
+                                    <div className="events-table-container">
+                                        <table className="events-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Event Name</th>
+                                                    <th>Starting Time</th>
+                                                    <th>Time Left</th>
+                                                    <th>Duration</th>
+                                                    <th>Type/Importance</th>
+                                                    <th>Actions</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {sortedUpcomingEvents.map((event) => (
+                                                    <tr key={event.id} className={getRowClassName(event.importance)}>
+                                                        <td>{event.title}</td>
+                                                        <td>{new Date(event.startTime).toLocaleString()}</td>
+                                                        <td>{calculateTimeLeft(event.startTime).days}d {calculateTimeLeft(event.startTime).hours}h {calculateTimeLeft(event.startTime).minutes}m</td>
+                                                        <td>{event.duration}</td>
+                                                        <td>{event.eventType}/{event.importance}</td>
+                                                        <td>
+                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-pencil"></i> Edit</button>
+                                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </>
                             )}
                             
                             {completedEvents.length > 0 && (
                                 <>
                                     <h3>Completed Events</h3>
-                                    <table className="events-table completed-events-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Event Name</th>
-                                                <th>Starting Time</th>
-                                                <th>Duration</th>
-                                                <th>Type/Importance</th>
-                                                <th>summary</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {completedEvents.map((event) => (
-                                                <tr key={event.id} className={getRowClassName(event.importance)}>
-                                                    <td>{event.title}</td>
-                                                    <td>{new Date(event.startTime).toLocaleString()}</td>
-                                                    <td>{event.duration}</td>
-                                                    <td>{event.eventType}/{event.importance}</td>
-                                                    <td>
-                                                        <button className="edit-btn" onClick={() => toggleEventForm(event)}><i class="fa-solid fa-ranking-star"></i> Rank efficency</button>
-                                                        <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i class="fa-solid fa-trash"></i> Remove</button>
-                                                    </td>
+                                    <div className="events-table-container">
+                                        <table className="events-table completed-events-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Event Name</th>
+                                                    <th>Starting Time</th>
+                                                    <th>Duration</th>
+                                                    <th>Type/Importance</th>
+                                                    <th>Summary</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {completedEvents.map((event) => (
+                                                    <tr key={event.id} className={getRowClassName(event.importance)}>
+                                                        <td>{event.title}</td>
+                                                        <td>{new Date(event.startTime).toLocaleString()}</td>
+                                                        <td>{event.duration}</td>
+                                                        <td>{event.eventType}/{event.importance}</td>
+                                                        <td>
+                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
+                                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </>
                             )}
                         </>

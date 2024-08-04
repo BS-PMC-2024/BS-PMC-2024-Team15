@@ -162,9 +162,8 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                         Event Type:
                         <select value={eventType} onChange={(e) => setEventType(e.target.value)}>
                             <option value="Study">Study</option>
-                            <option value="Work">Work</option>
-                            <option value="Exercise">Exercise</option>
-                            <option value="Leisure">Leisure</option>
+                            <option value="Social">Social</option>
+                            <option value="Hobby">Hobby</option>
                         </select>
                     </label>
                     <label>

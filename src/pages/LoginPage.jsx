@@ -10,7 +10,7 @@ const LoginPage = () => {
     const [message, setMessage] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+  
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch("http://localhost:5000/login", {
@@ -25,7 +25,6 @@ const LoginPage = () => {
             console.log(data.message);
             if (data.message === "Login Successful") {
                 localStorage.setItem('accessToken', data.access_token);
-                // Dispatch the login action if you need to update Redux state
                 dispatch(login({ token: data.access_token }));
                 navigate('/home');
             } else {
@@ -37,21 +36,20 @@ const LoginPage = () => {
             setMessage("An error occurred. Please try again.");
         });
     };
-// <p>"Choose our cutting-edge calendar application designed specifically for students and lecturers to enhance your time management efficiency. With integrated AI, our platform provides personalized scheduling, task prioritization, and productivity insights tailored to your needs. Experience seamless collaboration, real-time updates, and smart reminders to stay on top of your academic and professional commitments. Simplify your planning, reduce stress, and achieve your goals with our user-friendly and innovative time management solution. Elevate your productivity with our AI-powered calendar and make every moment count."</p>
-                      
+
     return (
         <section className="form-section">
-            <div className="form-container login-container">
-                <div className="login-image">
+            <div className="form-container">
+                <div className="form-image">
                     <img
                         src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                        alt="Sample"
+                        alt="Preview"
                     />
                 </div>
-                <div className="form-content login-form-container">
+                <div className="form-content">
+                    <h2>Sign in</h2>
                     <form onSubmit={handleSubmit}>
-                        <h2>Sign in</h2>
-                         <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Username</label>
                         <input
                             type="text"
                             id="username"
@@ -69,10 +67,12 @@ const LoginPage = () => {
                         />
                         <button type="submit">Login</button>
                         {message && <p>{message}</p>}
+                        <div>
                         <p>
-                            Don't have an account?
-                            <a href="http://localhost:3000/Register#!" className="register-link"> Register</a>
+                            Don't have an account? 
+                            <a href="http://localhost:3000/register#!" className="register-link"> Register</a>
                         </p>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../ComponentsCss/ConfirmPostForm.css'; // Ensure the CSS file is correct
+import '../ComponentsCss/ConfirmPostForm.css';
 
 const ConfirmPostForm = ({ isOpen, onClose, onConfirm, eventDetails, isEditMode }) => {
     const [formData, setFormData] = useState({
@@ -75,7 +75,7 @@ const ConfirmPostForm = ({ isOpen, onClose, onConfirm, eventDetails, isEditMode 
                     <h2>{isEditMode ? 'Edit Post' : 'View Post'}</h2>
                     {isEditMode ? (
                         <form onSubmit={handleSubmit}>
-                             {formData.imageUrl && <img src={formData.imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}
+                            {formData.imageUrl && <img src={formData.imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}
                             <label>
                                 Title:
                                 <input

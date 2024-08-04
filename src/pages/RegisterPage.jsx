@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 const RegisterPage = () => {
@@ -8,33 +9,16 @@ const RegisterPage = () => {
     const [type, setType] = useState('student');
     const [receiveNews, setReceiveNews] = useState(false);
     const [fullName, setFullName] = useState('');
-    const [avgStudyHours, setAvgStudyHours] = useState('');
-    const [avgStudyEfficiency, setAvgStudyEfficiency] = useState('');
-    const [message, setMessage] = useState('');
-
     const [planDay, setPlanDay] = useState(0);
     const [stickSchedule, setStickSchedule] = useState(0);
     const [satesfiedTasks, setSatesfiedTasks] = useState(0);
     const [deadlinedTasks, setnDeadlinedTasks] = useState(0);
     const [prioritizeTasks, setPrioritizeTasks] = useState(0);
-
-
+    const navigate = useNavigate();
+    
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(
-            'email:' +email+
-            '\npassword:' +password+
-            '\ndateOfBirth:' +dateOfBirth+
-            '\ntype:' +type+
-            '\nreceiveNews:' +receiveNews+
-            '\nfullName:' +fullName+
-            '\nplanDay:' +planDay+
-            '\nstickSchedule:' +stickSchedule+
-            '\nprioritizeTasks:' +prioritizeTasks+
-            '\nsatesfiedTasks:' +satesfiedTasks+ 
-            '\ndeadlinedTasks:' +deadlinedTasks
-        )
-        /*fetch("http://localhost:5000/register", {
+        fetch("http://localhost:5000/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -46,25 +30,21 @@ const RegisterPage = () => {
                 type,
                 receiveNews,
                 fullName,
-                avgStudyHours,
-                avgStudyEfficiency,
                 planDay,
                 stickSchedule,
-                controlTime,
-                meetDeadlines,
-                prioritizeTasks,
-                feelProductive,
-                manageDistractions,
+                satesfiedTasks,
+                deadlinedTasks,
+                prioritizeTasks
             }),
         })
         .then((response) => response.json())
         .then((data) => {
-            setMessage(data.message);
+            console.log(data.message);
         })
         .catch((error) => {
             console.error("Error:", error);
-            setMessage("An error occurred. Please try again.");
-        });*/
+        });
+        navigate('/Login');
     };
 
     const renderRatingOptions = (stateSetter, selectedValue, name) => (
@@ -87,15 +67,8 @@ const RegisterPage = () => {
     return (
         <section className="registration-section">
             <div className="registration-container">
-                <div className="left-column">
-                    <img
-                        src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                        className="w-full"
-                        alt="Sample image"
-                    />
-                </div>
+                <h2>Register</h2>
                 <div className="registration-form-container">
-                    <h2>Register</h2>
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="email">Email</label>
                         <input
@@ -161,7 +134,6 @@ const RegisterPage = () => {
                             Have an account? 
                             <a href="http://localhost:3000/login#!" className="register-link"> Login</a>
                         </p>
-                        {message && <p className="error-message">{message}</p>}
                     </form>
                 </div>
             </div>

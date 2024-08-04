@@ -5,7 +5,7 @@ import GraphComponent from '../Components/StatisticGraph';
 import PostCarousel from '../Components/PostCarousel';
 import CoursesComponent from '../Components/Courses'; 
 
-const LecturerHomePage = ({ calendarRef, eventsRef, statisticsRef, events, loading, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
+const LecturerHomePage = ({ userType,calendarRef, eventsRef, statisticsRef, events, loading, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, courses, fetchCourses, coursesRef }) => {
     return (
         <>
             <div className="calendar" ref={calendarRef}>
@@ -19,7 +19,7 @@ const LecturerHomePage = ({ calendarRef, eventsRef, statisticsRef, events, loadi
             </div>
             <div>
                 <h2>Recommended Events</h2>
-                <PostCarousel fetchEvents={fetchEvents} />
+                <PostCarousel fetchEvents={fetchEvents} userType={userType} />
             </div>
             <div ref={coursesRef}>
                 <h2>Courses</h2>
