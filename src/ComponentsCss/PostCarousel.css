@@ -108,10 +108,12 @@
 
 .carousel-control.prev {
     left: 10px;
+    width: 30px;
 }
 
 .carousel-control.next {
     right: 10px;
+    width: 30px;
 }
 
 .carousel-control:hover {

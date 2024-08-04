@@ -70,7 +70,7 @@ const HomePage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
-                }
+                },
             });
 
             if (!response.ok) {
@@ -92,14 +92,13 @@ const HomePage = () => {
             if (!idToken) {
                 throw new Error('No access token found');
             }
-
             const response = await fetch('http://localhost:5000/get_user_type', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
                 },
-                body: JSON.stringify({ token: idToken })
+                body: JSON.stringify({ token: idToken  })
             });
 
             if (!response.ok) {

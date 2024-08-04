@@ -21,14 +21,15 @@ const StudentHomePage = ({userType, onOpenCourseModal, calendarRef, eventsRef, s
                 <h2>Statistics</h2>
                 <GraphComponent events={events} loading={loading} fetchEvents={fetchEvents} />
             </div>
-            <div>
-                <h2>Recommended Events</h2>
-                <PostCarousel fetchEvents={fetchEvents} userType={userType} />
-            </div>
             <div ref={coursesRef}>
                 <h2>Courses</h2>
                 <CoursesComponent courses={courses} loadingCourses={loadingCourses} fetchCourses={fetchCourses} userType={userType} />
             </div>
+            <div>
+                <h2>Recommended Events</h2>
+                <PostCarousel fetchEvents={fetchEvents} userType={userType} />
+            </div>
+           
         </>
     );
 };
