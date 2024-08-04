@@ -4,6 +4,7 @@ import pyrebase
 import firebase_admin
 from firebase_admin import credentials, firestore, auth ,storage
 import requests
+import datetime 
 
 app = Flask(__name__)
 CORS(app)
@@ -93,6 +94,7 @@ def register():
     satesfiedTasks = data.get('satesfiedTasks')
     deadlinedTasks = data.get('deadlinedTasks')
     prioritizeTasks = data.get('prioritizeTasks')
+    courses = []
 
     try:
         user = auth.create_user_with_email_and_password( email,password)
@@ -104,6 +106,7 @@ def register():
             'type': userType,
             'receiveNews': receiveNews,
             'fullName': fullName,
+            'courses' : courses,
             'planDay': planDay,
             'stickSchedule': stickSchedule,
             'satesfiedTasks': satesfiedTasks,
@@ -343,6 +346,151 @@ def update_user():
     except Exception as e:
         return jsonify({"message": str(e)}), 400
 
+
+#add course to studnet
+@app.route('/add_course_to_user', methods=['POST'])
+def add_course_to_user():
+    try:
+        # Extract and verify the ID token from the request headers
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
+
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        # Get course ID from request data
+        data = request.get_json()
+        course_id = data.get('course_id')
+        if not course_id:
+            return jsonify({"message": "Course ID is required"}), 400
+
+        # Fetch course details from the database
+        course_ref = firestore_db.collection('courses').document(course_id)
+        course = course_ref.get()
+        if not course.exists:
+            return jsonify({"message": "Course not found"}), 404
+        course_data = course.to_dict()
+
+        # Fetch user details or create a new user document if it doesn't exist
+        user_ref = firestore_db.collection('users').where('user_id', '==', user_id).limit(1).stream()
+        user_doc = next(user_ref, None)
+
+        if user_doc:
+            user_data = user_doc.to_dict()
+            courses = user_data.get('courses', [])
+            if course_id not in courses:
+                courses.append(course_id)
+                firestore_db.collection('users').document(user_doc.id).update({'courses': courses})
+                        # Create events based on the course schedule
+                start_date = datetime.datetime.strptime(course_data['startDate'], '%Y-%m-%d')
+                duration_weeks = int(course_data['duration'].split()[0])  # Assuming duration is in weeks
+                end_date = start_date + datetime.timedelta(weeks=duration_weeks)
+                class_days = course_data['days']  # Assuming this is a list of weekdays, e.g., ['Sunday', 'Wednesday']
+
+                current_date = start_date
+                while current_date <= end_date:
+                    if current_date.strftime('%A') in class_days:
+                        event_ref = {
+                            'title': f"{course_data['name']} Class", ############## FIX TIME AND 
+                            'startTime': current_date.isoformat(),  # Assuming the class starts at the same time each day
+                            'duration': "2:00",  ############## FIX TIME AND ACORDING TO COURSE DAYS INFO
+                            'importance': 'High',
+                            'description': f"Class for {course_data['name']}",
+                            'eventType': 'Study',
+                            'user_id': user_id,
+                            'course_id': course_id,
+                            'createdAt': firestore.SERVER_TIMESTAMP
+                        }
+                        firestore_db.collection('events').add(event_ref)
+                    current_date += datetime.timedelta(days=1)
+
+                return jsonify({"message": "Course and events added successfully"}), 200
+
+
+            else:
+                return jsonify({"message": "Course already added to user"}), 400
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"message": str(e)}), 400
+
+
+
+
+##remove course from studnet
+@app.route('/remove_course_from_user', methods=['POST'])
+def remove_course_from_user():
+    try:
+        # Extract and verify the ID token from the request headers
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
+
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        # Get course ID from request data
+        data = request.get_json()
+        course_id = data.get('course_id')
+        if not course_id:
+            return jsonify({"message": "Course ID is required"}), 400
+
+        # Fetch user details
+        user_ref = firestore_db.collection('users').where('user_id', '==', user_id).limit(1).stream()
+        user_doc = next(user_ref, None)
+
+        if user_doc:
+            user_data = user_doc.to_dict()
+            courses = user_data.get('courses', [])
+            if course_id in courses:
+                courses.remove(course_id)
+                firestore_db.collection('users').document(user_doc.id).update({'courses': courses})
+
+                # Remove all events associated with the user and course
+                events_ref = firestore_db.collection('events').where('user_id', '==', user_id).where('course_id', '==', course_id).stream()
+                for event in events_ref:
+                    firestore_db.collection('events').document(event.id).delete()
+
+                return jsonify({"message": "Course and associated events removed successfully"}), 200
+            else:
+                return jsonify({"message": "Course not found in user courses"}), 400
+        else:
+            return jsonify({"message": "User not found"}), 404
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"message": str(e)}), 400
+
+
+
+
+#get student courses
+@app.route('/get_student_courses', methods=['GET'])
+def get_student_courses():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"message": "Missing or invalid token"}), 401
+
+        id_token = auth_header.split(' ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        user_ref = firestore_db.collection('users').where('user_id', '==', user_id).limit(1).stream()
+        user_doc = next(user_ref, None)
+
+        if user_doc:
+            user_data = user_doc.to_dict()
+            user_courses = user_data.get('courses', [])
+            return jsonify({"courses": user_courses}), 200
+        else:
+            return jsonify({"message": "User not found"}), 404
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"message": str(e)}), 400
+
 ###### Post Functions #######
 #get event posts
 @app.route('/get_event_Posts', methods=['GET'])
@@ -508,7 +656,8 @@ def get_courses():
         if (user_id == 'eShnRFj6KQYlaAKdJpZlp7MSpwd2'):#admin
             courses_ref = firestore_db.collection('courses')
         else:
-            courses_ref = firestore_db.collection('courses').where('user_id', '==', user_id)
+            courses_ref = firestore_db.collection('courses')
+            #courses_ref = firestore_db.collection('courses').where('user_id', '==', user_id)
             
         courses_stream = courses_ref.stream()
 
