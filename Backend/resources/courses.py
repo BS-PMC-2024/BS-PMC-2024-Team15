@@ -112,3 +112,40 @@ class updateCourse(MethodView):
             return jsonify({"message": "course updated successfully"}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 400
+        
+@blp.route('/upload_file/<string:courseId>', methods=['POST'])
+class upload_file(MethodView):
+    def post(self,courseId):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return jsonify({"message": "Missing or invalid token"}), 401
+
+            id_token = auth_header.split(' ')[1]
+            decoded_token = verify_firebase_token(id_token)
+
+            if 'file' not in request.files:
+                return jsonify({'message': 'No file part'}), 400
+
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({'message': 'No selected file'}), 400
+
+            bucket= current_app.config['STORAGE_BUCKET']
+            # Create a blob object with the file name
+            blob = bucket.blob(f'courses/{courseId}/{file.filename}')
+            blob.upload_from_file(file)
+
+            # Make the blob publicly accessible
+            blob.make_public()
+
+            # Update course document with file URL
+            firestore_db.collection('courses').document(courseId).update({
+                'pdfUrls': firestore.ArrayUnion([blob.public_url])  # Ensure this updates the document
+            })
+
+            return jsonify({'file_url': blob.public_url}), 200
+        except Exception as e:
+            print("Error:", str(e))
+            return jsonify({'message': str(e)}), 400
