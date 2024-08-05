@@ -62,7 +62,7 @@ class userRegister(MethodView):
             firestore_db.collection('users').add(user_data)
             return jsonify({"message": "User registered successfully"}), 200
         except Exception as e:
-            return jsonify({"message": str(e)}), 400
+            return jsonify({"message": "Something went wrong pleasr try again."}), 400
             
 @blp.route('/test', methods=['GET'])
 def test():
