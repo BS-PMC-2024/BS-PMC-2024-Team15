@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './MyProfileForm.css';
+import '../ComponentsCss/MyProfileForm.css';
 import { getToken } from '../features/tokenUtils';
 
 const MyProfileForm = ({ isOpen, onClose, onSave }) => {
@@ -77,7 +77,7 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <form onSubmit={handleSubmit}>
-                    <h2>My Profile</h2>
+                    <h2>Profile:{"" +profileData.fullName}</h2>
                     <label>
                         Email:
                         <input
@@ -89,27 +89,6 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
                         />
                     </label>
                     <label>
-                        Date of Birth:
-                        <input
-                            type="date"
-                            name="dateOfBirth"
-                            value={profileData.dateOfBirth}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label>
-                        Type:
-                        <select
-                            name="type"
-                            value={profileData.type}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="student">Student</option>
-                            <option value="lecturer">Lecturer</option>
-                        </select>
-                    </label>
-                    <label>
                         Receive News:
                         <input
                             type="checkbox"
@@ -118,8 +97,18 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
                             onChange={handleChange}
                         />
                     </label>
+                    <h3>User created at: {"" +profileData.createdAt}</h3>
+                    
+                    <h2>my first quizz : </h2>
+                    
+                    <h3>How often do you plan your day in advance?: { profileData.planDay} </h3>
+                    <h3>How well do you stick to your planned schedule?: { profileData.stickSchedule}</h3>
+                    <h3>How effectively do you prioritize your tasks?: { profileData.prioritizeTasks}</h3>
+                    <h3>How often do you meet deadlines?: { profileData.deadlinedTasks}</h3>
+                    <h3>How satisfied are you with your current time management skills?: { profileData.satesfiedTasks}</h3>
+                    
                     <div className="modal-buttons"> 
-                    <button type="submit">Save</button>
+                    <button type="submit">Edit information</button>
                     <button type="button" onClick={handleBack}>Back</button>
                     </div>
                 </form>

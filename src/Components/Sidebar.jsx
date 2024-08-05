@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import './Sidebar.css';
+import '../ComponentsCss/Sidebar.css';
 
 
-const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollToStatistics }) => {
+const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollToStatistics,scrollToCourses }) => {
     // Sidebar components Scrolling functions
     const handleScrollToStatistics = () => {
         scrollToStatistics(); 
@@ -12,10 +12,13 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollTo
         <>
             <aside className="sidebar">
                 <ul>
-                    <li><a className="sidebar-btn" onClick={scrollToCalendar}><i class="fa-solid fa-calendar"></i>Calendar</a></li>
-                    <li><a className="sidebar-btn" onClick={scrollToEvents}><i class="fa-solid fa-calendar-plus"></i>Events</a></li>
-                    <li><a className="sidebar-btn" onClick={handleScrollToStatistics}><i class="fa-solid fa-calendar-plus"></i>Statistics</a></li>
-                    <li><a className="sidebar-btn" onClick={toggleAIAssistant}><i class="fa-solid fa-calendar-plus"></i>Assistant Chat</a></li>
+
+                <a className="sidebar-btn" onClick={scrollToCalendar}><li><i class="fa-solid fa-calendar"></i>Calendar</li></a>
+                <a className="sidebar-btn" onClick={scrollToEvents}><li><i class="fa-solid fa-calendar-plus"></i>Events</li></a>
+                <a className="sidebar-btn" onClick={scrollToCourses}><li><i class="fa-solid fa-calendar"></i>Courses</li></a>
+                <a className="sidebar-btn" onClick={handleScrollToStatistics}><li><i class="fa-solid fa-calendar-plus"></i>Statistics</li></a>
+                <a className="sidebar-btn" onClick={toggleAIAssistant}><li><i class="fa-solid fa-calendar-plus"></i>Assistant Chat</li></a>
+
                 </ul>
             </aside>
         </>

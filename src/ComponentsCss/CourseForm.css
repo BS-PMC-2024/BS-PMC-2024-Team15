@@ -1,0 +1,20 @@
+.modal-content h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.pdf-table th, .pdf-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.pdf-table th {
+    background-color: #f2f2f2;
+}
