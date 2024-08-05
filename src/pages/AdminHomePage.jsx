@@ -14,6 +14,7 @@ const AdminHomePage = ({userType,  loadingCourses, fetchEvents, showAIAssistant,
                 <h2>Recommended Events</h2>
                 <PostCarousel fetchEvents={fetchEvents} userType={userType}/>
             </div>
+            
         </>
     );
 };

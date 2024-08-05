@@ -19,12 +19,40 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true);
     const [showAIAssistant, setShowAIAssistant] = useState(false);
     const [userType, setUserType] = useState(null);
-
+    
+    
     useEffect(() => {
-        fetchEvents();
         fetchUserType();
+        fetchEvents();
         fetchCourses();
     }, []);
+
+    const fetchUserType = async () => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            if (!idToken) {
+                throw new Error('No access token found');
+            }
+            const response = await fetch('http://localhost:5000/get_user_type', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify({ token: idToken  })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user type');
+            }
+
+            const data = await response.json();
+            setUserType(data.user_type);
+        } catch (error) {
+            console.error('Error fetching user type:', error);
+        }
+    };
+
 
     const fetchCourses = async () => {
         try {
@@ -32,21 +60,17 @@ const HomePage = () => {
             if (!idToken) {
                 throw new Error('No access token found');
             }
-            if (userType == 'admin'){
-
-            }
-            const response = await fetch('http://localhost:5000/get_courses', {
+            const response = await fetch(`http://localhost:5000/get_courses?userType=${userType}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
                 }
             });
-
+    
             if (!response.ok) {
                 throw new Error('Failed to fetch courses');
             }
-
             const data = await response.json();
             console.log('Fetched courses:', data); // Debug print
             setCourses(data);
@@ -56,7 +80,6 @@ const HomePage = () => {
             setLoadingCourses(false); // Set loadingCourses to false if there's an error
         }
     };
-
 
     const fetchEvents = async () => {
         try {
@@ -86,31 +109,6 @@ const HomePage = () => {
         }
     };
 
-    const fetchUserType = async () => {
-        try {
-            const idToken = localStorage.getItem('accessToken');
-            if (!idToken) {
-                throw new Error('No access token found');
-            }
-            const response = await fetch('http://localhost:5000/get_user_type', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}`
-                },
-                body: JSON.stringify({ token: idToken  })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch user type');
-            }
-
-            const data = await response.json();
-            setUserType(data.user_type);
-        } catch (error) {
-            console.error('Error fetching user type:', error);
-        }
-    };
 
     const scrollToCalendar = () => {
         if (calendarRef.current) {

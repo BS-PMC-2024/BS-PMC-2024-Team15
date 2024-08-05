@@ -65,7 +65,7 @@ class addCourse(MethodView):
 
 @blp.route('/get_courses', methods=['GET'])
 class getCourses(MethodView):
-    def get(self,usertype):
+    def get(self):
         try:
             firestore_db = current_app.config['FIRESTORE_DB']
             auth_header = request.headers.get('Authorization')
@@ -76,12 +76,12 @@ class getCourses(MethodView):
             decoded_token = verify_firebase_token(id_token)
             user_id = decoded_token['users'][0]['localId']
 
-            if (user_id == 'eShnRFj6KQYlaAKdJpZlp7MSpwd2'):#admin OR Student
+            user_type = request.args.get('userType')
+            if user_type == 'lecturer':
+                courses_ref = firestore_db.collection('courses').where('user_id', '==', user_id)
+            else :
                 courses_ref = firestore_db.collection('courses')
-            else:
-                courses_ref = firestore_db.collection('courses')
-                #courses_ref = firestore_db.collection('courses').where('user_id', '==', user_id) #for lecturers
-                
+            
             courses_stream = courses_ref.stream()
 
             courses_list = []
@@ -96,6 +96,7 @@ class getCourses(MethodView):
         except Exception as e:
             print("Error:", str(e))  # Debug print
             return jsonify({"message": str(e)}), 400
+
 
         
 @blp.route('/remove_course/<string:courseId>', methods=['DELETE'])
