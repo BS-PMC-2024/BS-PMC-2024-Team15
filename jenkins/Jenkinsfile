@@ -1,19 +1,29 @@
 pipeline {
-    agent {
-        docker {
-            image 'flask-api'
-            args '-p 5000:5000'
-        }
-    }
+    agent none
     stages {
-        stage('Test') {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.10-alpine'
+                }
+            }
             steps {
-                sh 'pytest'
+                sh 'python -m py_compile Backend/app.py'
             }
         }
-        stage('Deploy') {
+        stage('Test') {
+            agent {
+                docker {
+                    image 'python:3.10-alpine' // Reusing the working image from Build stage
+                }
+            }
             steps {
-                sh 'python app.py'
+                sh 'pytest --verbose --junit-xml test-reports/results.xml Backend/test_app.py'
+            }
+            post {
+                always {
+                    junit 'test-reports/results.xml'
+                }
             }
         }
     }
