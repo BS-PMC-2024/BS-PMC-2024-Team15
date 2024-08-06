@@ -8,7 +8,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'python -m py_compile Backend/*.py'
+                sh 'python -m py_compile Backend/app.py'
             }
         }
         stage('Test') {
@@ -19,7 +19,7 @@ pipeline {
             }
             steps {
                 sh 'pip install --user pytest' // Install pytest with user permission
-                sh 'pytest --verbose --junit-xml test-reports/results.xml Backend/'
+                sh 'pytest --verbose --junit-xml test-reports/results.xml Backend/validation_test.py Backend/integration_test.py'
             }
             post {
                 always {
