@@ -14,12 +14,12 @@ pipeline {
         stage('Test') {
             agent {
                 docker {
-                    image 'python:3.10-alpine' // Using Python image directly to run pytest
+                    image 'python:3.10-alpine'
                 }
             }
             steps {
-                sh 'pip install --user pytest'  // Install pytest
-                sh 'pytest -vv --disable-warnings --junit-xml test-reports/results.xml' // Run pytest with verbose output and disable warnings
+                sh 'pip install pytest'  // Install pytest globally
+                sh 'pytest -vv --disable-warnings --junit-xml test-reports/results.xml' // Run pytest
             }
             post {
                 always {
