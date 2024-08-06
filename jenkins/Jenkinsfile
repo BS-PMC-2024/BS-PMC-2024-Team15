@@ -8,7 +8,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'python -m py_compile Backend/app.py'
+                sh 'python -m py_compile Backend/*.py'
             }
         }
         stage('Test') {
@@ -18,11 +18,8 @@ pipeline {
                 }
             }
             steps {
-                // Install pytest within the container
-                sh 'pip install pytest'
-                
-                // Run both integration and validation tests
-                sh 'pytest --verbose --junit-xml test-reports/results.xml Backend/integration_test.py Backend/validation_test.py'
+                sh 'pip install --user pytest' // Install pytest with user permission
+                sh 'pytest --verbose --junit-xml test-reports/results.xml Backend/'
             }
             post {
                 always {
