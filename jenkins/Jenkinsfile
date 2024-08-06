@@ -1,24 +1,24 @@
 pipeline {
     agent {
         docker {
-            image 'docker/compose:1.29.2' // Replace with the appropriate image version
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount the Docker socket
+            image 'flask-api'
+            args '-p 5000:5000'
         }
     }
     stages {
         stage('Build') {
             steps {
-                sh 'docker-compose build'
+                sh 'docker build -t flask-api .'
             }
         }
         stage('Test') {
             steps {
-                sh 'docker-compose run --rm flask-api pytest'
+                sh 'docker run --rm flask-api pytest'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'docker run -d -p 5000:5000 flask-api'
             }
         }
     }
