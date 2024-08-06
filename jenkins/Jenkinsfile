@@ -1,24 +1,20 @@
 pipeline {
-    agent {
-        docker {
-            image 'flask-api'
-            args '-p 5000:5000'
-        }
-    }
+    agent any
+
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t flask-api .'
+                sh 'docker-compose build'
             }
         }
         stage('Test') {
             steps {
-                sh 'docker run --rm flask-api pytest'
+                sh 'docker-compose run web pytest'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 5000:5000 flask-api'
+                sh 'docker-compose up -d'
             }
         }
     }
