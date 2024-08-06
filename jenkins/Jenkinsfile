@@ -14,11 +14,15 @@ pipeline {
         stage('Test') {
             agent {
                 docker {
-                    image 'python:3.10-alpine' // Reusing the working image from Build stage
+                    image 'python:3.10-alpine'
                 }
             }
             steps {
-                sh 'pytest --verbose --junit-xml test-reports/results.xml Backend/test_app.py'
+                // Install pytest within the container
+                sh 'pip install pytest'
+                
+                // Run both integration and validation tests
+                sh 'pytest --verbose --junit-xml test-reports/results.xml Backend/integration_test.py Backend/validation_test.py'
             }
             post {
                 always {
