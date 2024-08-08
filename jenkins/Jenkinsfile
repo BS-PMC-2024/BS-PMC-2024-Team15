@@ -18,7 +18,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'py.test --verbose --junit-xml test-reports/results.xml Backend/test_app.py'
+                sh 'py.test --verbose --junit-xml test-reports/results.xml Backend/validation_test.py'
             }
             post {
                 always {
