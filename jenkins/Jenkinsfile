@@ -1,25 +1,24 @@
 pipeline {
-    agent any
+    agent none
     stages {
         stage('Build') {
             agent {
                 docker {
-                    image 'python:3.10-alpine'
+                    image 'python:2-alpine'
                 }
             }
             steps {
-                // Install dependencies as part of the build process
-                sh 'pip install -r Backend/requirements.txt'
+                sh 'python -m py_compile Backend/app.py'
             }
         }
         stage('Test') {
             agent {
                 docker {
-                    image 'python:3.10-alpine'
+                    image 'qnib/pytest'
                 }
             }
             steps {
-                sh 'pytest -vv --disable-warnings --junit-xml test-reports/results.xml' // Run pytest
+                sh 'py.test --verbose --junit-xml test-reports/results.xml Backend/test_app.py'
             }
             post {
                 always {
