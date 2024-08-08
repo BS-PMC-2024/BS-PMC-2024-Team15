@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../ComponentsCss/Courses.css';
 import CourseFormModal from './CourseForm'; // Import the modal component
 
-const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) => {
+const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fetchEvents}) => {
     const [showCourseForm, setShowCourseForm] = useState(false); // State to manage modal visibility
     const [selectedCourse, setSelectedCourse] = useState(null); // State to store selected course for editing
     const [userCourses, setUserCourses] = useState([]); // State to store user's registered courses
@@ -11,6 +11,8 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
         if (userType === "student") {
             fetchUserCourses();
         }
+        fetchCourses();
+        
     }, []);
 
     const fetchUserCourses = async () => {
@@ -99,6 +101,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
             const data = await response.json();
             console.log(data.message); // Optional: Handle the response message if needed
             fetchUserCourses(); // Refresh the user's registered courses
+            fetchEvents();
         } catch (error) {
             console.error('Error adding course to user:', error.message);
         }
@@ -123,6 +126,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
             const data = await response.json();
             console.log(data.message); // Optional: Handle the response message if needed
             fetchUserCourses(); // Refresh the user's registered courses
+            fetchEvents();
         } catch (error) {
             console.error('Error removing course from user:', error.message);
         }

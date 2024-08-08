@@ -138,10 +138,13 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                     <label>
                         Duration:
                         <select value={duration} onChange={(e) => setDuration(e.target.value)}>
-                            <option value="1 month">1 month</option>
-                            <option value="2 months">2 months</option>
-                            <option value="3 months">3 months</option>
-                            <option value="6 months">6 months</option>
+                            <option value="1 weeks">1 weeks</option>
+                            <option value="2 weeks">2 weeks</option>
+                            <option value="3 weeks">3 weeks</option>
+                            <option value="4 weeks">4 weeks</option>
+                            <option value="6 weeks">6 weeks</option>
+                            <option value="8 weeks">8 weeks</option>
+                            <option value="14 weeks">14 weeks</option>
                         </select>
                     </label>
                     <label>

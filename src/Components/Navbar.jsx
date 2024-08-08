@@ -7,7 +7,7 @@ import EventFormModal from './EventForm';  // Import EventFormModal
 import MyProfileForm from './MyProfileForm';
 import CourseFormModal from './CourseForm';
 
-const Navbar = ({userType}) => {
+const Navbar = ({userType , fetchCourses ,fetchPosts }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -74,7 +74,7 @@ const Navbar = ({userType}) => {
             console.error('Network error:', error);
             // Optionally, you might want to show a network error message here
         }
-
+        fetchPosts();
         // Close the event form modal after saving
         handleCloseEventForm();
     };
@@ -103,7 +103,7 @@ const Navbar = ({userType}) => {
         } catch (error) {
             console.error('Network error:', error);
         }
-    
+        fetchCourses();
         handleCloseCourseModal();
     };
     

@@ -19,12 +19,14 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true);
     const [showAIAssistant, setShowAIAssistant] = useState(false);
     const [userType, setUserType] = useState(null);
-    
-    
+    const [posts, setPosts] = useState([]);
+    const [loadingPosts, setLoadingPosts] = useState(true);
+
     useEffect(() => {
         fetchUserType();
         fetchEvents();
         fetchCourses();
+        fetchPosts();
     }, []);
 
     const fetchUserType = async () => {
@@ -108,6 +110,35 @@ const HomePage = () => {
             setLoading(false);
         }
     };
+    
+    const fetchPosts= async () => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            if (!idToken) {
+                throw new Error('No access token found');
+            }
+
+            const url = 'http://localhost:5000/get_event_Posts'; // Make sure this matches your backend endpoint
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setPosts(data);
+        } catch (error) {
+            console.error('Error fetching event posts:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
     const scrollToCalendar = () => {
@@ -164,7 +195,9 @@ const HomePage = () => {
         <div className="homepage">
             <div className="container">
                 <div className="full_sidebar">
-                    <Navbar userType={userType}/>
+                    <Navbar userType={userType}  
+                    fetchCourses={fetchCourses} 
+                    fetchPosts={fetchPosts}/>
                     <Sidebar
                         scrollToCourses={scrollToCourses}
                         scrollToCalendar={scrollToCalendar}
@@ -189,6 +222,10 @@ const HomePage = () => {
                         loadingCourses={loadingCourses}
                         courses={courses}
                         userType={userType}
+                        fetchPosts = {fetchPosts}
+                        loadingPosts={loadingPosts}
+                        posts={posts}
+                        
                     />
                 </main>
             </div>

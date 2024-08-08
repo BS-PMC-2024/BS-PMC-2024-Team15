@@ -119,15 +119,15 @@
 
 /* Conditional row colors based on importance level */
 .events-table .high-importance {
-    border-left: 6px solid #fea9a9;
+    border-left: 30px solid #fea9a9;
 }
 
 .events-table .medium-importance {
-    border-left: 6px solid #ffdc6e;
+    border-left: 30px solid #ffdc6e;
 }
 
 .events-table .low-importance {
-    border-left: 6px solid #bddc97;
+    border-left: 30px solid #bddc97;
 }
 
 .events-table tr {
