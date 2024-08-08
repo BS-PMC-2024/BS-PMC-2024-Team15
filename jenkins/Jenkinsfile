@@ -18,7 +18,6 @@ pipeline {
                 }
             }
             steps {
-                sh 'pip install pytest'  // Install pytest globally
                 sh 'pytest -vv --disable-warnings --junit-xml test-reports/results.xml' // Run pytest
             }
             post {

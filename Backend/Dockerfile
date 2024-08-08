@@ -8,3 +8,4 @@ COPY . .
 ENV FLASK_ENV=development 
 ENV PYTHONBUFFERED=1
 CMD ["python3", "app.py"]
+
