@@ -4,22 +4,21 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'python:3.10-alpine'
+                    image 'python:3.10.8-alpine'
                 }
             }
             steps {
-                sh 'python -m py_compile Backend/app.py'
+                sh 'pip install -r Backend/requirements.txt'
             }
         }
         stage('Test') {
             agent {
                 docker {
-                    image 'python:3.10-alpine'
+                    image 'qnib/pytest'
                 }
             }
             steps {
-                sh 'pip install pytest'  // Install pytest globally
-                sh 'pytest -vv --disable-warnings --junit-xml test-reports/results.xml' // Run pytest
+                sh 'py.test --verbose --junit-xml test-reports/results.xml Backend/validation_test.py'
             }
             post {
                 always {
