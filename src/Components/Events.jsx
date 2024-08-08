@@ -5,6 +5,8 @@ import EventFormModal from './EventForm'; // Import the modal component
 const EventsComponent = ({ events, loading, fetchEvents }) => {
     const [showEventForm, setShowEventForm] = useState(false); // State to manage modal visibility
     const [selectedEvent, setSelectedEvent] = useState(null); // State to store selected event for editing
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false); // State to manage remove confirmation modal visibility
+    const [eventToRemove, setEventToRemove] = useState(null); // State to store the event ID to be removed
 
     // Function to toggle modal visibility and set selected event for editing
     const toggleEventForm = (event) => {
@@ -46,7 +48,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
         try {
             const method = event.id ? 'PUT' : 'POST';
             const endpoint = event.id ? `update_event/${event.id}` : 'add_event';
-            
+
             const response = await fetch(`http://localhost:5000/${endpoint}`, {
                 method,
                 headers: {
@@ -68,9 +70,9 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
     };
 
     // Handle removing an event
-    const handleRemoveEvent = async (eventId) => {
+    const handleRemoveEvent = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/remove_event/${eventId}`, {
+            const response = await fetch(`http://localhost:5000/remove_event/${eventToRemove}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
@@ -78,6 +80,8 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
             }
             // Refresh events after removing
             fetchEvents();
+            setIsRemoveModalOpen(false); // Close the remove confirmation modal
+            setEventToRemove(null); // Reset the event to remove
         } catch (error) {
             console.error('Error removing event:', error);
         }
@@ -132,7 +136,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                         <td>{event.eventType}/{event.importance}</td>
                                                         <td>
                                                             <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-pencil"></i> Edit</button>
-                                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
+                                                            <button className="remove-btn" onClick={() => { setEventToRemove(event.id); setIsRemoveModalOpen(true); }}><i className="fa-solid fa-trash"></i> Remove</button>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -141,7 +145,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                     </div>
                                 </>
                             )}
-                            
+
                             {completedEvents.length > 0 && (
                                 <>
                                     <h3>Completed Events</h3>
@@ -165,7 +169,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                         <td>{event.eventType}/{event.importance}</td>
                                                         <td>
                                                             <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
-                                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
+                                                            <button className="remove-btn" onClick={() => { setEventToRemove(event.id); setIsRemoveModalOpen(true); }}><i className="fa-solid fa-trash"></i> Remove</button>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -176,13 +180,22 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                             )}
                         </>
                     )}
-                    <EventFormModal 
-                        isOpen={showEventForm} 
-                        onClose={() => setShowEventForm(false)} 
-                        onSave={handleSaveEvent} 
-                        event={selectedEvent} 
-                        slot={null} 
+                    <EventFormModal
+                        isOpen={showEventForm}
+                        onClose={() => setShowEventForm(false)}
+                        onSave={handleSaveEvent}
+                        event={selectedEvent}
+                        slot={null}
                     />
+                    {isRemoveModalOpen && (
+                        <div className="remove-modal">
+                            <div className="remove-modal-content">
+                                <p>Are you sure you want to remove this event?</p>
+                                <button onClick={handleRemoveEvent}>Yes</button>
+                                <button onClick={() => setIsRemoveModalOpen(false)}>No</button>
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
         </div>

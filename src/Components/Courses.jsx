@@ -6,6 +6,8 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
     const [showCourseForm, setShowCourseForm] = useState(false); // State to manage modal visibility
     const [selectedCourse, setSelectedCourse] = useState(null); // State to store selected course for editing
     const [userCourses, setUserCourses] = useState([]); // State to store user's registered courses
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false); // State to manage remove confirmation modal visibility
+    const [courseToRemove, setCourseToRemove] = useState(null); // State to store the course ID to be removed
 
     useEffect(() => {
         if (userType === "student") {
@@ -63,9 +65,9 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
         }
     };
 
-    const handleRemoveCourse = async (courseId) => {
+    const handleRemoveCourse = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/remove_course/${courseId}`, {
+            const response = await fetch(`http://localhost:5000/remove_course/${courseToRemove}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`, // Ensure token is sent
@@ -75,6 +77,8 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
                 throw new Error('Failed to remove course');
             }
             fetchCourses(); // Refresh courses after removing
+            setIsRemoveModalOpen(false); // Close the remove confirmation modal
+            setCourseToRemove(null); // Reset the course to remove
         } catch (error) {
             console.error('Error removing course:', error);
         }
@@ -90,12 +94,12 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
                 },
                 body: JSON.stringify({ course_id: courseId }),
             });
-    
+
             if (!response.ok) {
                 const errorMessage = await response.json();
                 throw new Error(errorMessage.message);
             }
-    
+
             const data = await response.json();
             console.log(data.message); // Optional: Handle the response message if needed
             fetchUserCourses(); // Refresh the user's registered courses
@@ -103,7 +107,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
             console.error('Error adding course to user:', error.message);
         }
     };
-    
+
     const handleRemoveCourseFromUser = async (courseId) => {
         try {
             const response = await fetch('http://localhost:5000/remove_course_from_user', {
@@ -114,12 +118,12 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
                 },
                 body: JSON.stringify({ course_id: courseId }),
             });
-    
+
             if (!response.ok) {
                 const errorMessage = await response.json();
                 throw new Error(errorMessage.message);
             }
-    
+
             const data = await response.json();
             console.log(data.message); // Optional: Handle the response message if needed
             fetchUserCourses(); // Refresh the user's registered courses
@@ -127,7 +131,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
             console.error('Error removing course from user:', error.message);
         }
     };
-    
+
     const getRowClassName = (level) => {
         switch (level) {
             case 'Advanced':
@@ -174,7 +178,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
                                                 <td>{course.duration}</td>
                                                 <td>{course.level}</td>
                                                 <td>
-                                                    <button className="remove-btn" onClick={() => handleRemoveCourseFromUser(course.id)}>Remove</button>
+                                                    <button className="remove-btn" onClick={() => { setCourseToRemove(course.id); setIsRemoveModalOpen(true); }}>Remove</button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -214,7 +218,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
                                                 ) : (
                                                     <p>
                                                         <button className="edit-btn" onClick={() => toggleCourseForm(course)}>Edit</button>
-                                                        <button className="remove-btn" onClick={() => handleRemoveCourse(course.id)}>Remove</button>
+                                                        <button className="remove-btn" onClick={() => { setCourseToRemove(course.id); setIsRemoveModalOpen(true); }}>Remove</button>
                                                     </p>
                                                 )}
                                             </td>
@@ -232,6 +236,15 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType }) =
                 onSave={handleSaveCourse}
                 course={selectedCourse}
             />
+            {isRemoveModalOpen && (
+                <div className="remove-modal">
+                    <div className="remove-modal-content">
+                        <p>Are you sure you want to remove this course?</p>
+                        <button onClick={handleRemoveCourse}>Yes</button>
+                        <button onClick={() => setIsRemoveModalOpen(false)}>No</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

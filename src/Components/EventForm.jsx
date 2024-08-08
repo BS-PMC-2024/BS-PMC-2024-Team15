@@ -53,13 +53,13 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
         if (!validateForm()) {
             return;
         }
-    
+
         let finalImageUrl = imageUrl;
         if (image) {
             try {
                 const formData = new FormData();
                 formData.append('file', image);
-    
+
                 const idToken = localStorage.getItem('accessToken');
                 const response = await fetch('http://localhost:5000/upload_image', {
                     method: 'POST',
@@ -68,7 +68,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                     },
                     body: formData
                 });
-    
+
                 const result = await response.json();
                 if (response.ok) {
                     finalImageUrl = result.file_url;
@@ -79,7 +79,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                 console.error('Error uploading image:', error);
             }
         }
-    
+
         const formData = {
             id: event ? event.id : null,
             title,
@@ -90,7 +90,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             eventType,
             imageUrl: finalImageUrl
         };
-    
+
         onSave(formData);
         handleFadeOutAndClose(); // Trigger fade-out and close after saving
     };
@@ -126,7 +126,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             <div className={`modal-content ${closing ? 'fade-out' : ''}`}>
                 <h2>{event ? 'Edit Event' : 'Add New Event'}</h2>
                 <form>
-                    {imageUrl && <img src={imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}    
+                    {imageUrl && <img src={imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}
                     <label>
                         Event Name:
                         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -142,12 +142,13 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                         <select value={duration} onChange={(e) => setDuration(e.target.value)}>
                             <option value="0:15">0:15</option>
                             <option value="0:30">0:30</option>
-                            <option value="0:45">0:45</option>
                             <option value="1:00">1:00</option>
-                            <option value="1:15">1:15</option>
                             <option value="1:30">1:30</option>
-                            <option value="1:45">1:45</option>
                             <option value="2:00">2:00</option>
+                            <option value="3:00">3:00</option>
+                            <option value="4:00">4:00</option>
+                            <option value="5:00">5:00</option>
+                            <option value="6:00">6:00</option>
                         </select>
                     </label>
                     <label>

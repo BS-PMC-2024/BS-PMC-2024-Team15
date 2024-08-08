@@ -19,8 +19,8 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true);
     const [showAIAssistant, setShowAIAssistant] = useState(false);
     const [userType, setUserType] = useState(null);
-    
-    
+
+
     useEffect(() => {
         fetchUserType();
         fetchEvents();
@@ -39,7 +39,7 @@ const HomePage = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
                 },
-                body: JSON.stringify({ token: idToken  })
+                body: JSON.stringify({ token: idToken })
             });
 
             if (!response.ok) {
@@ -67,7 +67,7 @@ const HomePage = () => {
                     'Authorization': `Bearer ${idToken}`
                 }
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to fetch courses');
             }
@@ -164,7 +164,7 @@ const HomePage = () => {
         <div className="homepage">
             <div className="container">
                 <div className="full_sidebar">
-                    <Navbar userType={userType}/>
+                    <Navbar userType={userType} />
                     <Sidebar
                         scrollToCourses={scrollToCourses}
                         scrollToCalendar={scrollToCalendar}

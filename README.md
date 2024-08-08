@@ -43,8 +43,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### 'pip install firebase-admin'
 
-
-
 if you want to run the flask app with docker Container follow this steps:
 1.download the docker desktop app from here: https://www.docker.com/products/docker-desktop/
 2.write this commands in the terminal:

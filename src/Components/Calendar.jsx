@@ -24,55 +24,56 @@ const CalendarComponent = ({ events, fetchEvents }) => {
         const now = new Date();
         let backgroundColor = '#3174ad';
         let borderLeft = '';
-    
+
 
         if (end < now) {
-           //if event has been ranked, return white color
+            //if event has been ranked, return white color
             backgroundColor = '#000000';
 
-        } else { switch (event.eventType) {
-            case 'Study':
-                backgroundColor = 'purple';
-                break;
-            case 'Social':
-                backgroundColor = 'orange';
-                break;
-            case 'Hobby':
-                backgroundColor = 'green';
-                break;
-            default:
-                backgroundColor = '#3174ad';
-                break;
-        }
+        } else {
+            switch (event.eventType) {
+                case 'Study':
+                    backgroundColor = 'purple';
+                    break;
+                case 'Social':
+                    backgroundColor = 'orange';
+                    break;
+                case 'Hobby':
+                    backgroundColor = 'green';
+                    break;
+                default:
+                    backgroundColor = '#3174ad';
+                    break;
+            }
         }
 
         switch (event.importance) {
             case 'High':
-                borderLeft = '8px solid #ff8888';
+                borderLeft = '12px solid red';
                 break;
             case 'Medium':
-                borderLeft = '8px solid yellow';
+                borderLeft = '12px solid orange';
                 break;
             case 'Low':
-                borderLeft = '8px solid green';
+                borderLeft = '12px solid yellow';
                 break;
             default:
                 backgroundColor = '#3174ad';
                 break;
         }
-    
+
         const style = {
             backgroundColor: backgroundColor,
             borderLeft: borderLeft
         };
-    
+
         return {
             style: style,
             tooltip: event.additionalInfo // Set tooltip text or other details
         };
     };
-    
-    
+
+
     const handleSelectSlot = (slotInfo) => {
         setSelectedSlot(slotInfo.start);
         setSelectedEvent(null);
