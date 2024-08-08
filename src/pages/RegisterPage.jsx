@@ -10,8 +10,6 @@ const iconList = [
     'https://cdn-icons-png.flaticon.com/512/3135/3135810.png',
     'https://cdn-icons-png.flaticon.com/512/3135/3135810.png',
     'https://cdn-icons-png.flaticon.com/512/2784/2784403.png'
-
-
 ];
 
 const RegisterPage = () => {
@@ -19,7 +17,7 @@ const RegisterPage = () => {
     const [password, setPassword] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [gender, setGender] = useState('');
-    const [icon, setIcon] = useState(iconList[0]); // Default to the first icon
+    const [icon, setIcon] = useState(iconList[0]);
     const [type, setType] = useState('student');
     const [receiveNews, setReceiveNews] = useState(false);
     const [fullName, setFullName] = useState('');
