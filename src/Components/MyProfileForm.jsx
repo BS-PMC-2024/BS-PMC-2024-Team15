@@ -77,7 +77,7 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <form onSubmit={handleSubmit}>
-                    <h2>Profile:{"" +profileData.fullName}</h2>
+                    <h2>Profile:{"" + profileData.fullName}</h2>
                     <label>
                         Email:
                         <input
@@ -97,19 +97,19 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
                             onChange={handleChange}
                         />
                     </label>
-                    <h3>User created at: {"" +profileData.createdAt}</h3>
-                    
+                    <h3>User created at: {"" + profileData.createdAt}</h3>
+
                     <h2>my first quizz : </h2>
-                    
-                    <h3>How often do you plan your day in advance?: { profileData.planDay} </h3>
-                    <h3>How well do you stick to your planned schedule?: { profileData.stickSchedule}</h3>
-                    <h3>How effectively do you prioritize your tasks?: { profileData.prioritizeTasks}</h3>
-                    <h3>How often do you meet deadlines?: { profileData.deadlinedTasks}</h3>
-                    <h3>How satisfied are you with your current time management skills?: { profileData.satesfiedTasks}</h3>
-                    
-                    <div className="modal-buttons"> 
-                    <button type="submit">Edit information</button>
-                    <button type="button" onClick={handleBack}>Back</button>
+
+                    <h3>How often do you plan your day in advance?: {profileData.planDay} </h3>
+                    <h3>How well do you stick to your planned schedule?: {profileData.stickSchedule}</h3>
+                    <h3>How effectively do you prioritize your tasks?: {profileData.prioritizeTasks}</h3>
+                    <h3>How often do you meet deadlines?: {profileData.deadlinedTasks}</h3>
+                    <h3>How satisfied are you with your current time management skills?: {profileData.satesfiedTasks}</h3>
+
+                    <div className="modal-buttons">
+                        <button type="submit">Edit information</button>
+                        <button type="button" onClick={handleBack}>Back</button>
                     </div>
                 </form>
                 {message && <p className="message">{message}</p>}
