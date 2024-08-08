@@ -8,7 +8,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'python -m py_compile Backend/app.py'
+                sh 'pip install -r Backend/requirements.txt'
             }
         }
         stage('Test') {
