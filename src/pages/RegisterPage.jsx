@@ -8,8 +8,9 @@ const iconList = [
     'https://cdn-icons-png.flaticon.com/512/5102/5102383.png',
     'https://cdn-icons-png.flaticon.com/512/5352/5352126.png',
     'https://cdn-icons-png.flaticon.com/512/3135/3135810.png',
-    'https://cdn-icons-png.flaticon.com/512/3135/3135810.png',
-    'https://cdn-icons-png.flaticon.com/512/2784/2784403.png'
+    'https://cdn-icons-png.flaticon.com/512/2995/2995633.png',
+    'https://cdn-icons-png.flaticon.com/512/2784/2784403.png',
+    'https://cdn-icons-png.flaticon.com/512/6024/6024190.png'
 ];
 
 const RegisterPage = () => {
