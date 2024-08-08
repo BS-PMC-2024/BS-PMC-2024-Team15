@@ -48,13 +48,13 @@ const CalendarComponent = ({ events, fetchEvents }) => {
 
         switch (event.importance) {
             case 'High':
-                borderLeft = '8px solid #ff8888';
+                borderLeft = '14px solid #ff8888';
                 break;
             case 'Medium':
-                borderLeft = '8px solid yellow';
+                borderLeft = '14px solid yellow';
                 break;
             case 'Low':
-                borderLeft = '8px solid green';
+                borderLeft = '14px solid green';
                 break;
             default:
                 backgroundColor = '#3174ad';
