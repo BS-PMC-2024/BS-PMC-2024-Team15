@@ -168,6 +168,7 @@ const Navbar = ({ userType, fetchCourses, fetchPosts }) => {
                         <p>Are you sure you want to log out?</p>
                         <div className="modal-buttons">
                             <button className="modal-btn" onClick={confirmLogout}>Yes</button>
+
                             <button className="modal-btn" onClick={handleCloseLogoutModal}>No</button>
                         </div>
                     </div>
