@@ -142,12 +142,14 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                         <select value={duration} onChange={(e) => setDuration(e.target.value)}>
                             <option value="0:15">0:15</option>
                             <option value="0:30">0:30</option>
-                            <option value="0:45">0:45</option>
                             <option value="1:00">1:00</option>
-                            <option value="1:15">1:15</option>
                             <option value="1:30">1:30</option>
-                            <option value="1:45">1:45</option>
                             <option value="2:00">2:00</option>
+                            <option value="3:00">3:00</option>
+                            <option value="4:00">4:00</option>
+                            <option value="5:00">5:00</option>
+                            <option value="6:00">6:00</option>
+                            <option value="8:00">8:00</option>
                         </select>
                     </label>
                     <label>
