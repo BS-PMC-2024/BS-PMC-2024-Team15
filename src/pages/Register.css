@@ -21,7 +21,7 @@ h3 {
   align-items: center;
   min-height: 100vh;
   padding: 2em;
-  background: #000000d4;
+  background: #000000d4 !important;
   backdrop-filter: blur(20px);
   border-radius: 25px;
   box-shadow: 0 15px 60px #00000063;
