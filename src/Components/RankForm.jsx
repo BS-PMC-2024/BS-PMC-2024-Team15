@@ -11,7 +11,7 @@ const RankForm = ({ event, onClose, onSave }) => {
     };
 
     return (
-        <div className="modal-background">
+        <div id = "rank-modal" className="modal-background">
             <div className="modal-content">
                 <h2>Rank {event.title} task</h2>
                 <p>Here you can rank your efficiency in this assignment from 0 - 10</p>
