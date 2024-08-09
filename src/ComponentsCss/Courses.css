@@ -11,7 +11,7 @@
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     margin-bottom: 50px;
-    max-height: calc(8.5 * 44px); /* Assuming each row is 44px high */
+    max-height: calc(10 * 44px); /* Assuming each row is 44px high */
     display: block;
     overflow-y: auto; /* Add vertical scrollbar if more than 7 rows */
 }
@@ -161,5 +161,3 @@
     border: 10px solid rgba(0, 0, 0, 0);
     background-clip: padding-box;
 }
-
-

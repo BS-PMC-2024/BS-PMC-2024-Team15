@@ -32,7 +32,7 @@
     margin: 10px;
     flex: 1 0 calc(33.333% - 20px); /* Fit 3 cards in the carousel, accounting for margin */
     max-width: calc(33.333% - 20px); /* Ensure each card does not exceed its calculated width */
-    text-align: center; /* Align text to the left */
+    text-align: left; /* Align text to the left */
     box-sizing: border-box; /* Ensure padding and border are included in width */
 }
 

@@ -230,7 +230,6 @@ const HomePage = () => {
                 </main>
             </div>
 
-            <a className="sidebar-btn" onClick={toggleAIAssistant}><li><i class="fa-solid fa-calendar-plus"></i>Assistant Chat</li></a>
 
             {showAIAssistant && (
                 <AIAssistantComponent
