@@ -12,7 +12,7 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollTo
         <>
             <aside className="sidebar">
                 <ul>
-
+{/* class name is the icon next to title in the side bar */}
                 <a className="sidebar-btn" onClick={scrollToCalendar}><li><i class="fa-solid fa-calendar-days"></i>Calendar</li></a>
                 <a className="sidebar-btn" onClick={scrollToEvents}><li><i class="fa-solid fa-calendar-plus"></i>Events</li></a>
                 <a className="sidebar-btn" onClick={scrollToCourses}><li><i class="fa-solid fa-person-chalkboard"></i>Courses</li></a>
