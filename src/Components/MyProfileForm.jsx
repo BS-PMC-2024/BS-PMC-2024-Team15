@@ -21,6 +21,7 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
         type: 'student',
         receiveNews: false,
         icon: '',
+        createdAt: '',
     });
     const [message, setMessage] = useState('');
 
@@ -56,6 +57,13 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
         setProfileData({
             ...profileData,
             [name]: type === 'checkbox' ? checked : value,
+        });
+    };
+
+    const handleIconClick = (iconUrl) => {
+        setProfileData({
+            ...profileData,
+            icon: iconUrl,
         });
     };
 
@@ -102,14 +110,19 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
                         />
                     </label>
                     <label>
-                        icon:
-                        <input
-                            type="icon"
-                            name="icon"
-                            value={profileData.icon}
-                            onChange={handleChange}
-                            required
-                        />
+                        Icon:
+                        <div className="icon-list">
+                            {iconList.map((icon, index) => (
+                                <img
+                                    key={index}
+                                    src={icon}
+                                    alt={`Icon ${index}`}
+                                    onClick={() => handleIconClick(icon)}
+                                    className={profileData.icon === icon ? 'selected' : ''}
+                                    style={{ cursor: 'pointer', margin: '5px', width: '50px', height: '50px' }}
+                                />
+                            ))}
+                        </div>
                     </label>
                     <label>
                         Receive News:
