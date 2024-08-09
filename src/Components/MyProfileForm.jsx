@@ -2,12 +2,25 @@ import React, { useState, useEffect } from 'react';
 import '../ComponentsCss/MyProfileForm.css';
 import { getToken } from '../features/tokenUtils';
 
+
+const iconList = [
+    'https://cdn-icons-png.flaticon.com/512/167/167752.png',
+    'https://cdn-icons-png.flaticon.com/512/2798/2798310.png',
+    'https://cdn-icons-png.flaticon.com/512/5102/5102383.png',
+    'https://cdn-icons-png.flaticon.com/512/5352/5352126.png',
+    'https://cdn-icons-png.flaticon.com/512/3135/3135810.png',
+    'https://cdn-icons-png.flaticon.com/512/2995/2995633.png',
+    'https://cdn-icons-png.flaticon.com/512/2784/2784403.png',
+    'https://cdn-icons-png.flaticon.com/512/6024/6024190.png'
+];
+
 const MyProfileForm = ({ isOpen, onClose, onSave }) => {
     const [profileData, setProfileData] = useState({
         email: '',
         dateOfBirth: '',
         type: 'student',
         receiveNews: false,
+        icon: '',
     });
     const [message, setMessage] = useState('');
 
@@ -84,6 +97,16 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
                             type="email"
                             name="email"
                             value={profileData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </label>
+                    <label>
+                        icon:
+                        <input
+                            type="icon"
+                            name="icon"
+                            value={profileData.icon}
                             onChange={handleChange}
                             required
                         />
