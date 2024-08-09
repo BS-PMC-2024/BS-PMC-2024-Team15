@@ -116,8 +116,6 @@ const RegisterPage = () => {
                             id="type"
                             value={type}
                             onChange={(e) => setType(e.target.value)}
-
-
                         >
                             <option value="student">Student</option>
                             <option value="lecturer">Lecturer</option>
