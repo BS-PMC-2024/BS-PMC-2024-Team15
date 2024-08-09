@@ -17,13 +17,13 @@ const LecturerHomePage = ({ userType,calendarRef, eventsRef, statisticsRef, even
                 <h2>Events</h2>
                 <EventsComponent events={events} loading={loading} fetchEvents={fetchEvents} />
             </div>
-            <div>
-                <h2>Recommended Events</h2>
-                <PostCarousel posts={posts} loadingPosts={loadingPosts} fetchPosts={fetchPosts} fetchEvents={fetchEvents} userType={userType} />
-            </div>
             <div ref={coursesRef}>
                 <h2>Courses</h2>
                 <CoursesComponent courses={courses} loadingCourses={loadingCourses} fetchCourses={fetchCourses} />
+            </div>
+            <div>
+                <h2>Recommended Events</h2>
+                <PostCarousel posts={posts} loadingPosts={loadingPosts} fetchPosts={fetchPosts} fetchEvents={fetchEvents} userType={userType} />
             </div>
             <div ref={statisticsRef}>
                 <h2>Statistics</h2>

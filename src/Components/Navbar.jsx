@@ -134,11 +134,12 @@ const Navbar = ({ userType, fetchCourses, fetchPosts }) => {
                     My Profile
                 </button>
                 {userType !== "student" && <button className="nav-btn" onClick={handleOpenCourseModal}>Add Course</button>}
+
                 {userType === "admin" && <button className="nav-btn" onClick={handleOpenEventForm}>Post Event</button>}
                
                 <button className="nav-btn"><i class="fa-solid fa-users-viewfinder"></i>About Us</button>
                 <button className="nav-btn" onClick={handleOpenLogoutModal}><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
-            </div>
+
 
             <EventFormModal
                 isOpen={isEventFormOpen}

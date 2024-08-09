@@ -12,6 +12,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     const [image, setImage] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
     const [closing, setClosing] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         if (event) {
@@ -92,10 +93,12 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
         };
     
         onSave(formData);
+        setSuccessMessage('Event successfully added!');
         handleFadeOutAndClose(); // Trigger fade-out and close after saving
     };
 
     const resetForm = () => {
+        setSuccessMessage('');
         setTitle('');
         setStartTime(slot ? slot.start : '');
         setDuration('0:15');
@@ -112,6 +115,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     };
 
     const handleFadeOutAndClose = () => {
+        
         setClosing(true);
         setTimeout(() => {
             setClosing(false);
@@ -181,6 +185,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                         </button>
                         <button type="button" onClick={handleClose}>Cancel</button>
                     </div>
+                    {successMessage && <p className="success-message">{successMessage}</p>} {/* Display success message */}
                 </form>
             </div>
         </div>

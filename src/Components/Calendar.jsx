@@ -32,29 +32,29 @@ const CalendarComponent = ({ events, fetchEvents }) => {
 
         } else { switch (event.eventType) {
             case 'Study':
-                backgroundColor = 'purple';
+                backgroundColor = '#9773dc';
                 break;
             case 'Social':
-                backgroundColor = 'orange';
+                backgroundColor = '#69b0e6';
                 break;
             case 'Hobby':
-                backgroundColor = 'green';
+                backgroundColor = '#5dd2a5';
                 break;
             default:
                 backgroundColor = '#3174ad';
                 break;
         }
         }
-
+       
         switch (event.importance) {
             case 'High':
-                borderLeft = '14px solid #ff8888';
+                borderLeft = '14px solid #f04a4a';
                 break;
             case 'Medium':
-                borderLeft = '14px solid yellow';
+                borderLeft = '14px solid #f1ba41';
                 break;
             case 'Low':
-                borderLeft = '14px solid green';
+                borderLeft = '14px solid  #f7f322';
                 break;
             default:
                 backgroundColor = '#3174ad';
@@ -107,7 +107,7 @@ const CalendarComponent = ({ events, fetchEvents }) => {
             const response = await fetch(url, requestOptions);
 
             fetchEvents();
-            handleCloseEventForm();
+           // handleCloseEventForm();
         } catch (error) {
             console.error('Error saving or updating event:', error);
         }

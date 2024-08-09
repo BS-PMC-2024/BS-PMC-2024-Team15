@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import '../ComponentsCss/Courses.css';
-import CourseFormModal from './CourseForm'; // Import the modal component
+import CourseFormModal from './CourseForm';
 
-const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fetchEvents}) => {
-    const [showCourseForm, setShowCourseForm] = useState(false); // State to manage modal visibility
-    const [selectedCourse, setSelectedCourse] = useState(null); // State to store selected course for editing
-    const [userCourses, setUserCourses] = useState([]); // State to store user's registered courses
+const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fetchEvents }) => {
+    const [showCourseForm, setShowCourseForm] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState(null);
+    const [userCourses, setUserCourses] = useState([]);
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false); // For dialog visibility
+    const [courseToRemove, setCourseToRemove] = useState(null); // For storing the course to remove
 
     useEffect(() => {
         if (userType === "student") {
             fetchUserCourses();
         }
         fetchCourses();
-        
     }, []);
 
     const fetchUserCourses = async () => {
@@ -36,8 +37,8 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fet
     };
 
     const toggleCourseForm = (course) => {
-        setSelectedCourse(course); // Set selected course for editing or null for new course
-        setShowCourseForm(!showCourseForm); // Toggle modal visibility
+        setSelectedCourse(course);
+        setShowCourseForm(!showCourseForm);
     };
 
     const handleSaveCourse = async (course) => {
@@ -49,7 +50,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fet
                 method,
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                    'Content-Type': 'application/json', // Add Content-Type header
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(course),
             });
@@ -57,26 +58,27 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fet
             if (!response.ok) {
                 throw new Error(`Failed to ${course.id ? 'update' : 'add'} course`);
             }
-            fetchCourses(); // Refresh the courses list
+            fetchCourses();
 
-            setShowCourseForm(false); // Close the modal after saving
+            setShowCourseForm(false);
         } catch (error) {
             console.error(`Error ${course.id ? 'updating' : 'adding'} course:`, error);
         }
     };
 
-    const handleRemoveCourse = async (courseId) => {
+    const handleConfirmRemoveCourse = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/remove_course/${courseId}`, {
+            const response = await fetch(`http://localhost:5000/remove_course/${courseToRemove}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`, // Ensure token is sent
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                 },
             });
             if (!response.ok) {
                 throw new Error('Failed to remove course');
             }
-            fetchCourses(); // Refresh courses after removing
+            fetchCourses();
+            setShowConfirmationDialog(false); // Close the dialog
         } catch (error) {
             console.error('Error removing course:', error);
         }
@@ -92,21 +94,21 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fet
                 },
                 body: JSON.stringify({ course_id: courseId }),
             });
-    
+
             if (!response.ok) {
                 const errorMessage = await response.json();
                 throw new Error(errorMessage.message);
             }
-    
+
             const data = await response.json();
-            console.log(data.message); // Optional: Handle the response message if needed
-            fetchUserCourses(); // Refresh the user's registered courses
+            console.log(data.message);
+            fetchUserCourses();
             fetchEvents();
         } catch (error) {
             console.error('Error adding course to user:', error.message);
         }
     };
-    
+
     const handleRemoveCourseFromUser = async (courseId) => {
         try {
             const response = await fetch('http://localhost:5000/remove_course_from_user', {
@@ -117,21 +119,21 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fet
                 },
                 body: JSON.stringify({ course_id: courseId }),
             });
-    
+
             if (!response.ok) {
                 const errorMessage = await response.json();
                 throw new Error(errorMessage.message);
             }
-    
+
             const data = await response.json();
-            console.log(data.message); // Optional: Handle the response message if needed
-            fetchUserCourses(); // Refresh the user's registered courses
+            console.log(data.message);
+            fetchUserCourses();
             fetchEvents();
         } catch (error) {
             console.error('Error removing course from user:', error.message);
         }
     };
-    
+
     const getRowClassName = (level) => {
         switch (level) {
             case 'Advanced':
@@ -178,7 +180,9 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fet
                                                 <td>{course.duration}</td>
                                                 <td>{course.level}</td>
                                                 <td>
-                                                    <button className="remove-btn" onClick={() => handleRemoveCourseFromUser(course.id)}>Remove</button>
+                                                    <button className="remove-btn" onClick={() => {
+                                                        handleRemoveCourseFromUser(course.id);
+                                                    }}>Remove</button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -218,7 +222,10 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fet
                                                 ) : (
                                                     <p>
                                                         <button className="edit-btn" onClick={() => toggleCourseForm(course)}>Edit</button>
-                                                        <button className="remove-btn" onClick={() => handleRemoveCourse(course.id)}>Remove</button>
+                                                        <button className="remove-btn" onClick={() => {
+                                                            setCourseToRemove(course.id);
+                                                            setShowConfirmationDialog(true);
+                                                        }}>Remove</button>
                                                     </p>
                                                 )}
                                             </td>
@@ -230,12 +237,26 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType ,fet
                     )}
                 </>
             )}
+
             <CourseFormModal
                 isOpen={showCourseForm}
                 onClose={() => setShowCourseForm(false)}
                 onSave={handleSaveCourse}
                 course={selectedCourse}
             />
+
+            {/* Built-in Confirmation Dialog */}
+            {showConfirmationDialog && (
+                <div className="confirmation-dialog-overlay">
+                    <div className="confirmation-dialog-content">
+                        <p>Are you sure you want to remove this course?</p>
+                        <div className="confirmation-dialog-buttons">
+                            <button className="confirmation-btn" onClick={handleConfirmRemoveCourse}>Yes</button>
+                            <button className="confirmation-btn" onClick={() => setShowConfirmationDialog(false)}>No</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
