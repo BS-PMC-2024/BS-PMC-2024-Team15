@@ -133,7 +133,7 @@
 }
 
 
-.rbc-toolbar button:hover, .rbc-toolbar button:active, .rbc-toolbar button:focus, .rbc-toolbar button.rbc-active {
+.rbc-toolbar button:hover, .rbc-toolbar button:active, .rbc-toolbar button:focus, .rbc-toolbar button.rbc-active {/* today btn contrast */
     background-color: #fff;
     border-radius: 10px !important;
     font-weight: 900;
