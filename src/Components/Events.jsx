@@ -41,7 +41,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
     };
 
     // Get sorted upcoming events
-    const sortedUpcomingEvents = sortEventsByTimeLeft(upcomingEvents);
+    const sortedUpcomingEvents = sortEventsByTimeLeft(upcomingEvents);//sorted events by time
 
     // Handle updating an existing event
     const handleSaveEvent = async (event) => {
