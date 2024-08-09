@@ -135,6 +135,7 @@ const CalendarComponent = ({ events, fetchEvents }) => {
                 }}
             />
             <EventFormModal
+            // the day highlighted is the current date.
                 isOpen={showEventForm}
                 onClose={handleCloseEventForm}
                 onSave={handleSaveEvent}
