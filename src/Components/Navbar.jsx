@@ -79,7 +79,6 @@ const Navbar = ({ userType, fetchCourses, fetchPosts }) => {
         } catch (error) {
             console.error('Network error:', error);
         }
-        alert('event added successfully!');
         fetchPosts();
         handleCloseEventForm();
     };
@@ -106,7 +105,6 @@ const Navbar = ({ userType, fetchCourses, fetchPosts }) => {
         } catch (error) {
             console.error('Network error:', error);
         }
-        alert('course added successfully!');
         fetchCourses();
         handleCloseCourseModal();
     };
@@ -136,12 +134,10 @@ const Navbar = ({ userType, fetchCourses, fetchPosts }) => {
                     My Profile
                 </button>
                 {userType !== "student" && <button className="nav-btn" onClick={handleOpenCourseModal}>Add Course</button>}
-
                 {userType === "admin" && <button className="nav-btn" onClick={handleOpenEventForm}>Post Event</button>}
-               
-     
-                <button className="nav-btn" onClick={handleOpenLogoutModal}><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
-
+                <button className="nav-btn">About Us</button>
+                <button className="nav-btn" onClick={handleOpenLogoutModal}>Logout</button>
+            </div>
 
             <EventFormModal
                 isOpen={isEventFormOpen}
@@ -177,7 +173,6 @@ const Navbar = ({ userType, fetchCourses, fetchPosts }) => {
                     </div>
                 </div>
             )}
-            </div>
         </nav>
     );
 };

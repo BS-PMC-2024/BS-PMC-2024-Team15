@@ -80,18 +80,6 @@
     padding: 17px 15px;
 }
 
-
-
-.success-message {
-    color: #28a745; /* Green color for success */
-    background-color: #d4edda ; /* Light green background */
-    border: 1px solid #c3e6cb; /* Slightly darker green border */
-    padding: 10px;
-    border-radius: 4px;
-    margin-top: 10px;
-    text-align: center;
-}
-
 /* Error message styling */
 .error {
     color: #f44336; /* Red color for error messages */

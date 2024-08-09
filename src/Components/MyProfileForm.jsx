@@ -99,7 +99,6 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
                 <span className="close" onClick={onClose}>&times;</span>
                 <form onSubmit={handleSubmit}>
                     <h2>Profile:{"" + profileData.fullName}</h2>
-
                     <label>
                         Email:
                         <input

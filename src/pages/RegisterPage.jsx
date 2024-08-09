@@ -105,6 +105,7 @@ const RegisterPage = () => {
                             id="gender"
                             value={gender}
                             onChange={(e) => setGender(e.target.value)}
+
                         >
                             <option value="male">Male</option>
                             <option value="female">Female</option>
