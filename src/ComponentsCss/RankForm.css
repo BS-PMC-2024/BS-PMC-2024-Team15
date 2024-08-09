@@ -1,0 +1,74 @@
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 70px;
+    border-radius: 8px;
+    text-align: center;
+    width: 580px; /* Adjust as needed */
+}
+
+.rating-options {
+    display: flex;
+    justify-content: space-between;
+    margin: 35px 0;
+}
+
+.rating-options label {
+    margin: 0 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
+}
+
+form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+form button[type="submit"] {
+    background-color: #4CAF50; /* Adjust color as needed */
+    color: white;
+}
+
+form button[type="button"] {
+    background-color: #f44336; /* Adjust color as needed */
+    color: white;
+}
+
+.rating-options input[type="radio"] {
+    width: 13px;
+    height: 13px;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.rating-options label {
+    font-size: 20px; /* Adjust the font size to match the larger circles */
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+}

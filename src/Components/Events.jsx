@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import '../ComponentsCss/Events.css';
-import EventFormModal from './EventForm'; // Import the modal component
+import EventFormModal from './EventForm';
+import RankForm from './RankForm'; // Import the RankForm component
 
 const EventsComponent = ({ events, loading, fetchEvents }) => {
-    const [showEventForm, setShowEventForm] = useState(false); // State to manage modal visibility
-    const [selectedEvent, setSelectedEvent] = useState(null); // State to store selected event for editing
-    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false); // State for remove confirmation modal
-    const [eventToRemove, setEventToRemove] = useState(null); // State to store event ID to remove
+    const [showEventForm, setShowEventForm] = useState(false); 
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false); 
+    const [eventToRemove, setEventToRemove] = useState(null); 
+    const [showRankForm, setShowRankForm] = useState(false); 
+    const [weeklyRank, setWeeklyRank] = useState(0); 
+    const [eventState,setEvents] = useState(events);
 
-    // Function to toggle modal visibility and set selected event for editing
     const toggleEventForm = (event) => {
-        setSelectedEvent(event); // Set selected event for editing
-        setShowEventForm(!showEventForm); // Toggle modal visibility
+        setSelectedEvent(event);
+        setShowEventForm(!showEventForm);
     };
 
-    // Calculating time left until upcoming event starts
+    const toggleRankForm = (event) => {
+        setSelectedEvent(event);
+        setShowRankForm(!showRankForm);
+    };
+
     const calculateTimeLeft = (startTime) => {
         const eventTime = new Date(startTime);
         const now = new Date();
@@ -23,27 +30,23 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
         const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
         const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
-        return { days, hours, minutes, total: timeLeft }; // Return total milliseconds for sorting
+        return { days, hours, minutes, total: timeLeft };
     };
 
-    // Separate events into upcoming and completed
     const now = new Date();
     const upcomingEvents = events.filter(event => new Date(event.startTime) > now);
     const completedEvents = events.filter(event => new Date(event.startTime) <= now);
 
-    // Function to sort events by time left
     const sortEventsByTimeLeft = (events) => {
         return events.slice().sort((a, b) => {
             const timeLeftA = calculateTimeLeft(a.startTime).total;
             const timeLeftB = calculateTimeLeft(b.startTime).total;
-            return timeLeftA - timeLeftB; // Sort in ascending order of time left
+            return timeLeftA - timeLeftB;
         });
     };
 
-    // Get sorted upcoming events
-    const sortedUpcomingEvents = sortEventsByTimeLeft(upcomingEvents);//sorted events by time
+    const sortedUpcomingEvents = sortEventsByTimeLeft(upcomingEvents);
 
-    // Handle updating an existing event
     const handleSaveEvent = async (event) => {
         try {
             const method = event.id ? 'PUT' : 'POST';
@@ -61,19 +64,26 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                 throw new Error(`Failed to ${event.id ? 'update' : 'add'} event`);
             }
 
-            // Refresh events after saving or updating
-            alert('event added successfully!');
+            alert('Event added successfully!');
             fetchEvents();
-            setShowEventForm(false); // Close the modal after saving
+            setShowEventForm(false);
         } catch (error) {
             console.error(`Error ${event.id ? 'updating' : 'adding'} event:`, error);
         }
     };
 
-    // Handle removing an event with confirmation
+    const handleSaveRank = (eventId, rank) => {
+        setEvents(prevEvents =>
+            prevEvents.map(event =>
+                event.id === eventId ? { ...event, rank } : event
+            )
+        );
+        setWeeklyRank(prevRank => prevRank + rank); 
+    };
+
     const confirmRemoveEvent = (eventId) => {
-        setEventToRemove(eventId); // Set the event ID to be removed
-        setIsRemoveModalOpen(true); // Open the confirmation modal
+        setEventToRemove(eventId);
+        setIsRemoveModalOpen(true);
     };
 
     const handleRemoveEvent = async () => {
@@ -84,16 +94,14 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
             if (!response.ok) {
                 throw new Error('Failed to remove event');
             }
-            // Refresh events after removing
-            alert('event removed');
+            alert('Event removed');
             fetchEvents();
-            setIsRemoveModalOpen(false); // Close the confirmation modal
+            setIsRemoveModalOpen(false);
         } catch (error) {
             console.error('Error removing event:', error);
         }
     };
 
-    // Function to determine row class based on event importance
     const getRowClassName = (importance) => {
         switch (importance) {
             case 'High':
@@ -174,7 +182,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                         <td>{event.duration}</td>
                                                         <td>{event.eventType}/{event.importance}</td>
                                                         <td>
-                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
+                                                            <button className="edit-btn" onClick={() => toggleRankForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
                                                             <button className="remove-btn" onClick={() => confirmRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
                                                         </td>
                                                     </tr>
@@ -186,6 +194,15 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                             )}
                         </>
                     )}
+
+                    {showRankForm && (
+                        <RankForm
+                            event={selectedEvent}
+                            onSave={(rank) => handleSaveRank(selectedEvent.id, rank) }
+                            onClose={()=> setShowRankForm(false)}
+                        />
+                    )}
+
                     <EventFormModal 
                         isOpen={showEventForm} 
                         onClose={() => setShowEventForm(false)} 
@@ -194,7 +211,14 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                         slot={null} 
                     />
 
-                    {/* Remove Confirmation Modal */}
+                    {showRankForm && (
+                        <RankForm
+                            event={selectedEvent}
+                            onSave={handleSaveRank}
+                            onClose={() => setShowRankForm(false)}
+                        />
+                    )}
+
                     {isRemoveModalOpen && (
                         <div className="modal-background">
                             <div className="modal-content">
