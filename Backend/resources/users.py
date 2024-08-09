@@ -28,9 +28,11 @@ class userRegister(MethodView):
         email = data.get('email')
         password = data.get('password')
         dateOfBirth = data.get('dateOfBirth')
+        gender=data.get('gender')
         userType = data.get('type')
         receiveNews = data.get('receiveNews')
         fullName = data.get('fullName')
+        icon = data.get('icon')
         planDay = data.get('planDay')
         stickSchedule = data.get('stickSchedule')
         satesfiedTasks = data.get('satesfiedTasks')
@@ -48,8 +50,10 @@ class userRegister(MethodView):
                 'email': email,
                 'dateOfBirth': dateOfBirth,
                 'type': userType,
+                'gender':gender,
                 'receiveNews': receiveNews,
                 'fullName': fullName,
+                'icon': icon,
                 'courses' : courses,
                 'planDay': planDay,
                 'stickSchedule': stickSchedule,
