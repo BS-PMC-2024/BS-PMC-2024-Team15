@@ -250,12 +250,13 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
 
             {/* Built-in Confirmation Dialog */}
             {showConfirmationDialog && (
-                <div className="confirmation-dialog-overlay">
-                    <div className="confirmation-dialog-content">
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Confirm Remove course</h2>
                         <p>Are you sure you want to remove this course?</p>
-                        <div className="confirmation-dialog-buttons">
-                            <button className="confirmation-btn" onClick={handleConfirmRemoveCourse}>Yes</button>
-                            <button className="confirmation-btn" onClick={() => setShowConfirmationDialog(false)}>No</button>
+                        <div className="modal-buttons">
+                            <button className="modal-btn" onClick={handleConfirmRemoveCourse}>Yes</button>
+                            <button className="modal-btn" onClick={() => setShowConfirmationDialog(false)}>No</button>
                         </div>
                     </div>
                 </div>
