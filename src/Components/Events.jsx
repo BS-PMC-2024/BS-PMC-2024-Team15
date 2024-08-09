@@ -5,6 +5,8 @@ import EventFormModal from './EventForm'; // Import the modal component
 const EventsComponent = ({ events, loading, fetchEvents }) => {
     const [showEventForm, setShowEventForm] = useState(false); // State to manage modal visibility
     const [selectedEvent, setSelectedEvent] = useState(null); // State to store selected event for editing
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false); // State for remove confirmation modal
+    const [eventToRemove, setEventToRemove] = useState(null); // State to store event ID to remove
 
     // Function to toggle modal visibility and set selected event for editing
     const toggleEventForm = (event) => {
@@ -60,6 +62,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
             }
 
             // Refresh events after saving or updating
+            alert('event added successfully!');
             fetchEvents();
             setShowEventForm(false); // Close the modal after saving
         } catch (error) {
@@ -67,17 +70,24 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
         }
     };
 
-    // Handle removing an event
-    const handleRemoveEvent = async (eventId) => {
+    // Handle removing an event with confirmation
+    const confirmRemoveEvent = (eventId) => {
+        setEventToRemove(eventId); // Set the event ID to be removed
+        setIsRemoveModalOpen(true); // Open the confirmation modal
+    };
+
+    const handleRemoveEvent = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/remove_event/${eventId}`, {
+            const response = await fetch(`http://localhost:5000/remove_event/${eventToRemove}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
                 throw new Error('Failed to remove event');
             }
             // Refresh events after removing
+            alert('event removed');
             fetchEvents();
+            setIsRemoveModalOpen(false); // Close the confirmation modal
         } catch (error) {
             console.error('Error removing event:', error);
         }
@@ -132,7 +142,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                         <td>{event.eventType}/{event.importance}</td>
                                                         <td>
                                                             <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-pencil"></i> Edit</button>
-                                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
+                                                            <button className="remove-btn" onClick={() => confirmRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -165,7 +175,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                         <td>{event.eventType}/{event.importance}</td>
                                                         <td>
                                                             <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
-                                                            <button className="remove-btn" onClick={() => handleRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
+                                                            <button className="remove-btn" onClick={() => confirmRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -183,6 +193,20 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                         event={selectedEvent} 
                         slot={null} 
                     />
+
+                    {/* Remove Confirmation Modal */}
+                    {isRemoveModalOpen && (
+                        <div className="modal-background">
+                            <div className="modal-content">
+                                <h2>Confirm Remove Event</h2>
+                                <p>Are you sure you want to remove this event?</p>
+                                <div className="modal-buttons">
+                                    <button className="modal-btn" onClick={handleRemoveEvent}>Yes</button>
+                                    <button className="modal-btn" onClick={() => setIsRemoveModalOpen(false)}>No</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
         </div>

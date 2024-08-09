@@ -17,13 +17,13 @@ const StudentHomePage = ({userType, onOpenCourseModal, calendarRef, eventsRef, s
                 <h2>Events</h2>
                 <EventsComponent events={events} loading={loading} fetchEvents={fetchEvents} />
             </div>
-            <div ref={statisticsRef}>
-                <h2>Statistics</h2>
-                <GraphComponent events={events} loading={loading} fetchEvents={fetchEvents} />
-            </div>
             <div ref={coursesRef}>
                 <h2>Courses</h2>
                 <CoursesComponent courses={courses} loadingCourses={loadingCourses} fetchEvents={fetchEvents} fetchCourses={fetchCourses} userType={userType} />
+            </div>
+            <div ref={statisticsRef}>
+                <h2>Statistics</h2>
+                <GraphComponent events={events} loading={loading} fetchEvents={fetchEvents} />
             </div>
             <div>
                 <h2>Recommended Events</h2>
