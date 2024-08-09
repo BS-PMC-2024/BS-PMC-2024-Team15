@@ -62,6 +62,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
             }
 
             // Refresh events after saving or updating
+            alert('event added successfully!');
             fetchEvents();
             setShowEventForm(false); // Close the modal after saving
         } catch (error) {
@@ -84,6 +85,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                 throw new Error('Failed to remove event');
             }
             // Refresh events after removing
+            alert('event removed');
             fetchEvents();
             setIsRemoveModalOpen(false); // Close the confirmation modal
         } catch (error) {

@@ -77,6 +77,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
             if (!response.ok) {
                 throw new Error('Failed to remove course');
             }
+            alert('course removed ');
             fetchCourses();
             setShowConfirmationDialog(false); // Close the dialog
         } catch (error) {
@@ -102,6 +103,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
 
             const data = await response.json();
             console.log(data.message);
+            alert('course added successfully!');
             fetchUserCourses();
             fetchEvents();
         } catch (error) {
@@ -127,6 +129,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
 
             const data = await response.json();
             console.log(data.message);
+            alert('course removed successfully!');
             fetchUserCourses();
             fetchEvents();
         } catch (error) {
