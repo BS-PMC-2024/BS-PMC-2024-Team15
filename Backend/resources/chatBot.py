@@ -36,11 +36,20 @@ def get_completion_from_messages(messages, model="gpt-4o-mini", temperature=0):
     )
     return response.choices[0].message["content"]
 
-# Initial context to inform the bot about its job.
+def verify_firebase_token(id_token):
+    firebase_config = current_app.config['FIREBASE_CONFIG']
+    verify_url = f"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={firebase_config['apiKey']}"
+    response = requests.post(verify_url, json={'idToken': id_token})
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception("Token verification failed")
+
+# Initial context to inform the bot about his job.
 context = [
     {'role': 'system', 'content': """
 You are a smart assistant designed to help students plan effective study schedules to improve their 
-performance in school or college and achieve their academic goals.
+performance in school or college and achieve their academic and personal goals.
 
 1. **Gathering Information**:
    - Ask the user how many days they have until the test.
@@ -151,6 +160,34 @@ class AIassistant(MethodView):
         data = request.get_json()
         prompt = data.get("user_input")
         action = data.get("action")
+        flag = data.get("flag")
+        if(flag):   
+          auth_header = request.headers.get('Authorization')
+          if not auth_header or not auth_header.startswith('Bearer '):
+              return jsonify({"message": "Missing or invalid token"}), 401
+
+          id_token = auth_header.split(' ')[1]
+          decoded_token = verify_firebase_token(id_token)
+          user_id = decoded_token['users'][0]['localId']
+
+          # Fetch the user's events
+          if(decoded_token):
+              firestore_db = current_app.config['FIRESTORE_DB']
+              events_ref = firestore_db.collection('events').where('user_id', '==', user_id)
+              events = events_ref.stream()
+
+              events_list = []
+              for event in events:
+                  event_data = event.to_dict()
+                  event_data['id'] = event.id
+                  events_list.append(event_data)
+
+              # Add the user's events to the context
+              context.append({'role': 'system', 'content': f"User's upcoming events: {events_list}"})
+              print(events_list)
+
+          else:
+              return jsonify({"message": str("error")}), 400
         
         if action == "Chat":
             context.append({'role': 'user', 'content': f"{prompt}"})
@@ -174,26 +211,25 @@ class AIassistant(MethodView):
 
             # parse the JSON string
             summaryData = json.loads(json_string)
-            
+
             # iterate through the days and their tasks to create the data from the response
             for offset, day in enumerate(summaryData['days']):
               day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
-              print(f"Date: {day['date']}")
               for task in day["tasks"]:
-                  print(f"  Time: {task['time']}")
-                  print(f"  Mission: {task['mission']}")
-                  print(f"  Event Name: {task['event_name']}")
-                  print(f"  Importance Level: {task['importance_level']}")
-                  print(f"  Event Type: {task['event_type']}")
-                  print("")
-            studyPlan = jsonify(summaryData)
-            createEventsFromChat(studyPlan)
-            return jsonify(message='events created succssefully')
+                print(f"  Event Name: {task['event_name']}")
+                print(f"  Date: {day['date']}")
+                print(f"  Time: {task['time']}")
+                print(f"  Mission: {task['mission']}")
+                
+                print(f"  Importance Level: {task['importance_level']}")
+                print(f"  Event Type: {task['event_type']}")
+                print("")
+    
+            # createEventsFromChat(summaryData)
+            return jsonify("events created succssefully"), 200
         
         return jsonify({'content': 'Invalid action'}), 400
     
 
-def createEventsFromChat(studyPlan):
-    print('i am the study plan from func')
-    print(studyPlan)
-    
+# def createEventsFromChat(studyPlan):
+   

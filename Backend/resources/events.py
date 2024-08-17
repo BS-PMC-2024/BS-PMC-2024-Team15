@@ -67,7 +67,7 @@ class addEvent(MethodView):
             print("Error:", str(e))
             return jsonify({"message": str(e)}), 400
         
-
+    
 
 @blp.route('/get_events', methods=['GET'])
 class getEvents(MethodView):
@@ -91,7 +91,7 @@ class getEvents(MethodView):
                 event_data = event.to_dict()
                 event_data['id'] = event.id
                 events_list.append(event_data)
-
+            
             return jsonify(events_list), 200
         except Exception as e:
             return jsonify({"message": str(e)}), 400
