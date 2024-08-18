@@ -57,11 +57,13 @@ const AIAssistantComponent = ({ isOpen, onClose }) => {
 
     const handleCreateEvents = async () => {
         setIsLoading(true);
+        const token = getToken();
         try {
-            const response = await fetch('http://localhost:5000/aibot', {
+            const response = await fetch('http://localhost:5000/AI_study_plan', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({ user_input: '', action: 'Create Events' }),
             });

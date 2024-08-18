@@ -76,6 +76,7 @@ performance in school or college and achieve their academic and personal goals.
        - `date`: The specific date. Use the get_current_date function to get the current date.
        - `tasks`: An array of tasks/events for that day. Each task/event should be a dictionary with the following keys:
          - `time`: The time allocated for the task/event.
+         - `duration`: how much time is allocated for the task
          - `mission`: The description of the task/event.
          - `event_name`: A short name that describes the task/event.
          - `importance_level`: The importance level of the task/event, which can be 'low', 'medium', or 'high'.
@@ -93,6 +94,7 @@ For example:
       "tasks": [
         {
           "time": "8:00-10:00",
+          "duration": 2:00,
           "mission": "learn math for 2 hours",
           "event_name": "Math Study",
           "importance_level": "high",
@@ -100,6 +102,7 @@ For example:
         },
         {
           "time": "10:00-10:15",
+          "duration": 0:15,
           "mission": "take a break",
           "event_name": "Break",
           "importance_level": "low",
@@ -107,6 +110,7 @@ For example:
         },
         {
           "time": "10:15-12:15",
+          "duration": 2:00,
           "mission": "learn complex algebra",
           "event_name": "Complex Algebra",
           "importance_level": "high",
@@ -119,6 +123,7 @@ For example:
       "tasks": [
         {
           "time": "8:00-10:00",
+          "duration": 2:00,
           "mission": "learn physics for 2 hours",
           "event_name": "Physics Study",
           "importance_level": "high",
@@ -126,6 +131,7 @@ For example:
         },
         {
           "time": "10:00-10:15",
+          "duration": 0:15,
           "mission": "take a break",
           "event_name": "Break",
           "importance_level": "low",
@@ -133,6 +139,7 @@ For example:
         },
         {
           "time": "10:15-12:15",
+          "duration": 2:00,
           "mission": "learn quantum mechanics",
           "event_name": "Quantum Mechanics",
           "importance_level": "high",
@@ -155,12 +162,14 @@ remember to use the get_current_date function for the date value in the JSON for
 # route the response from the openAI API to the client side 
 @blp.route("/aibot", methods=["POST"])
 class AIassistant(MethodView):
-    def post(self):
-        global context
+    def post(self): 
         data = request.get_json()
         prompt = data.get("user_input")
         action = data.get("action")
         flag = data.get("flag")
+
+        id_token = None
+
         if(flag):   
           auth_header = request.headers.get('Authorization')
           if not auth_header or not auth_header.startswith('Bearer '):
@@ -211,25 +220,155 @@ class AIassistant(MethodView):
 
             # parse the JSON string
             summaryData = json.loads(json_string)
+            if id_token:  # Check if id_token is available
+                try:
+                    ai_study_plan_url = "http://localhost:5000/AI_study_plan"  # Replace with your actual endpoint URL
+                    headers = {
+                        'Authorization': f'Bearer {id_token}',
+                        'Content-Type': 'application/json'
+                    }
+                    response = requests.post(ai_study_plan_url, headers=headers, json=summaryData)
+                    
+                    if response.status_code == 200:
+                        return jsonify("Study plan events created successfully"), 200
+                    else:
+                        return jsonify({"message": f"Failed to create events: {response.text}"}), response.status_code
 
-            # iterate through the days and their tasks to create the data from the response
-            for offset, day in enumerate(summaryData['days']):
-              day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
-              for task in day["tasks"]:
-                print(f"  Event Name: {task['event_name']}")
-                print(f"  Date: {day['date']}")
-                print(f"  Time: {task['time']}")
-                print(f"  Mission: {task['mission']}")
-                
-                print(f"  Importance Level: {task['importance_level']}")
-                print(f"  Event Type: {task['event_type']}")
-                print("")
-    
-            # createEventsFromChat(summaryData)
-            return jsonify("events created succssefully"), 200
+                except Exception as e:
+                    print("Error sending data to AI_study_plan:", str(e))
+                    return jsonify({"message": str(e)}), 500
+            else:
+                return jsonify({"message": "ID token is missing or invalid"}), 400
         
         return jsonify({'content': 'Invalid action'}), 400
+            
     
 
-# def createEventsFromChat(studyPlan):
-   
+@blp.route("/AI_study_plan", methods=["POST"])
+class AIassistant(MethodView):
+    def post(self):
+      data = request.get_json()
+      action = data.get("action")
+
+      auth_header = request.headers.get('Authorization')
+      if not auth_header or not auth_header.startswith('Bearer '):
+        return jsonify({"message": "Missing or invalid token"}), 401
+
+      id_token = auth_header.split(' ')[1]
+      decoded_token = verify_firebase_token(id_token)
+      user_id = decoded_token['users'][0]['localId']
+
+      if action == "Create Events":
+            context.append(
+                {'role': 'system', 'content':
+                 "return the study plan in the JSON format like the example you have. "},
+            )
+            response = get_completion_from_messages(context)
+            start = response.find('{')
+            end = response.rfind('}') + 1
+            json_string = response[start:end]
+
+            # parse the JSON string
+            summaryData = json.loads(json_string)
+# Process each day and task in the study plan
+            for offset, day in enumerate(summaryData['days']):
+                day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
+                for task in day["tasks"]:
+                    print(f"  Event Name: {task['event_name']}")
+                    print(f"  Date: {day['date']}")
+                    print(f"  Time: {task['time']}")
+                    print(f"  Duration: {task['duration']}")
+                    print(f"  Mission: {task['mission']}")  
+                    print(f"  Importance Level: {task['importance_level']}")
+                    print(f"  Event Type: {task['event_type']}")
+                    print("")
+                    try:
+                      event_ref = {
+                          'title': task['event_name'],
+                          'startTime': task['time'],
+                          'duration': task['duration'],
+                          'importance': task['importance_level'],
+                          'description': task['mission'],
+                          'eventType': task['event_type'],
+                          'user_id': user_id,
+                          'createdAt': firestore.SERVER_TIMESTAMP
+                       }
+            
+                      firestore_db = current_app.config['FIRESTORE_DB']
+                      doc_ref = firestore_db.collection('events').add(event_ref)
+                      event_id = doc_ref[1].id  # Get the generated document ID
+                      return jsonify({"message": "Event added successfully", "id": event_id}), 200
+
+                    except Exception as e:
+                        print("Error:", str(e))
+                        return jsonify({"message": str(e)}), 400
+                    # Here you would add the logic to create the events in your database
+
+            return jsonify("Events created successfully"), 200
+
+
+
+#     if not summaryData or 'days' not in summaryData:
+        #         return jsonify({"message": "Invalid or missing study plan data"}), 400
+
+        #     # Process each day and task in the study plan
+        #     for offset, day in enumerate(summaryData['days']):
+        #         day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
+        #         for task in day["tasks"]:
+        #             print(f"  Event Name: {task['event_name']}")
+        #             print(f"  Date: {day['date']}")
+        #             print(f"  Time: {task['time']}")
+        #             print(f"  Mission: {task['mission']}")  
+        #             print(f"  Importance Level: {task['importance_level']}")
+        #             print(f"  Event Type: {task['event_type']}")
+        #             print("")
+
+        #             # Here you would add the logic to create the events in your database
+
+        #     return jsonify("Events created successfully"), 200
+
+        # except Exception as e:
+        #     print("Error processing study plan:", str(e))
+        #     return jsonify({"message": str(e)}), 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # try:
+        #     summaryData = request.get_json()
+
+        #     if not summaryData or 'days' not in summaryData:
+        #         return jsonify({"message": "Invalid or missing study plan data"}), 400
+
+        #     # Process each day and task in the study plan
+        #     for offset, day in enumerate(summaryData['days']):
+        #         day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
+        #         for task in day["tasks"]:
+        #             print(f"  Event Name: {task['event_name']}")
+        #             print(f"  Date: {day['date']}")
+        #             print(f"  Time: {task['time']}")
+        #             print(f"  Mission: {task['mission']}")  
+        #             print(f"  Importance Level: {task['importance_level']}")
+        #             print(f"  Event Type: {task['event_type']}")
+        #             print("")
+
+        #             # Here you would add the logic to create the events in your database
+
+        #     return jsonify("Events created successfully"), 200
+
+        # except Exception as e:
+        #     print("Error processing study plan:", str(e))
+        #     return jsonify({"message": str(e)}), 500
