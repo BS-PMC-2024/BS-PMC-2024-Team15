@@ -83,6 +83,21 @@ class GraphComponent extends React.Component {
             }]
         };
 
+        // useEffect(() => {
+        //     const fetchWeeklyEfficiency = async () => {
+        //         const response = await fetch('http://localhost:5000/get_weekly_efficiency', {
+        //             headers: {
+        //                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        //             }
+        //         });
+        //         const data = await response.json();
+        //         setEfficiencyData(data);
+        //     };
+        
+        //     fetchWeeklyEfficiency();
+        // }, []);
+
+        
         return (
             <div id="statistic">
                 {loading ? (

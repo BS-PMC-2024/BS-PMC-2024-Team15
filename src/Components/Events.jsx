@@ -200,6 +200,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                             event={selectedEvent}
                             onSave={(rank) => handleSaveRank(selectedEvent.id, rank) }
                             onClose={()=> setShowRankForm(false)}
+                            fetchEvents={fetchEvents}
                         />
                     )}
 
@@ -210,15 +211,6 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                         event={selectedEvent} 
                         slot={null} 
                     />
-
-                    {showRankForm && (
-                        <RankForm
-                            event={selectedEvent}
-                            onSave={handleSaveRank}
-                            onClose={() => setShowRankForm(false)}
-                        />
-                    )}
-
                     {isRemoveModalOpen && (
                         <div className="modal-background">
                             <div className="modal-content">

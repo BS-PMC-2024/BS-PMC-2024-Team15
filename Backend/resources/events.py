@@ -4,6 +4,7 @@ from flask import request, jsonify, current_app
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 import requests
+import datetime
 
 
 blp = Blueprint('events', __name__, description='Operations on events')
@@ -195,3 +196,69 @@ class uploudImage(MethodView):
         except Exception as e:
             print("Error:", str(e))
             return jsonify({'message': str(e)}), 400
+        
+
+@blp.route('/rank_event/<string:eventId>', methods=['PUT'])
+class rankEvent(MethodView):
+    def put(self, eventId):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            data = request.get_json()
+            rank = data.get('rank')
+
+            if rank is None:
+                return jsonify({"message": "Rank value is required"}), 400
+
+            event_ref = firestore_db.collection('events').document(eventId)
+            event_ref.update({"rank": rank, "isRanked": True})
+
+            # Optional: Calculate weekly efficiency and store it
+            calculate_and_store_weekly_efficiency(eventId, rank)
+
+            return jsonify({"message": "Event ranked successfully"}), 200
+        except Exception as e:
+            return jsonify({"message": str(e)}), 400
+
+
+
+@blp.route('/rank_event/<string:eventId>', methods=['PUT'])
+class rankEvent(MethodView):
+    def put(self, eventId):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            data = request.get_json()
+            rank = data.get('rank')
+
+            if rank is None:
+                return jsonify({"message": "Rank value is required"}), 400
+
+            event_ref = firestore_db.collection('events').document(eventId)
+            event_ref.update({"rank": rank, "isRanked": True})
+
+            # Optional: Calculate weekly efficiency and store it
+            calculate_and_store_weekly_efficiency(eventId, rank)
+
+            return jsonify({"message": "Event ranked successfully"}), 200
+        except Exception as e:
+            return jsonify({"message": str(e)}), 400
+
+def calculate_and_store_weekly_efficiency(eventId, rank):
+    firestore_db = current_app.config['FIRESTORE_DB']
+    event = firestore_db.collection('events').document(eventId).get().to_dict()
+    user_id = event['user_id']
+    
+    # Calculate current week number
+    current_week = datetime.datetime.now().isocalendar()[1]
+
+    # Query all events for the current week
+    events_ref = firestore_db.collection('events').where('user_id', '==', user_id).where('weekNumber', '==', current_week).stream()
+    ranks = [event.to_dict().get('rank', 0) for event in events_ref]
+    
+    # Calculate average rank for the week
+    if ranks:
+        avg_rank = sum(ranks) / len(ranks)
+        # Save to weekly_efficiency collection
+        firestore_db.collection('users').document(user_id).collection('weekly_efficiency').document(str(current_week)).set({
+            'weekNumber': current_week,
+            'efficiencyScore': avg_rank,
+        })
