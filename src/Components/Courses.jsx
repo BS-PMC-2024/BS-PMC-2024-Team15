@@ -8,6 +8,9 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
     const [userCourses, setUserCourses] = useState([]);
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false); // For dialog visibility
     const [courseToRemove, setCourseToRemove] = useState(null); // For storing the course to remove
+    const [showInfoDialog, setShowInfoDialog] = useState(false); // For Info dialog visibility
+    const [infoCourse, setInfoCourse] = useState(null); // For storing the course to show info
+    const [registeredUsers, setRegisteredUsers] = useState([]);
 
     useEffect(() => {
         if (userType === "student") {
@@ -15,6 +18,26 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
         }
         fetchCourses();
     }, []);
+
+
+    const fetchRegisteredUsers = async (courseId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/get_course_users/${courseId}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to fetch registered users`);
+            }
+            const data = await response.json();
+            setRegisteredUsers(data);
+            console.log(data);
+        } catch (error) {
+            console.error("Error fetching registered users:", error);
+        }
+    };
+    
 
     const fetchUserCourses = async () => {
         try {
@@ -152,6 +175,12 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
 
     const filteredCourses = courses.filter(course => !userCourses.includes(course.id));
 
+    const handleInfoClick = (course) => {
+        setInfoCourse(course);
+        setShowInfoDialog(true);
+        fetchRegisteredUsers(course.id);
+    };
+
     return (
         <div className="courses">
             {loadingCourses ? (
@@ -224,6 +253,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                                     </>
                                                 ) : (
                                                     <p>
+                                                        <button className="info-btn" onClick={() => handleInfoClick(course)}>View Info</button>
                                                         <button className="edit-btn" onClick={() => toggleCourseForm(course)}>Edit</button>
                                                         <button className="remove-btn" onClick={() => {
                                                             setCourseToRemove(course.id);
@@ -252,11 +282,45 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
             {showConfirmationDialog && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h2>Confirm Remove course</h2>
+                        <h2>Confirm Remove Course</h2>
                         <p>Are you sure you want to remove this course?</p>
                         <div className="modal-buttons">
                             <button className="modal-btn" onClick={handleConfirmRemoveCourse}>Yes</button>
                             <button className="modal-btn" onClick={() => setShowConfirmationDialog(false)}>No</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Info Dialog */}
+            {showInfoDialog && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Course Information</h2>
+                        {infoCourse && (
+                            <>
+                                <p><strong>Course Name:</strong> {infoCourse.name}</p>
+                                <p><strong>Instructor:</strong> {infoCourse.instructor}</p>
+                                <p><strong>Start Date:</strong> {new Date(infoCourse.startDate).toLocaleDateString()}</p>
+                                <p><strong>Duration:</strong> {infoCourse.duration}</p>
+                                <p><strong>Level:</strong> {infoCourse.level}</p>
+                                <p><strong>Description:</strong> {infoCourse.description}</p>
+                                {/* Add any other fields you want to display */}
+                                <p><strong>Registered Users:</strong></p>
+                                <ul>
+                                {registeredUsers && registeredUsers.length > 0 ? (
+                                        registeredUsers.map((user, index) => (
+                                        <li key={index}>{user}</li>
+                                        ))
+                                    ) : (
+                                        <li>No users registered for this course.</li>
+                                    )}
+                                </ul>
+                            </>
+                        )}
+                        <div className="modal-buttons">
+                            <button className="modal-btn" onClick={() => setShowInfoDialog(false)}>Send mail to students</button>
+                            <button className="modal-btn" onClick={() => setShowInfoDialog(false)}>Close</button>
                         </div>
                     </div>
                 </div>
