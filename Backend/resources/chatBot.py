@@ -16,6 +16,29 @@ def get_current_date():
 def get_date_with_offset(offset):
     return (datetime.datetime.now() + datetime.timedelta(days=offset)).strftime("%Y-%m-%d")
 
+from datetime import datetime, timedelta
+
+def get_date_with_offset(offset):
+    return (datetime.now() + timedelta(days=offset)).strftime("%Y-%m-%d")
+
+def convert_time_to_iso(original_time, offset):
+    # Get the date with the specified offset
+    desired_date = get_date_with_offset(offset)
+    
+    # Split the time range to get the start time
+    start_time_str = original_time.split("-")[0]
+    
+    # Combine date and time into a single string
+    datetime_str = f"{desired_date} {start_time_str}"
+    
+    # Parse it into a datetime object
+    dt = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+    
+    # Convert it to the desired ISO 8601 format
+    formatted_time = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    
+    return formatted_time
+
 
 def get_completion(prompt, model="gpt-4o-mini"):
     openai.api_key = current_app.config.get('OPENAI_API_KEY')
@@ -210,7 +233,9 @@ class AIassistant(MethodView):
         elif action == "Create Events":
             context.append(
                 {'role': 'system', 'content':
-                 "return the study plan in the JSON format like the example you have. "},
+                 "return the study plan in the JSON format like the example you have. "
+                 "Make sure to avoid scheduling tasks at times when the user"
+                 "already has other events on their calendar."},
             )
             response = get_completion_from_messages(context)
             # seprate the JSON part from the response.
@@ -282,10 +307,14 @@ class AIassistant(MethodView):
                     print(f"  Importance Level: {task['importance_level']}")
                     print(f"  Event Type: {task['event_type']}")
                     print("")
-                    try:
-                      event_ref = {
+
+                    original_time = task['time']
+                    print(original_time)
+                    formatted_time = convert_time_to_iso(original_time, offset)
+                    print(formatted_time)
+                    event_ref = {
                           'title': task['event_name'],
-                          'startTime': task['time'],
+                          'startTime': formatted_time,
                           'duration': task['duration'],
                           'importance': task['importance_level'],
                           'description': task['mission'],
@@ -293,16 +322,13 @@ class AIassistant(MethodView):
                           'user_id': user_id,
                           'createdAt': firestore.SERVER_TIMESTAMP
                        }
-            
-                      firestore_db = current_app.config['FIRESTORE_DB']
-                      doc_ref = firestore_db.collection('events').add(event_ref)
-                      event_id = doc_ref[1].id  # Get the generated document ID
-                      return jsonify({"message": "Event added successfully", "id": event_id}), 200
+                    
+                    firestore_db = current_app.config['FIRESTORE_DB']
+                    doc_ref = firestore_db.collection('events').add(event_ref)
+                    event_id = doc_ref[1].id  # Get the generated document ID
+                
+                    print(f"Event added successfully, Event ID: {event_id} \n")
 
-                    except Exception as e:
-                        print("Error:", str(e))
-                        return jsonify({"message": str(e)}), 400
-                    # Here you would add the logic to create the events in your database
 
             return jsonify("Events created successfully"), 200
 
