@@ -21,6 +21,7 @@ const HomePage = () => {
     const [userType, setUserType] = useState(null);
     const [posts, setPosts] = useState([]);
     const [loadingPosts, setLoadingPosts] = useState(true);
+    const [UserId,setUserId] = useState('');
 
     useEffect(() => {
         fetchUserType();
@@ -32,6 +33,7 @@ const HomePage = () => {
     const fetchUserType = async () => {
         try {
             const idToken = localStorage.getItem('accessToken');
+           
             if (!idToken) {
                 throw new Error('No access token found');
             }
@@ -50,6 +52,7 @@ const HomePage = () => {
 
             const data = await response.json();
             setUserType(data.user_type);
+            setUserId(data.user_id);
         } catch (error) {
             console.error('Error fetching user type:', error);
         }
@@ -209,6 +212,7 @@ const HomePage = () => {
                 <main className="main-content">
                     <h1 class="main_logo">Study Buddy</h1>
                     <UserHomePage
+                        UserId={UserId}
                         calendarRef={calendarRef}
                         eventsRef={eventsRef}
                         statisticsRef={statisticsRef}
