@@ -90,7 +90,7 @@ class getCourses(MethodView):
                 course_data['id'] = course.id
                 courses_list.append(course_data)
 
-            print("Courses fetched from DB:", courses_list)  # Debug print
+            # print("Courses fetched from DB:", courses_list)  # Debug print
 
             return jsonify(courses_list), 200
         except Exception as e:
