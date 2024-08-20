@@ -95,9 +95,14 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     };
 
     const handleSelectEvent = (event) => {
-        setSelectedEvent(event);
-        setSelectedSlot(null);
-        setShowEventForm(true);
+        if(!event.isRanked) {
+            setSelectedEvent(event);
+            setSelectedSlot(null);
+            setShowEventForm(true);
+        }
+        else{
+            alert("This event has been ranked, and cannot be edited.")
+        }
     };
 
     const handleCloseEventForm = () => {
