@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import PostCarousel from '../Components/PostCarousel';
 import CoursesComponent from '../Components/Courses';
-import GeneralMsgModal from '../Components/GeneralMsgModal'; // Import the modal
+import GeneralMsgModal from '../Components/GeneralMsgModal';
+import AdminUserTable from '../Components/AdminUserTable'; // Import the new AdminUserTable component
 
 const AdminHomePage = ({ userType, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, fetchPosts, courses, fetchCourses, coursesRef, posts, loadingPosts }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,6 +50,7 @@ const AdminHomePage = ({ userType, loadingCourses, fetchEvents, showAIAssistant,
         }
     };
 
+
     return (
         <>
             <div ref={coursesRef}>
@@ -60,10 +62,10 @@ const AdminHomePage = ({ userType, loadingCourses, fetchEvents, showAIAssistant,
                 <PostCarousel posts={posts} loadingPosts={loadingPosts} fetchPosts={fetchPosts} fetchEvents={fetchEvents} userType={userType} />
             </div>
             <div>
-                <h2>Registered users:</h2>
+                <h2>Registered Users</h2>
+                <AdminUserTable /> {/* Add the AdminUserTable component here */}
                 <button onClick={handleOpenModal}>Send General Msg</button>
             </div>
-
             <GeneralMsgModal
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}

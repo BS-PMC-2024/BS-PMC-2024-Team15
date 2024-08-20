@@ -3,7 +3,7 @@ import '../ComponentsCss/AiChatForm.css';
 import { ThreeDots } from 'react-loader-spinner';
 import { getToken } from '../features/tokenUtils';
 
-const AIAssistantComponent = ({ isOpen, onClose }) => {
+const AIAssistantComponent = ({ isOpen, onClose, fetchEvents }) => {
     const [userInput, setUserInput] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +34,7 @@ const AIAssistantComponent = ({ isOpen, onClose }) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`, // Add the token here
                 },
-                body: JSON.stringify({ user_input: newMessage.content, action: 'Chat',flag: 'True' }),
+                body: JSON.stringify({ user_input: newMessage.content, action: 'Chat', flag: 'True' }),
             });
 
             if (!response.ok) {
@@ -83,6 +83,7 @@ const AIAssistantComponent = ({ isOpen, onClose }) => {
             ]);
         } finally {
             setIsLoading(false);
+            fetchEvents();
         }
     };
 

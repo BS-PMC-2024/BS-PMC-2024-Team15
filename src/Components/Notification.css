@@ -1,41 +1,68 @@
-/* Notification.css */
+/* Notification container for dropdown alignment */
 .notification-container {
-  background-color: #f4f4f4;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  margin: 10px 0;
   position: relative;
-    border: 0;
-
-    box-shadow: 0 10px 29px rgba(0, 0, 0, 0.08);
-    border-radius: 15px;
-    padding: 15px;
+  display: inline-block;
 }
 
-.notification-card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+/* Hamburger button styles */
+.hamburger-button {
+  margin-top:20px;
+  padding-top: 10px;
+  width: 200px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative; 
+}
+
+/* Red dot indicating unread notifications */
+.notification-dot {
+  position: absolute;
+  top: 0;
+  right: -10px; /* Adjust the position of the dot */
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+/* Notification dropdown menu styles */
+.notification-dropdown {
+  position: absolute;
+  top: 100%; /* Align dropdown below the button */
+  left: 0;
+  width: 300px;
+  background-color: #333;
+  color: white;
   padding: 10px;
-  margin-bottom: 10px;
-  position: relative;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+}
+
+.notification-dropdown.open {
+  display: block;
+}
+
+/* Notification card styles */
+.notification-card {
+  background-color: #444;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.notification-card p {
+  margin: 0;
 }
 
 .dismiss-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: green;
-  border: none;
+  background-color: #ff6666;
   color: white;
-  border-radius: 4px;
+  border: none;
   padding: 5px 10px;
+  border-radius: 4px;
   cursor: pointer;
-  width: 100px;
-  padding: unset;
-}
-
-.dismiss-button:hover {
-  background-color: #232020;
+  margin-top: 5px;
 }

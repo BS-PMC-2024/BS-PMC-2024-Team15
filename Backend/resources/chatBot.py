@@ -102,9 +102,9 @@ performance in school or college and achieve their academic and personal goals.
          - `duration`: how much time is allocated for the task
          - `mission`: The description of the task/event.
          - `event_name`: A short name that describes the task/event.
-         - `importance_level`: The importance level of the task/event, which can be 'low', 'medium', or 'high'.
+         - `importance`: The importance level of the task/event, which can be 'low', 'medium', or 'high'.
           Rank them considering the `mission` value.
-         - `event_type`: The type of the task/event, which can be 'study', 'social', or 'hobby'.
+         - `eventType`: The type of the task/event, which can be 'study', 'social', or 'hobby'.
 
 For example:
 
@@ -120,24 +120,24 @@ For example:
           "duration": 2:00,
           "mission": "learn math for 2 hours",
           "event_name": "Math Study",
-          "importance_level": "high",
-          "event_type": "study"
+          "importance": "High",
+          "eventType": "Study"
         },
         {
           "time": "10:00-10:15",
           "duration": 0:15,
           "mission": "take a break",
           "event_name": "Break",
-          "importance_level": "low",
-          "event_type": "hobby"
+          "importance": "Low",
+          "eventType": "Hobby"
         },
         {
           "time": "10:15-12:15",
           "duration": 2:00,
           "mission": "learn complex algebra",
           "event_name": "Complex Algebra",
-          "importance_level": "high",
-          "event_type": "study"
+          "importance": "High",
+          "eventType": "Study"
         }
       ]
     },
@@ -149,24 +149,24 @@ For example:
           "duration": 2:00,
           "mission": "learn physics for 2 hours",
           "event_name": "Physics Study",
-          "importance_level": "high",
-          "event_type": "study"
+          "importance": "High",
+          "eventType": "Study"
         },
         {
           "time": "10:00-10:15",
           "duration": 0:15,
           "mission": "take a break",
           "event_name": "Break",
-          "importance_level": "low",
-          "event_type": "hobby"
+          "importance": "Low",
+          "eventType": "Hobby"
         },
         {
           "time": "10:15-12:15",
           "duration": 2:00,
           "mission": "learn quantum mechanics",
           "event_name": "Quantum Mechanics",
-          "importance_level": "high",
-          "event_type": "study"
+          "importance": "High",
+          "eventType": "Study"
         }
       ]
     }
@@ -304,8 +304,8 @@ class AIassistant(MethodView):
                     print(f"  Time: {task['time']}")
                     print(f"  Duration: {task['duration']}")
                     print(f"  Mission: {task['mission']}")  
-                    print(f"  Importance Level: {task['importance_level']}")
-                    print(f"  Event Type: {task['event_type']}")
+                    print(f"  Importance Level: {task['importance']}")
+                    print(f"  Event Type: {task['eventType']}")
                     print("")
 
                     original_time = task['time']
@@ -316,9 +316,9 @@ class AIassistant(MethodView):
                           'title': task['event_name'],
                           'startTime': formatted_time,
                           'duration': task['duration'],
-                          'importance': task['importance_level'],
+                          'importance': task['importance'],
                           'description': task['mission'],
-                          'eventType': task['event_type'],
+                          'eventType': task['eventType'],
                           'user_id': user_id,
                           'createdAt': firestore.SERVER_TIMESTAMP
                        }
@@ -345,8 +345,8 @@ class AIassistant(MethodView):
         #             print(f"  Date: {day['date']}")
         #             print(f"  Time: {task['time']}")
         #             print(f"  Mission: {task['mission']}")  
-        #             print(f"  Importance Level: {task['importance_level']}")
-        #             print(f"  Event Type: {task['event_type']}")
+        #             print(f"  Importance Level: {task['importance']}")
+        #             print(f"  Event Type: {task['eventType']}")
         #             print("")
 
         #             # Here you would add the logic to create the events in your database
@@ -387,8 +387,8 @@ class AIassistant(MethodView):
         #             print(f"  Date: {day['date']}")
         #             print(f"  Time: {task['time']}")
         #             print(f"  Mission: {task['mission']}")  
-        #             print(f"  Importance Level: {task['importance_level']}")
-        #             print(f"  Event Type: {task['event_type']}")
+        #             print(f"  Importance Level: {task['importance']}")
+        #             print(f"  Event Type: {task['eventType']}")
         #             print("")
 
         #             # Here you would add the logic to create the events in your database

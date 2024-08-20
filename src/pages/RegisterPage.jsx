@@ -27,10 +27,45 @@ const RegisterPage = () => {
     const [satesfiedTasks, setSatesfiedTasks] = useState(0);
     const [deadlinedTasks, setnDeadlinedTasks] = useState(0);
     const [prioritizeTasks, setPrioritizeTasks] = useState(0);
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
+    const validateFullName = (name) => {
+        const nameRegex = /^[A-Za-z\s]{1,20}$/;
+        return nameRegex.test(name);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const newErrors = {};
+
+        if (!validateFullName(fullName)) {
+            newErrors.fullName = 'Full name must be between 1 and 20 characters and contain only letters and spaces.';
+        }
+
+        if (!validateEmail(email)) {
+            newErrors.email = 'Invalid email format.';
+        }
+
+        if (!validatePassword(password)) {
+            newErrors.password = 'Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, and one number.';
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
         fetch("http://localhost:5000/register", {
             method: "POST",
             headers: {
@@ -93,6 +128,8 @@ const RegisterPage = () => {
                             onChange={(e) => setFullName(e.target.value)}
                             required
                         />
+                        {errors.fullName && <p className="error-message">{errors.fullName}</p>}
+
                         <label htmlFor="dateOfBirth">Date of Birth (optional)</label>
                         <input
                             type="date"
@@ -100,6 +137,7 @@ const RegisterPage = () => {
                             value={dateOfBirth}
                             onChange={(e) => setDateOfBirth(e.target.value)}
                         />
+
                         <label htmlFor="gender">Gender</label>
                         <select
                             id="gender"
@@ -110,6 +148,7 @@ const RegisterPage = () => {
                             <option value="female">Female</option>
                             <option value="else">Else</option>
                         </select>
+
                         <label htmlFor="type">Type</label>
                         <select
                             id="type"
@@ -119,6 +158,7 @@ const RegisterPage = () => {
                             <option value="student">Student</option>
                             <option value="lecturer">Lecturer</option>
                         </select>
+
                         <label htmlFor="email">Email</label>
                         <input
                             type="email"
@@ -127,6 +167,8 @@ const RegisterPage = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
+                        {errors.email && <p className="error-message">{errors.email}</p>}
+
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
@@ -135,6 +177,8 @@ const RegisterPage = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
+                        {errors.password && <p className="error-message">{errors.password}</p>}
+
                         <label htmlFor="icon">Icon:</label>
                         <div className="icon-selector">
                             <div className="selected-icon" onClick={() => setIcon(!icon)}>
@@ -148,16 +192,22 @@ const RegisterPage = () => {
                                 ))}
                             </div>
                         </div>
+
                         <label>How often do you plan your day in advance?</label>
                         {renderRatingOptions(setPlanDay, planDay, "planDay")}
+
                         <label>How well do you stick to your planned schedule?</label>
                         {renderRatingOptions(setStickSchedule, stickSchedule, "stickSchedule")}
+
                         <label>How effectively do you prioritize your tasks?</label>
                         {renderRatingOptions(setPrioritizeTasks, prioritizeTasks, "prioritizeTasks")}
+
                         <label>How often do you meet deadlines?</label>
                         {renderRatingOptions(setnDeadlinedTasks, deadlinedTasks, "deadlinedTasks")}
+
                         <label>How satisfied are you with your current time management skills?</label>
                         {renderRatingOptions(setSatesfiedTasks, satesfiedTasks, "satesfiedTasks")}
+
                         <div className="receive-emails">
                             <input
                                 type="checkbox"
@@ -167,10 +217,11 @@ const RegisterPage = () => {
                             />
                             <label htmlFor="receiveNews">Interested in receiving news</label>
                         </div>
+
                         <button type="submit">Register</button>
                         <p>
                             Have an account?
-                            <a href="http://localhost:3000/login#!" className="register-link"> Login</a>
+                            <a href="/login" className="register-link"> Login</a>
                         </p>
                     </form>
                 </div>
