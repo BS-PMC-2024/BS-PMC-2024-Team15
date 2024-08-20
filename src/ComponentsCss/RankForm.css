@@ -40,7 +40,7 @@
 
 form {
     display: flex;
-    flex-direction: column;
+    flex-direction: ROW;
     align-items: center;
 }
 

@@ -38,28 +38,7 @@
     font-weight: 800;
 }
 
-.courses-table td button {
-    width: 50%;
-    height: 44px;
-    background-color: #bd9cfd;
-    color: black;
-    font-weight: 900;
-    border: none;
-    padding: 7px 23px;
-    box-shadow: none;
-    font-size: 14px;
-    border-radius: 0;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border-radius: 20px;
-    border-bottom: 3px solid #0000001c;
-}
 
-.courses-table td button:hover {
-    background-color: #9773dc; /* Darker blue on hover */
-    color: #fff;
-    transition: 0.2s all;
-}
 
 .courses-table tbody tr:nth-child(even) {
     background-color: #f9f9f9; /* Alternate row background color */

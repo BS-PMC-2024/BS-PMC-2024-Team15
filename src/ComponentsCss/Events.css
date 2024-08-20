@@ -38,16 +38,17 @@
     font-weight: 800;
 }
 
-.events-table td button {
-    width: 50%;
+.events-table td button, .courses-table td button, .event-card button.edit, .modal-buttons button:first-child, .dialog-actions button:first-child {
+    width: 45%;
     height: 44px;
     background-color: #bd9cfd;
     color: black;
     font-weight: 900;
     border: none;
-    padding: 7px 23px;
+    padding: 5px 15px;
+    margin: 0 5px;
     box-shadow: none;
-    font-size: 14px;
+    font-size: 12px;
     border-radius: 0;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -55,7 +56,7 @@
     border-bottom: 3px solid #0000001c;
 }
 
-.events-table td button:hover {
+.events-table td button:hover, .courses-table td button:hover, .event-card button.edit:hover {
     background-color: #9773dc; /* Darker blue on hover */
     color: #fff;
     transition: 0.2s all;
@@ -70,7 +71,7 @@
     color: white; /* White text color */
     border: none; /* No border */
     padding: 10px 20px; /* Padding inside the button */
-    font-size: 16px; /* Font size */
+    font-size: 12px; /* Font size */
     cursor: pointer; /* Cursor style on hover */
     border-radius: 5px; /* Rounded corners */
 }
@@ -88,12 +89,13 @@
     background-color: #004d99; /* Darker blue when button is clicked */
 }
 
-.events-table td .remove-btn {
+.events-table td .remove-btn, .event-card button.remove, .modal-buttons button:last-child, .dialog-actions button:nth-of-type(2) {
     background-color: #ff8d86;
     color: black;
     border: none;
+    font-weight: BOLD;
     padding: 8px 12px;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     border-radius: 0;
     transition: background-color 0.3s ease;
@@ -195,7 +197,7 @@
     cursor: pointer;
     background-color: #4CAF50;
     color: white;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 .modal-btn:hover {

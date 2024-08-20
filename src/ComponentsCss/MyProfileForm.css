@@ -34,7 +34,7 @@
 }
 
 .modal-content form label {
-    display: block;
+    display: contents;
     margin-bottom: 15px;
     color: black;
     width: 100%;
@@ -123,4 +123,17 @@ h3 {
     color: #2c2c2c !important;
     text-align: center;
     padding: 10px;
+}
+
+.profile_quizz_test{
+    text-align: left;
+    line-height: 32px;
+
+    span{
+        font-weight: bold;
+        background-color: #bd9cfd;
+        color: #fff;
+        padding: 3px 10px;
+        border-radius: 5px;
+    }
 }

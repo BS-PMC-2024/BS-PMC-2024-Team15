@@ -29,10 +29,17 @@
 
 .ai-assistant.closed {
     transform: translateY(100%);
+
 }
 
 .ai-assistant.open {
     transform: translateY(0);
+    position: absolute;
+    bottom: 45px;
+    left: 40px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+
+
 }
 
 .ai-assistant-content {

@@ -117,45 +117,47 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
 
     return (
         <div className="modal-overlay">
-            <div className="modal-content">
+            <div className="modal-content add-new-course-form">
                 <h2>{course ? 'Edit Course' : 'Add New Course'}</h2>
                 <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
-                    <label>
-                        Course Name:
-                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                        {errors.name && <p className="error">{errors.name}</p>}
-                    </label>
-                    <label>
-                        Instructor:
-                        <input type="text" value={instructor} onChange={(e) => setInstructor(e.target.value)} />
-                        {errors.instructor && <p className="error">{errors.instructor}</p>}
-                    </label>
-                    <label>
-                        Start Date:
-                        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-                        {errors.startDate && <p className="error">{errors.startDate}</p>}
-                    </label>
-                    <label>
-                        Duration:
-                        <select value={duration} onChange={(e) => setDuration(e.target.value)}>
-                            <option value="1 weeks">1 weeks</option>
-                            <option value="2 weeks">2 weeks</option>
-                            <option value="3 weeks">3 weeks</option>
-                            <option value="4 weeks">4 weeks</option>
-                            <option value="6 weeks">6 weeks</option>
-                            <option value="8 weeks">8 weeks</option>
-                            <option value="14 weeks">14 weeks</option>
-                        </select>
-                    </label>
-                    <label>
-                        Level:
-                        <select value={level} onChange={(e) => setLevel(e.target.value)}>
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Advanced">Advanced</option>
-                        </select>
-                    </label>
-                    <label>
+                    <div style={{width:' 50%'}}>
+                        <label>
+                            Course Name:
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                            {errors.name && <p className="error">{errors.name}</p>}
+                        </label>
+                        <label>
+                            Instructor:
+                            <input type="text" value={instructor} onChange={(e) => setInstructor(e.target.value)} />
+                            {errors.instructor && <p className="error">{errors.instructor}</p>}
+                        </label>
+                        <label>
+                            Start Date:
+                            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                            {errors.startDate && <p className="error">{errors.startDate}</p>}
+                        </label>
+                        <label>
+                            Duration:
+                            <select value={duration} onChange={(e) => setDuration(e.target.value)}>
+                                <option value="1 weeks">1 weeks</option>
+                                <option value="2 weeks">2 weeks</option>
+                                <option value="3 weeks">3 weeks</option>
+                                <option value="4 weeks">4 weeks</option>
+                                <option value="6 weeks">6 weeks</option>
+                                <option value="8 weeks">8 weeks</option>
+                                <option value="14 weeks">14 weeks</option>
+                            </select>
+                        </label>
+                        <label>
+                            Level:
+                            <select value={level} onChange={(e) => setLevel(e.target.value)}>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </label>
+                    </div>
+                    <label className="days_and_time">
                         Days and Times:
                         <div className="checkbox-group">
                             {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'].map((day) => (
@@ -194,7 +196,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                         </div>
                         {errors.days && <p className="error">{errors.days}</p>}
                     </label>
-                    <label>
+                    <label className="form_desc_input">
                         Description:
                         <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                         {errors.description && <p className="error">{errors.description}</p>}

@@ -1,10 +1,10 @@
 
-h2 {
+.reg_main h2 {
   font-family: 'Varela Round' !important;
   font-size: 58px !important;
   font-weight: 900 !important;
   color: #2c2c2c !important;
-  text-align: center;
+  text-align: left;
 }
 
 h3 {
@@ -15,28 +15,17 @@ h3 {
   text-align: center;
 }
 
-.registration-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 2em;
-  background: #000000d4 !important;
-  backdrop-filter: blur(20px);
-  border-radius: 25px;
-  box-shadow: 0 15px 60px #00000063;
-}
-
 .registration-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   background: #fff;
-  padding: 2em;
+  padding: 50px;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  max-width: 500px; /* This sets the max width */
-  width: 100%;
+  max-width: unset;
+  width: fit-content;
+  justify-content: center;
 }
 
 .registration-form-container {
@@ -52,7 +41,8 @@ h3 {
 
 .registration-form-container form {
   display: flex;
-  flex-direction: column;
+  width: 100%;
+  flex-direction: row;
   gap: 1em;
 }
 
@@ -60,16 +50,11 @@ h3 {
   font-size: 16px;
   color: #2c2c2c;
   font-weight: bold;
+  display: inline-grid;
+  width: 50%;
+  padding: 0 15px;
 }
 
-.registration-form-container input,
-.registration-form-container select {
-  padding: 0.75em;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-  font-family: "Varela Round", sans-serif;
-}
 
 .registration-form-container input:focus,
 .registration-form-container select:focus {
@@ -82,24 +67,55 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
 
-.rating-options label {
-  display: flex;
-  align-items: center;
-}
+  label {
+    display: flex;
+    align-items: center;
 
-.rating-options input {
-  margin-right: 0.5em;
+
+    input {
+      margin: 0;
+      margin-right: 10px;
+      width: 30px;
+      accent-color: #9773dc;
+    }
+  }
+
 }
 
 .receive-emails {
   display: flex;
   align-items: center;
   gap: 0.5em;
+  margin-top: 10px;
+  
+    label{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      input{
+        width: 20px;
+        margin-top: 0;
+      }
+    }
+
+}
+
+.reg_btn_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  p{
+    font-size: 20px !important;
+  }
 }
 
 .registration-form-container button {
+  width: 400px;
+  height: 60px;
   padding: 0.75em;
   background-color: #2c2c2c;
   color: #fff;
@@ -113,6 +129,7 @@ h3 {
 .registration-form-container button:hover {
   background-color: #9773dc;
 }
+
 
 .registration-form-container p {
   margin-top: 1em;
@@ -130,6 +147,25 @@ h3 {
   text-decoration: underline;
 }
 
+.reg_quiz {
+  max-width: 35%;
+  width: -webkit-fill-available;
+  background: #f7f7f7;
+  padding: 1em;
+  border-radius: 15px;
+
+  label {
+    width: 100%;
+    font-size: 18px;
+    margin: 15px 0 0;      
+  }
+}
+
+.reg_main{
+  max-width: 60%;
+  width: -webkit-fill-available;
+  text-align: left;
+}
 
 .register-form .icon-selector select {
   width: 100%;
@@ -151,17 +187,12 @@ h3 {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #f4f4f4;
-}
-
-.registration-container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 90%;
-  max-width: 600px;
+  height: 100%;
+  padding: 2em;
+  background: #000000d4 !important;
+  backdrop-filter: blur(20px);
+  border-radius: 25px;
+  box-shadow: 0 15px 60px #00000063;
 }
 
 .registration-form-container {
@@ -170,31 +201,88 @@ h3 {
   align-items: center;
 }
 
+.registration-form-container{
+input, select{
+    height: 50px;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+    padding: 15px;
+    box-shadow: none !important;
+    margin-top: 5px;
+    margin-bottom: 0 !important;
+    border: 0 !important;
+    border-radius: 8px;
+    background: #f5f6f8;
+    color: black;
+    transition: 0.4s all;
+
+    &:focus{
+      background-color: #9773dc1a !important;
+      transition: 0.4s all;
+    }
+  }
+}
+
 .icon-selector {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .selected-icon {
-  cursor: pointer;
-  border: 1px solid #ccc;
-  padding: 5px;
-  border-radius: 5px;
+  width: fit-content;
+  border-radius: 50%;
+  padding: 20px;
+  border: 0;
+  background: #c1a8f2;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+  img{
+    width: 50px;
+    height: 50px;
+  }
 }
+
+
 
 .icon-list {
   display: flex;
   flex-wrap: wrap;
   margin-top: 5px;
+  align-items: center;
+  
+  .icon-item {
+    margin: 5px;
+    border: 1px solid transparent;
+    transition: border-color 0.3s;
+    background: #f5f6f8;
+    border-radius: 50%;
+    padding: 15px;
+    margin: 5px 10px;
+
+    img{
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+    }
+  }
 }
 
-.icon-item {
-  margin: 5px;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  transition: border-color 0.3s;
-}
+
 
 .icon-item:hover {
   border-color: #007bff;
+}
+
+p.error-message {
+  position: unset;
+  margin-top: 10px;
+  max-width: 340px;
+  background: #ffffff75;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #b8b8b8;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
