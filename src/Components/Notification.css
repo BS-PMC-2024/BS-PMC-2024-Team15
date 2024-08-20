@@ -1,41 +1,40 @@
-/* Notification.css */
-.notification-container {
-  background-color: #f4f4f4;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  margin: 10px 0;
-  position: relative;
-    border: 0;
-
-    box-shadow: 0 10px 29px rgba(0, 0, 0, 0.08);
-    border-radius: 15px;
-    padding: 15px;
-}
-
+/* Hide notification cards by default */
 .notification-card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 10px;
-  position: relative;
+  display: none; /* Hide the cards */
 }
 
-.dismiss-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: green;
-  border: none;
+/* Notification drawer styles */
+.notification-drawer {
+  position: fixed;
+  top: 0;
+  left: -300px; /* Initially off-screen */
+  width: 300px;
+  height: 100%;
+  background-color: #333;
   color: white;
-  border-radius: 4px;
-  padding: 5px 10px;
-  cursor: pointer;
-  width: 100px;
-  padding: unset;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  transition: left 0.3s ease;
+  z-index: 999;
+  overflow-y: auto; /* Allow scrolling if content exceeds height */
 }
 
-.dismiss-button:hover {
-  background-color: #232020;
+/* Show drawer and messages when open */
+.notification-drawer.open {
+  left: 0; /* Slide in */
+}
+
+.notification-drawer.open .notification-card {
+  display: block; /* Show the cards when drawer is open */
+}
+
+/* Backdrop to close the drawer when clicking outside */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
 }

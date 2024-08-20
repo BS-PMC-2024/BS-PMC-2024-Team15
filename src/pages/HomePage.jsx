@@ -21,7 +21,7 @@ const HomePage = () => {
     const [userType, setUserType] = useState(null);
     const [posts, setPosts] = useState([]);
     const [loadingPosts, setLoadingPosts] = useState(true);
-    const [UserId,setUserId] = useState('');
+    const [UserId, setUserId] = useState('');
 
     useEffect(() => {
         fetchUserType();
@@ -33,7 +33,7 @@ const HomePage = () => {
     const fetchUserType = async () => {
         try {
             const idToken = localStorage.getItem('accessToken');
-           
+
             if (!idToken) {
                 throw new Error('No access token found');
             }
@@ -43,7 +43,7 @@ const HomePage = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
                 },
-                body: JSON.stringify({ token: idToken  })
+                body: JSON.stringify({ token: idToken })
             });
 
             if (!response.ok) {
@@ -72,7 +72,7 @@ const HomePage = () => {
                     'Authorization': `Bearer ${idToken}`
                 }
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to fetch courses');
             }
@@ -113,8 +113,8 @@ const HomePage = () => {
             setLoading(false);
         }
     };
-    
-    const fetchPosts= async () => {
+
+    const fetchPosts = async () => {
         try {
             const idToken = localStorage.getItem('accessToken');
             if (!idToken) {
@@ -198,9 +198,9 @@ const HomePage = () => {
         <div className="homepage">
             <div className="container">
                 <div className="full_sidebar">
-                    <Navbar userType={userType}  
-                    fetchCourses={fetchCourses} 
-                    fetchPosts={fetchPosts}/>
+                    <Navbar userType={userType}
+                        fetchCourses={fetchCourses}
+                        fetchPosts={fetchPosts} />
                     <Sidebar
                         scrollToCourses={scrollToCourses}
                         scrollToCalendar={scrollToCalendar}
@@ -226,10 +226,10 @@ const HomePage = () => {
                         loadingCourses={loadingCourses}
                         courses={courses}
                         userType={userType}
-                        fetchPosts = {fetchPosts}
+                        fetchPosts={fetchPosts}
                         loadingPosts={loadingPosts}
                         posts={posts}
-                        
+
                     />
                 </main>
             </div>
@@ -240,6 +240,7 @@ const HomePage = () => {
                 <AIAssistantComponent
                     isOpen={showAIAssistant}
                     onClose={toggleAIAssistant}
+                    fetchEvents={fetchEvents}
                 />
             )}
 

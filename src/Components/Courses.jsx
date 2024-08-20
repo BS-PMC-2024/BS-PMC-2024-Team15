@@ -255,6 +255,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                         <th>Start Date</th>
                                         <th>Duration</th>
                                         <th>Level</th>
+                                        <th>Files</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -268,6 +269,22 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                                 <td>{new Date(course.startDate).toLocaleDateString()}</td>
                                                 <td>{course.duration}</td>
                                                 <td>{course.level}</td>
+                                                <td>
+                                                    {course.pdfUrls && course.pdfUrls.length > 0 ? (
+                                                        course.pdfUrls.map((pdfUrl, index) => {
+                                                            const fileName = decodeURIComponent(pdfUrl.split('/').pop());
+                                                            return (
+                                                                <div key={index}>
+                                                                    <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                                                                        {fileName}
+                                                                    </a>
+                                                                </div>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <span>No files uploaded</span>
+                                                    )}
+                                                </td>
                                                 <td>
                                                     <button className="remove-btn" onClick={() => {
                                                         handleRemoveCourseFromUser(course.id);
@@ -292,7 +309,9 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                         <th>Start Date</th>
                                         <th>Duration</th>
                                         <th>Level</th>
+                                        <th>Files</th>
                                         <th>Actions</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -303,6 +322,22 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                             <td>{new Date(course.startDate).toLocaleDateString()}</td>
                                             <td>{course.duration}</td>
                                             <td>{course.level}</td>
+                                            <td>
+                                                {course.pdfUrls && course.pdfUrls.length > 0 ? (
+                                                    course.pdfUrls.map((pdfUrl, index) => {
+                                                        const fileName = decodeURIComponent(pdfUrl.split('/').pop());
+                                                        return (
+                                                            <div key={index}>
+                                                                <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                                                                    {fileName}
+                                                                </a>
+                                                            </div>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <span>No files uploaded</span>
+                                                )}
+                                            </td>
                                             <td>
                                                 {userType === "student" ? (
                                                     <>

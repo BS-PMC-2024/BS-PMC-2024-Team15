@@ -1,24 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Notification.css';
 
-const Notification = ({ notifications, onRemoveNotification }) => {
-  return (
+const NotificationDrawer = ({ notifications }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-    <div className="notification-container">
-      <h2>messages</h2>
-      {notifications.map((notification) => (
-        <div key={notification.id} className="notification-card">
-          <p>{notification.message}</p>
-          <button
-            onClick={() => onRemoveNotification(notification.id)}
-            className="dismiss-button"
-          >
-            Confirm
-          </button>
-        </div>
-      ))}
-    </div>
+  const toggleDrawer = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <>
+      <button className="hamburger-button" onClick={toggleDrawer}>
+        &#9776;
+      </button>
+      {isOpen && <div className="backdrop" onClick={toggleDrawer}></div>}
+      <div className={`notification-drawer ${isOpen ? 'open' : ''}`}>
+        {notifications.map((notification, index) => (
+          <div key={index} className="notification-card">
+            <p>{notification.message}</p>
+            <button className="dismiss-button">Dismiss</button>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 
-export default Notification;
+export default NotificationDrawer;
