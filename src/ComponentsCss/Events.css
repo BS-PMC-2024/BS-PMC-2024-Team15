@@ -51,8 +51,7 @@
     border-radius: 0;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
+    border-radius: 20px;
     border-bottom: 3px solid #0000001c;
 }
 
@@ -98,8 +97,7 @@
     cursor: pointer;
     border-radius: 0;
     transition: background-color 0.3s ease;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
+    border-radius: 20px;
     border-bottom: 3px solid #0000001c;
 }
 

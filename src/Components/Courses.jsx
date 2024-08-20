@@ -59,7 +59,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
             console.error("Error fetching registered users:", error);
         }
     };
-    
+
 
     const fetchUserCourses = async () => {
         try {
@@ -203,40 +203,39 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
         fetchRegisteredUsers(course.id);
     };
 
-    const handleNotificationClick = (course,Notification) => {
+    const handleNotificationClick = (course, Notification) => {
         fetchRegisteredUserIds(course.id);
-        SaveNotification(registeredUsersIds,Notification)
-        console.log("click" + registeredUsersIds + Notification);
+        SaveNotification(registeredUsersIds, Notification)
     };
 
-   const SaveNotification = async (registeredUserIds, notification) => {
-    try {
-        const payload = {
-            user_ids: registeredUserIds,
-            message: notification
-        };
+    const SaveNotification = async (registeredUserIds, notification) => {
+        try {
+            const payload = {
+                user_ids: registeredUserIds,
+                message: notification
+            };
 
-        const response = await fetch('http://localhost:5000/add_notification', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        });
+            const response = await fetch('http://localhost:5000/add_notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
 
-        if (!response.ok) {
-            const errorMessage = await response.json();
-            throw new Error(errorMessage.error || 'Failed to save notification');
+            if (!response.ok) {
+                const errorMessage = await response.json();
+                throw new Error(errorMessage.error || 'Failed to save notification');
+            }
+
+            const data = await response.json();
+            console.log('Notification saved:', data);
+            return data;
+        } catch (error) {
+            console.error('Error saving notification:', error.message);
+            return { success: false, error: error.message };
         }
-
-        const data = await response.json();
-        console.log('Notification saved:', data);
-        return data;
-    } catch (error) {
-        console.error('Error saving notification:', error.message);
-        return { success: false, error: error.message };
-    }
-};
+    };
 
 
     return (
@@ -366,9 +365,9 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                 {/* Add any other fields you want to display */}
                                 <p><strong>Registered Users:</strong></p>
                                 <ul>
-                                {registeredUsers && registeredUsers.length > 0 ? (
+                                    {registeredUsers && registeredUsers.length > 0 ? (
                                         registeredUsers.map((user, index) => (
-                                        <li key={index}>{user}</li>
+                                            <li key={index}>{user}</li>
                                         ))
                                     ) : (
                                         <li>No users registered for this course.</li>
@@ -385,7 +384,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                             </>
                         )}
                         <div className="modal-buttons">
-                            <button className="modal-btn" onClick={() => handleNotificationClick(infoCourse,Notification)}>Send Notification to students</button>
+                            <button className="modal-btn" onClick={() => handleNotificationClick(infoCourse, Notification)}>Send Notification to students</button>
                             <button className="modal-btn" onClick={() => setShowInfoDialog(false)}>Close</button>
                         </div>
                     </div>

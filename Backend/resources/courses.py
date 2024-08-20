@@ -207,8 +207,9 @@ class GetCourseUsers(MethodView):
             for user_doc in users:
                 user_info = user_doc.to_dict()
                 courses = user_info.get('courses', [])
+                id = user_info.get('user_id')
                 if courseId in courses:
-                    registered_user_ids.append(user_doc.id)
+                    registered_user_ids.append(id)
 
             print(f"User Full Names: {registered_user_ids}")  # Debugging line
             return jsonify(registered_user_ids), 200

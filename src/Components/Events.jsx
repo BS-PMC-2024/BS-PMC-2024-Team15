@@ -48,7 +48,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
         try {
             const method = event.id ? 'PUT' : 'POST';
             const endpoint = event.id ? `update_event/${event.id}` : 'add_event';
-            
+
             const response = await fetch(`http://localhost:5000/${endpoint}`, {
                 method,
                 headers: {
@@ -151,7 +151,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                     </div>
                                 </>
                             )}
-                            
+
                             {completedEvents.length > 0 && (
                                 <>
                                     <h3>Completed Events</h3>
@@ -174,7 +174,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                         <td>{event.duration}</td>
                                                         <td>{event.eventType}/{event.importance}</td>
                                                         <td>
-                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
+                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank </button>
                                                             <button className="remove-btn" onClick={() => confirmRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
                                                         </td>
                                                     </tr>
@@ -186,12 +186,12 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                             )}
                         </>
                     )}
-                    <EventFormModal 
-                        isOpen={showEventForm} 
-                        onClose={() => setShowEventForm(false)} 
-                        onSave={handleSaveEvent} 
-                        event={selectedEvent} 
-                        slot={null} 
+                    <EventFormModal
+                        isOpen={showEventForm}
+                        onClose={() => setShowEventForm(false)}
+                        onSave={handleSaveEvent}
+                        event={selectedEvent}
+                        slot={null}
                     />
 
                     {/* Remove Confirmation Modal */}
