@@ -116,8 +116,8 @@ class getUserType(MethodView):
             if user_data:
                 user_info = user_data.to_dict()
                 user_type = user_info['type']
-
-                print (user_type)
+                
+                # print (user_type) # debug line
                 return jsonify({'user_type': user_type, 'user_id':user_id}), 200
             else:
                 return jsonify({"message": "User not found"}), 404
@@ -145,7 +145,7 @@ class getUser(MethodView):
 
             if user_data:
                 user_info = user_data.to_dict()
-                print(user_info)
+                # print(user_info) # debug line
                 return jsonify(user_info), 200
             else:
                 return jsonify({"message": "User not found"}), 404
@@ -449,7 +449,7 @@ class GetCourseUsers(MethodView):
                 id = user_info.get('user_id')
                 registered_user_ids.append(id)
 
-            print(f"User ids: {registered_user_ids}")  # Debugging line
+            # print(f"User ids: {registered_user_ids}")  # Debugging line
             return jsonify(registered_user_ids), 200
         except Exception as e:
             print(f"Error: {str(e)}")  # Debugging line
