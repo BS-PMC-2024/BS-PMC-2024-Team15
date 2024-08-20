@@ -16,7 +16,7 @@ def create_app():
     load_dotenv()
 
     if not firebase_admin._apps:
-        cred = credentials.Certificate(os.getenv('docker_path'))
+        cred = credentials.Certificate(os.getenv('local_path'))
         firebase_admin.initialize_app(cred,{
         'storageBucket': os.getenv('FIREBASE_STORAGE_BUCKET')})
 

@@ -4,13 +4,13 @@ import EventFormModal from './EventForm';
 import RankForm from './RankForm'; // Import the RankForm component
 
 const EventsComponent = ({ events, loading, fetchEvents }) => {
-    const [showEventForm, setShowEventForm] = useState(false); 
+    const [showEventForm, setShowEventForm] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false); 
-    const [eventToRemove, setEventToRemove] = useState(null); 
-    const [showRankForm, setShowRankForm] = useState(false); 
-    const [weeklyRank, setWeeklyRank] = useState(0); 
-    const [eventState,setEvents] = useState(events);
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+    const [eventToRemove, setEventToRemove] = useState(null);
+    const [showRankForm, setShowRankForm] = useState(false);
+    const [weeklyRank, setWeeklyRank] = useState(0);
+    const [eventState, setEvents] = useState(events);
 
     const toggleEventForm = (event) => {
         setSelectedEvent(event);
@@ -51,7 +51,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
         try {
             const method = event.id ? 'PUT' : 'POST';
             const endpoint = event.id ? `update_event/${event.id}` : 'add_event';
-            
+
             const response = await fetch(`http://localhost:5000/${endpoint}`, {
                 method,
                 headers: {
@@ -78,7 +78,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                 event.id === eventId ? { ...event, rank } : event
             )
         );
-        setWeeklyRank(prevRank => prevRank + rank); 
+        setWeeklyRank(prevRank => prevRank + rank);
     };
 
     const confirmRemoveEvent = (eventId) => {
@@ -159,7 +159,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                     </div>
                                 </>
                             )}
-                            
+
                             {completedEvents.length > 0 && (
                                 <>
                                     <h3>Completed Events</h3>
@@ -182,7 +182,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                         <td>{event.duration}</td>
                                                         <td>{event.eventType}/{event.importance}</td>
                                                         <td>
-                                                            <button className="edit-btn" onClick={() => toggleRankForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
+                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
                                                             <button className="remove-btn" onClick={() => confirmRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
                                                         </td>
                                                     </tr>
@@ -194,22 +194,12 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                             )}
                         </>
                     )}
-
-                    {showRankForm && (
-                        <RankForm
-                            event={selectedEvent}
-                            onSave={(rank) => handleSaveRank(selectedEvent.id, rank) }
-                            onClose={()=> setShowRankForm(false)}
-                            fetchEvents={fetchEvents}
-                        />
-                    )}
-
-                    <EventFormModal 
-                        isOpen={showEventForm} 
-                        onClose={() => setShowEventForm(false)} 
-                        onSave={handleSaveEvent} 
-                        event={selectedEvent} 
-                        slot={null} 
+                    <EventFormModal
+                        isOpen={showEventForm}
+                        onClose={() => setShowEventForm(false)}
+                        onSave={handleSaveEvent}
+                        event={selectedEvent}
+                        slot={null}
                     />
                     {isRemoveModalOpen && (
                         <div className="modal-background">
