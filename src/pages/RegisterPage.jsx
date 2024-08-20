@@ -45,27 +45,43 @@ const RegisterPage = () => {
         return nameRegex.test(name);
     };
 
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const newErrors = {};
 
+        // Validate Full Name
         if (!validateFullName(fullName)) {
             newErrors.fullName = 'Full name must be between 1 and 20 characters and contain only letters and spaces.';
         }
 
+        // Validate Email
         if (!validateEmail(email)) {
             newErrors.email = 'Invalid email format.';
         }
 
+        // Validate Password
         if (!validatePassword(password)) {
             newErrors.password = 'Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, and one number.';
         }
 
+        // Validate Date of Birth
+        if (dateOfBirth) {
+            const today = new Date();
+            const dob = new Date(dateOfBirth);
+            if (dob >= today) {
+                newErrors.dateOfBirth = 'Date of Birth must be in the past.';
+            }
+        }
+
+        // If there are any validation errors, set them and prevent form submission
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
+        // Proceed with form submission if there are no errors
         fetch("http://localhost:5000/register", {
             method: "POST",
             headers: {
@@ -96,7 +112,6 @@ const RegisterPage = () => {
             });
         navigate('/Login');
     };
-
     const renderRatingOptions = (stateSetter, selectedValue, name) => (
         <div className="rating-options">
             {[0, 1, 2, 3, 4, 5].map((value) => (
@@ -137,6 +152,8 @@ const RegisterPage = () => {
                             value={dateOfBirth}
                             onChange={(e) => setDateOfBirth(e.target.value)}
                         />
+                        {errors.dateOfBirth && <p className="error-message">{errors.dateOfBirth}</p>}
+
 
                         <label htmlFor="gender">Gender</label>
                         <select
