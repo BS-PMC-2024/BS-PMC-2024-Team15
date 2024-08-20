@@ -76,3 +76,6 @@ if you want to run tests follow this steps:
 - 'pytest'
 
 if you having issues in the register test make sure the the user name provided in the test is not already in the db.
+
+To use Tab features in Statistics, you need to run the next line:
+- npm install react-tabs 
