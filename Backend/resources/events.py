@@ -243,3 +243,15 @@ class rankEvent(MethodView):
 #             return jsonify({"message": "Event ranked successfully"}), 200
 #         except Exception as e:
 #             return jsonify({"message":str(e)}),400
+
+
+
+@blp.route('/get_user_events/<user_id>', methods=['GET'])
+def get_user_events(user_id):
+    try:
+        firestore_db = current_app.config['FIRESTORE_DB']
+        events_ref = firestore_db.collection('events').where('user_id', '==', user_id).stream()
+        events = [event.to_dict() for event in events_ref]
+        return jsonify(events), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400

@@ -1,10 +1,11 @@
+// AdminHomePage.jsx
 import React, { useState } from 'react';
 import PostCarousel from '../Components/PostCarousel';
 import CoursesComponent from '../Components/Courses';
 import GeneralMsgModal from '../Components/GeneralMsgModal';
 import AdminUserTable from '../Components/AdminUserTable'; // Import the new AdminUserTable component
 
-const AdminHomePage = ({ userType, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, fetchPosts, courses, fetchCourses, coursesRef, posts, loadingPosts }) => {
+const AdminHomePage = ({ userType, UserId, loadingCourses, fetchEvents, showAIAssistant, toggleAIAssistant, fetchPosts, courses, fetchCourses, coursesRef, posts, loadingPosts }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [notification, setNotification] = useState('');
 
@@ -40,16 +41,13 @@ const AdminHomePage = ({ userType, loadingCourses, fetchEvents, showAIAssistant,
                 body: JSON.stringify(payload),
             });
 
-
             alert('Message sent successfully!');
             setNotification('');
             handleCloseModal();
         } catch (error) {
             console.error('Error sending message:', error.message);
-
         }
     };
-
 
     return (
         <>
@@ -63,7 +61,7 @@ const AdminHomePage = ({ userType, loadingCourses, fetchEvents, showAIAssistant,
             </div>
             <div>
                 <h2>Registered Users</h2>
-                <AdminUserTable /> {/* Add the AdminUserTable component here */}
+                <AdminUserTable UserId={UserId} /> {/* Pass UserId to AdminUserTable */}
                 <button onClick={handleOpenModal}>Send General Msg</button>
             </div>
             <GeneralMsgModal

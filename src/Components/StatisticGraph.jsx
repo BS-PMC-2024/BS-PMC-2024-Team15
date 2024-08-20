@@ -5,7 +5,7 @@ import 'react-tabs/style/react-tabs.css';
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const StatisticGraph = ({ events, loading }) => {
+const StatisticGraph = ({ events, loading, users }) => {
     const [weeklyEfficiency, setWeeklyEfficiency] = useState([]);
     const [eventStatistics, setEventStatistics] = useState([]);
 

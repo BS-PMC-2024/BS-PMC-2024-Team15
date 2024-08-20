@@ -101,7 +101,7 @@ const CalendarComponent = ({ events, fetchEvents }) => {
             setShowEventForm(true);
         }
         else{
-            alert("This event has been ranked, and cannot be edited.")
+            alert("This event has been ranked and cannot be edited.")
         }
     };
 
