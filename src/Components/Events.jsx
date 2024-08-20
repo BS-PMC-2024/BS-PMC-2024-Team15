@@ -175,23 +175,26 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {completedEvents.map((event) => (
-                                                    <tr key={event.id} className={getRowClassName(event.importance)}>
-                                                        <td>{event.title}</td>
-                                                        <td>{new Date(event.startTime).toLocaleString()}</td>
-                                                        <td>{event.duration}</td>
-                                                        <td>{event.eventType}/{event.importance}</td>
-                                                        <td>
-                                                            <button className="edit-btn" onClick={() => toggleRankForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
-                                                            <button className="remove-btn" onClick={() => confirmRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
+                                                {completedEvents
+                                                    .filter(event => !event.rank)  // Filter out events with rank set to true
+                                                    .map((event) => (
+                                                        <tr key={event.id} className={getRowClassName(event.importance)}>
+                                                            <td>{event.title}</td>
+                                                            <td>{new Date(event.startTime).toLocaleString()}</td>
+                                                            <td>{event.duration}</td>
+                                                            <td>{event.eventType}/{event.importance}</td>
+                                                            <td>
+                                                                <button className="edit-btn" onClick={() => toggleRankForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
+                                                                <button className="remove-btn" onClick={() => confirmRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
                                             </tbody>
                                         </table>
                                     </div>
                                 </>
                             )}
+
                         </>
                     )}
 
