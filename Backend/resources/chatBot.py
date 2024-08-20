@@ -67,38 +67,55 @@ def verify_firebase_token(id_token):
         return response.json()
     else:
         raise Exception("Token verification failed")
+    
 
 # Initial context to inform the bot about his job.
 context = [
     {'role': 'system', 'content': """
 You are a smart assistant designed to help students plan effective study schedules to improve their 
 performance in school or college and achieve their academic and personal goals.
-
+Your job is to create an effective schedule for the user based on the goals they want to achieve.
+     
 1. **Gathering Information**:
    - Ask the user how many days they have until the test.
    - Ask the user how many hours they can dedicate to studying each day.
    - Ask the user what specific goals they want to achieve or if there are any specific topics they would like to practice.
    - Ask the user if they have any other commitments or activities that need to be considered while planning the study schedule.
+   - Make sure you ask all these questions in the same order one after the other and separately. 
+   - Remember you want to maintain a human and friendly conversation.
 
 2. **Proposing the Study Plan**:
-   - Based on the user's input, propose a study plan.
+   - Based on the user's input, and base on the user's event list that you got propose a study plan.
    - Ask the user if they are satisfied with the proposed study plan.
+   - Make sure that the study plan you offered to the user does not conflict with the user's existing events 
+     According to the list of events you received at the beginning of this conversation.
+   - Extract the dates and times from the event list and make sure they are not overleap with the dates and the times in your study plan.
+   
 
 3. **Feedback and Adjustment**:
-   - If the user responds positively, return the details in JSON format.
+   - If the user responds positively, tell the user to press on the **Create events** button.
    - If the user responds negatively, ask what they would like to change and update the study plan accordingly.
 
 4. **Confirming Satisfaction**:
-   - Make sure to ask the user if they liked the study plan before returning the JSON format.
+   - Make sure to ask the user if they liked the study plan before you tell them to press the **Create events** button.
 
-5. **JSON Format**:
+5. **Detailed Task Planning**:
+   - Ensure that the time is correctly split and clearly indicate the start and end times for each task.
+    
+    """}
+]
+
+json_example = {
+    """
+    **Example To JSON Format**:
    - Here is an example of the JSON summary to return at the end of the conversation with the user. 
    The JSON should contain the following keys:
      - `num_of_days`: Holds the number of days the student plans to study.
      - `days`: An array where each element represents a day along with its date with the following structure:
        - `date`: The specific date. Use the get_current_date function to get the current date.
        - `tasks`: An array of tasks/events for that day. Each task/event should be a dictionary with the following keys:
-         - `time`: The time allocated for the task/event.
+         - `time`: The time allocated for the task/event. 
+         - Make sure to return time in 24 hour format.
          - `duration`: how much time is allocated for the task
          - `mission`: The description of the task/event.
          - `event_name`: A short name that describes the task/event.
@@ -138,6 +155,14 @@ For example:
           "event_name": "Complex Algebra",
           "importance": "High",
           "eventType": "Study"
+        },
+        {
+          "time": "12:15-14:15",
+          "duration": 2:00,
+          "mission": "learn math",
+          "event_name": "Complex Math",
+          "importance": "High",
+          "eventType": "Study"
         }
       ]
     },
@@ -173,14 +198,8 @@ For example:
   ]
 }
 ```
-
-remember to use the get_current_date function for the date value in the JSON format
-
-6. **Detailed Task Planning**:
-   - Ensure that the time is correctly split and clearly indicate the start and end times for each task.
-    
-    """}
-]
+"""
+}
 
 # route the response from the openAI API to the client side 
 @blp.route("/aibot", methods=["POST"])
@@ -228,44 +247,9 @@ class AIassistant(MethodView):
             return jsonify({'content': response.replace('\n', '<br>')
                             .replace('**','')
                             .replace('###','')
-                            .replace('####','')})
-        
-        elif action == "Create Events":
-            context.append(
-                {'role': 'system', 'content':
-                 "return the study plan in the JSON format like the example you have. "
-                 "Make sure to avoid scheduling tasks at times when the user"
-                 "already has other events on their calendar."},
-            )
-            response = get_completion_from_messages(context)
-            # seprate the JSON part from the response.
-            start = response.find('{')
-            end = response.rfind('}') + 1
-            json_string = response[start:end]
-
-            # parse the JSON string
-            summaryData = json.loads(json_string)
-            if id_token:  # Check if id_token is available
-                try:
-                    ai_study_plan_url = "http://localhost:5000/AI_study_plan"  # Replace with your actual endpoint URL
-                    headers = {
-                        'Authorization': f'Bearer {id_token}',
-                        'Content-Type': 'application/json'
-                    }
-                    response = requests.post(ai_study_plan_url, headers=headers, json=summaryData)
-                    
-                    if response.status_code == 200:
-                        return jsonify("Study plan events created successfully"), 200
-                    else:
-                        return jsonify({"message": f"Failed to create events: {response.text}"}), response.status_code
-
-                except Exception as e:
-                    print("Error sending data to AI_study_plan:", str(e))
-                    return jsonify({"message": str(e)}), 500
-            else:
-                return jsonify({"message": "ID token is missing or invalid"}), 400
-        
-        return jsonify({'content': 'Invalid action'}), 400
+                            .replace('####','')})  
+        else:
+            return jsonify({'content': 'Invalid action'}), 400
             
     
 
@@ -285,8 +269,13 @@ class AIassistant(MethodView):
 
       if action == "Create Events":
             context.append(
+                {'role':'system','content':f"{json_example}"},
+            )
+            context.append(
                 {'role': 'system', 'content':
-                 "return the study plan in the JSON format like the example you have. "},
+                 "return the study plan in the JSON format like the example you have. "
+                 "Make sure to avoid scheduling tasks at times when the user"
+                 "already has other events on their calendar."},
             )
             response = get_completion_from_messages(context)
             start = response.find('{')
@@ -331,70 +320,3 @@ class AIassistant(MethodView):
 
 
             return jsonify("Events created successfully"), 200
-
-
-
-#     if not summaryData or 'days' not in summaryData:
-        #         return jsonify({"message": "Invalid or missing study plan data"}), 400
-
-        #     # Process each day and task in the study plan
-        #     for offset, day in enumerate(summaryData['days']):
-        #         day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
-        #         for task in day["tasks"]:
-        #             print(f"  Event Name: {task['event_name']}")
-        #             print(f"  Date: {day['date']}")
-        #             print(f"  Time: {task['time']}")
-        #             print(f"  Mission: {task['mission']}")  
-        #             print(f"  Importance Level: {task['importance']}")
-        #             print(f"  Event Type: {task['eventType']}")
-        #             print("")
-
-        #             # Here you would add the logic to create the events in your database
-
-        #     return jsonify("Events created successfully"), 200
-
-        # except Exception as e:
-        #     print("Error processing study plan:", str(e))
-        #     return jsonify({"message": str(e)}), 500
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # try:
-        #     summaryData = request.get_json()
-
-        #     if not summaryData or 'days' not in summaryData:
-        #         return jsonify({"message": "Invalid or missing study plan data"}), 400
-
-        #     # Process each day and task in the study plan
-        #     for offset, day in enumerate(summaryData['days']):
-        #         day["date"] = get_date_with_offset(offset)  # Update the date with the current date + offset
-        #         for task in day["tasks"]:
-        #             print(f"  Event Name: {task['event_name']}")
-        #             print(f"  Date: {day['date']}")
-        #             print(f"  Time: {task['time']}")
-        #             print(f"  Mission: {task['mission']}")  
-        #             print(f"  Importance Level: {task['importance']}")
-        #             print(f"  Event Type: {task['eventType']}")
-        #             print("")
-
-        #             # Here you would add the logic to create the events in your database
-
-        #     return jsonify("Events created successfully"), 200
-
-        # except Exception as e:
-        #     print("Error processing study plan:", str(e))
-        #     return jsonify({"message": str(e)}), 500

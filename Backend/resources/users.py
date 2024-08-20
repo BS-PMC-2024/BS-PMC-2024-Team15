@@ -116,8 +116,8 @@ class getUserType(MethodView):
             if user_data:
                 user_info = user_data.to_dict()
                 user_type = user_info['type']
-
-                print (user_type)
+                
+                # print (user_type) # debug line
                 return jsonify({'user_type': user_type, 'user_id':user_id}), 200
             else:
                 return jsonify({"message": "User not found"}), 404
@@ -145,7 +145,7 @@ class getUser(MethodView):
 
             if user_data:
                 user_info = user_data.to_dict()
-                print(user_info)
+                # print(user_info) # debug line
                 return jsonify(user_info), 200
             else:
                 return jsonify({"message": "User not found"}), 404
@@ -449,7 +449,7 @@ class GetCourseUsers(MethodView):
                 id = user_info.get('user_id')
                 registered_user_ids.append(id)
 
-            print(f"User ids: {registered_user_ids}")  # Debugging line
+            # print(f"User ids: {registered_user_ids}")  # Debugging line
             return jsonify(registered_user_ids), 200
         except Exception as e:
             print(f"Error: {str(e)}")  # Debugging line
@@ -488,7 +488,8 @@ class GetAllUsers(MethodView):
                     "satesfiedTasks": user_data.get('satesfiedTasks'),
                     "deadlinedTasks": user_data.get('deadlinedTasks'),
                     "prioritizeTasks": user_data.get('prioritizeTasks'),
-                    "createdAt": user_data.get('createdAt')
+                    "createdAt": user_data.get('createdAt'),
+                    "user_id":user_data.get('user_id')
                 })
 
             return jsonify(users), 200
@@ -496,3 +497,13 @@ class GetAllUsers(MethodView):
         except Exception as e:
             print("Error:", str(e))
             return jsonify({"message": str(e)}), 400
+
+@blp.route('/get_user_events/<user_id>', methods=['GET'])
+def get_user_events(user_id):
+    try:
+        firestore_db = current_app.config['FIRESTORE_DB']
+        events_ref = firestore_db.collection('events').where('user_id', '==', user_id).stream()
+        events = [event.to_dict() for event in events_ref]
+        return jsonify(events), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
