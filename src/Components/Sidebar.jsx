@@ -17,6 +17,7 @@ const Sidebar = ({ scrollToCalendar, scrollToEvents, toggleAIAssistant, scrollTo
                 <a className="sidebar-btn" onClick={scrollToEvents}><li><i class="fa-solid fa-calendar-plus"></i>Events</li></a>
                 <a className="sidebar-btn" onClick={scrollToCourses}><li><i class="fa-solid fa-person-chalkboard"></i>Courses</li></a>
                 <a className="sidebar-btn" onClick={handleScrollToStatistics}><li><i class="fa-solid fa-chart-line"></i>Statistics</li></a>
+                <a className="sidebar-btn" onClick={handleScrollToStatistics}><li><i class="fa-solid fa-chart-line"></i>View Progress</li></a>
                 <a className="sidebar-btn" onClick={toggleAIAssistant}><li><i class="fa-regular fa-comments"></i>Assistant Chat</li></a>
 
                 </ul>
