@@ -1,20 +1,29 @@
 pipeline {
-    agent any
-
+    agent none
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.10.8-alpine'
+                }
+            }
             steps {
-                sh 'docker-compose build'
+                sh 'pip install -r Backend/requirements.txt'
             }
         }
         stage('Test') {
-            steps {
-                sh 'docker-compose run web pytest'
+            agent {
+                docker {
+                    image 'qnib/pytest'
+                }
             }
-        }
-        stage('Deploy') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'py.test --verbose --junit-xml test-reports/results.xml Backend/validation_test.py'
+            }
+            post {
+                always {
+                    junit 'test-reports/results.xml'
+                }
             }
         }
     }

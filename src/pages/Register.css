@@ -1,63 +1,200 @@
+
+h2 {
+  font-family: 'Varela Round' !important;
+  font-size: 58px !important;
+  font-weight: 900 !important;
+  color: #2c2c2c !important;
+  text-align: center;
+}
+
+h3 {
+  font-family: 'Varela Round' !important;
+  font-size: 21px !important;
+  margin-top: -14px !important;
+  color: #2c2c2c !important;
+  text-align: center;
+}
+
 .registration-section {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 2em;
+  background: #000000d4 !important;
+  backdrop-filter: blur(20px);
+  border-radius: 25px;
+  box-shadow: 0 15px 60px #00000063;
 }
 
 .registration-container {
   display: flex;
-  flex-direction: row;
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  padding: 2em;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 500px; /* This sets the max width */
+  width: 100%;
 }
 
 .registration-form-container {
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  width: 100%;
 }
 
 .registration-form-container h2 {
-  margin-bottom: 20px;
+  font-size: 36px;
+  margin-bottom: 1em;
+}
+
+.registration-form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 .registration-form-container label {
-  margin-bottom: 5px;
+  font-size: 16px;
+  color: #2c2c2c;
   font-weight: bold;
 }
 
 .registration-form-container input,
 .registration-form-container select {
-  margin-bottom: 10px;
-  padding: 10px;
+  padding: 0.75em;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: "Varela Round", sans-serif;
 }
 
-.registration-form-container select {
-  width: 100%;
-  padding: 10px;
+.registration-form-container input:focus,
+.registration-form-container select:focus {
+  outline: none;
+  border-color: #9773dc;
+  box-shadow: 0 0 5px rgba(151, 115, 220, 0.5);
 }
 
-.registration-form-container .receive-emails {
+.rating-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rating-options label {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+}
+
+.rating-options input {
+  margin-right: 0.5em;
+}
+
+.receive-emails {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 .registration-form-container button {
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
+  padding: 0.75em;
+  background-color: #2c2c2c;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .registration-form-container button:hover {
-  background-color: #0056b3;
+  background-color: #9773dc;
+}
+
+.registration-form-container p {
+  margin-top: 1em;
+  font-size: 14px;
+  text-align: center;
+}
+
+.registration-form-container .register-link {
+  color: #9773dc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.registration-form-container .register-link:hover {
+  text-decoration: underline;
+}
+
+
+.register-form .icon-selector select {
+  width: 100%;
+  padding: 5px;
+  margin-top: 10px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  text-indent: 25px; 
+}
+
+.register-form .selected-icon {
+  display: block;
+  margin-top: 10px;
+}
+/* Register.css */
+
+.registration-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.registration-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 600px;
+}
+
+.registration-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon-selector {
+  display: flex;
+  flex-direction: column;
+}
+
+.selected-icon {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.icon-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.icon-item {
+  margin: 5px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.icon-item:hover {
+  border-color: #007bff;
 }

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './Calendar.css';
+import '../ComponentsCss/Calendar.css';
 import EventFormModal from './EventForm';
+import CustomEventComponent from './CustomEventCalendarComponent'; // Import the custom component
 
 const localizer = momentLocalizer(moment);
 
@@ -12,43 +13,80 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
 
+    const CustomEventComponent = ({ event }) => {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>{event.title}</span>
+                {event.isRanked && (
+                    <img src="https://cdn-icons-png.flaticon.com/128/4436/4436481.png" alt="Done" style={{ height: '16px', marginLeft: 'auto' }} /> // added icon for ranked events.
+                )}
+            </div>
+        );
+    };
+
     useEffect(() => {
-        // Fetch events only if events are empty or null
-        if (!events || events.length === 0) {
+        //Fetch events only if events are empty or null
+        if (!events) {
             fetchEvents();
         }
-    }, [events, fetchEvents]); 
+    }, [events, fetchEvents]);
 
     const eventStyleGetter = (event, start, end, isSelected) => {
-        let backgroundColor = '#3174ad';
+        const now = new Date();
+        let backgroundColor;
+        let borderLeft;
+        let color = '#FFFFFF'; // Default text color is white
+
+        if (event.isRanked) {
+            backgroundColor = 'transparent';
+            borderLeft = '2px solid green'; // not working currently
+            color = '#000000'; // Set text color to black for ranked events so it can be seen with white background.
+        } else if (end < now) {
+            backgroundColor = '#000000'; // Black for past events not yet ranked
+        } else {
+            switch (event.eventType) {
+                case 'Study':
+                    backgroundColor = '#9773dc';
+                    break;
+                case 'Social':
+                    backgroundColor = '#69b0e6';
+                    break;
+                case 'Hobby':
+                    backgroundColor = '#5dd2a5';
+                    break;
+                default:
+                    backgroundColor = '#3174ad';
+                    break;
+            }
+        }
+
         switch (event.importance) {
             case 'High':
-                backgroundColor = '#e53935';
+                borderLeft = '14px solid #f04a4a';
                 break;
             case 'Medium':
-                backgroundColor = '#ffb74d';
+                borderLeft = '14px solid #f1ba41';
                 break;
             case 'Low':
-                backgroundColor = '#81c784';
+                borderLeft = '14px solid #f7f322';
                 break;
             default:
-                backgroundColor = '#3174ad';
+                borderLeft = '14px solid #3174ad';
                 break;
         }
 
         const style = {
             backgroundColor: backgroundColor,
-            borderRadius: '4px',
-            opacity: 0.8,
-            color: 'white',
-            border: 'none',
-            padding: '2px 4px',
+            borderLeft: borderLeft,
+            color: color, // Apply the text color
         };
 
         return {
             style: style,
+            tooltip: event.additionalInfo // Set tooltip text or other details
         };
     };
+
 
     const handleSelectSlot = (slotInfo) => {
         setSelectedSlot(slotInfo.start);
@@ -81,14 +119,10 @@ const CalendarComponent = ({ events, fetchEvents }) => {
             };
 
             let url = formData.id ? `http://localhost:5000/update_event/${formData.id}` : 'http://localhost:5000/add_event';
-
             const response = await fetch(url, requestOptions);
-            if (!response.ok) {
-                throw new Error(formData.id ? 'Failed to update event' : 'Failed to add event');
-            }
-
+            alert('event added/updated successfully!');
             fetchEvents();
-            handleCloseEventForm();
+            // handleCloseEventForm();
         } catch (error) {
             console.error('Error saving or updating event:', error);
         }
@@ -111,6 +145,9 @@ const CalendarComponent = ({ events, fetchEvents }) => {
                 onSelectEvent={handleSelectEvent}
                 style={{ height: 500 }}
                 eventPropGetter={eventStyleGetter}
+                components={{
+                    event: CustomEventComponent, // Use the custom event component
+                }}
             />
             <EventFormModal
                 isOpen={showEventForm}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './EventForm.css';
+import '../ComponentsCss/EventForm.css';
 
 const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     const [title, setTitle] = useState('');
@@ -9,6 +9,9 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     const [description, setDescription] = useState('');
     const [eventType, setEventType] = useState('Study');
     const [errors, setErrors] = useState({});
+    const [image, setImage] = useState(null);
+    const [imageUrl, setImageUrl] = useState('');
+    const [closing, setClosing] = useState(false);
 
     useEffect(() => {
         if (event) {
@@ -18,8 +21,9 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             setImportance(event.importance || 'Low');
             setDescription(event.description || '');
             setEventType(event.eventType || 'Study');
+            setImageUrl(event.imageUrl || '');
         } else if (slot) {
-            setStartTime(slot.start); // Set startTime with the selected slot time
+            setStartTime(slot.start);
         } else {
             resetForm();
         }
@@ -45,11 +49,37 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
         return Object.keys(errors).length === 0;
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!validateForm()) {
             return;
         }
-
+    
+        let finalImageUrl = imageUrl;
+        if (image) {
+            try {
+                const formData = new FormData();
+                formData.append('file', image);
+    
+                const idToken = localStorage.getItem('accessToken');
+                const response = await fetch('http://localhost:5000/upload_image', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`
+                    },
+                    body: formData
+                });
+    
+                const result = await response.json();
+                if (response.ok) {
+                    finalImageUrl = result.file_url;
+                } else {
+                    console.error(result.message);
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+    
         const formData = {
             id: event ? event.id : null,
             title,
@@ -57,10 +87,12 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
             duration,
             importance,
             description,
-            eventType
+            eventType,
+            imageUrl: finalImageUrl
         };
-
+    
         onSave(formData);
+        handleFadeOutAndClose(); // Trigger fade-out and close after saving
     };
 
     const resetForm = () => {
@@ -70,16 +102,32 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
         setImportance('Low');
         setDescription('');
         setEventType('Study');
+        setImage(null);
+        setImageUrl('');
         setErrors({});
     };
 
-    if (!isOpen) return null;
+    const handleClose = () => {
+        handleFadeOutAndClose(); // Use the same fade-out function for closing
+    };
+
+    const handleFadeOutAndClose = () => {
+        
+        setClosing(true);
+        setTimeout(() => {
+            setClosing(false);
+            onClose();
+        }, 500);
+    };
+
+    if (!isOpen && !closing) return null;
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className={`modal-overlay ${closing ? 'fade-out' : ''}`}>
+            <div className={`modal-content ${closing ? 'fade-out' : ''}`}>
                 <h2>{event ? 'Edit Event' : 'Add New Event'}</h2>
                 <form>
+                    {imageUrl && <img src={imageUrl} alt="Event" style={{ width: '400px', height: '200px' }} />}    
                     <label>
                         Event Name:
                         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -106,9 +154,9 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                     <label>
                         Importance:
                         <select value={importance} onChange={(e) => setImportance(e.target.value)}>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
                             <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
                         </select>
                     </label>
                     <label>
@@ -121,12 +169,18 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
                     </label>
                     <label>
                         Description:
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
                         {errors.description && <p className="error">{errors.description}</p>}
                     </label>
+                    <label>
+                        Upload Image:
+                        <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+                    </label>
                     <div className="modal-buttons">
-                        <button type="button" onClick={handleSave}>{event ? 'Update Event' : 'Add Event'}</button>
-                        <button type="button" onClick={onClose}>Cancel</button>
+                        <button type="button" onClick={handleSave}>
+                            {event ? 'Update Event' : 'Add Event'}
+                        </button>
+                        <button type="button" onClick={handleClose}>Cancel</button>
                     </div>
                 </form>
             </div>
