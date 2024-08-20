@@ -455,3 +455,44 @@ class GetCourseUsers(MethodView):
             print(f"Error: {str(e)}")  # Debugging line
             return jsonify({"message": str(e)}), 400
         
+
+@blp.route('/get_all_users', methods=['GET'])
+class GetAllUsers(MethodView):
+    def get(self):
+        try:
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return jsonify({"message": "Missing or invalid token"}), 401
+
+            id_token = auth_header.split(' ')[1]
+            decoded_token = verify_firebase_token(id_token)
+
+            firestore_db = current_app.config['FIRESTORE_DB']
+            users_ref = firestore_db.collection('users')
+            users_query = users_ref.stream()
+
+            users = []
+            for user in users_query:
+                user_data = user.to_dict()
+                users.append({
+                    "fullName": user_data.get('fullName'),
+                    "email": user_data.get('email'),
+                    "dateOfBirth": user_data.get('dateOfBirth'),
+                    "type": user_data.get('type'),
+                    "gender": user_data.get('gender'),
+                    "receiveNews": user_data.get('receiveNews'),
+                    "icon": user_data.get('icon'),
+                    "courses": user_data.get('courses'),
+                    "planDay": user_data.get('planDay'),
+                    "stickSchedule": user_data.get('stickSchedule'),
+                    "satesfiedTasks": user_data.get('satesfiedTasks'),
+                    "deadlinedTasks": user_data.get('deadlinedTasks'),
+                    "prioritizeTasks": user_data.get('prioritizeTasks'),
+                    "createdAt": user_data.get('createdAt')
+                })
+
+            return jsonify(users), 200
+
+        except Exception as e:
+            print("Error:", str(e))
+            return jsonify({"message": str(e)}), 400

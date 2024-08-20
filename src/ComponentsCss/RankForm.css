@@ -58,12 +58,4 @@ form button {
     margin: 0 10px;
 }
 
-form button[type="submit"] {
-    background-color: #4CAF50; /* Adjust color as needed */
-    color: white;
-}
-
-form button[type="button"] {
-    background-color: #f44336; /* Adjust color as needed */
-    color: white;
-}
+    

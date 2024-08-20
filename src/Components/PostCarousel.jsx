@@ -7,13 +7,17 @@ const Carousel = ({ children }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const slidesToShow = 3; // Number of slides to show at once
     const nextSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.ceil(children.length / slidesToShow));
+        setCurrentIndex((prevIndex) => {
+            const newIndex = prevIndex + slidesToShow;
+            return newIndex >= children.length ? 0 : newIndex;
+        });
     };
 
     const prevSlide = () => {
-        setCurrentIndex(
-            (prevIndex) => (prevIndex - 1 + Math.ceil(children.length / slidesToShow)) % Math.ceil(children.length / slidesToShow)
-        );
+        setCurrentIndex((prevIndex) => {
+            const newIndex = prevIndex - slidesToShow;
+            return newIndex < 0 ? Math.max(0, children.length - slidesToShow) : newIndex;
+        });
     };
 
     return (
@@ -34,14 +38,14 @@ const Carousel = ({ children }) => {
     );
 };
 
-const PostCarousel = ({fetchPosts, fetchEvents ,userType, posts , Loadiingposts}) => {
+const PostCarousel = ({ fetchPosts, fetchEvents, userType, posts, Loadiingposts }) => {
     const [events, setEvents] = useState([]);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [editMode, setEditMode] = useState(false);
 
-   
+
     useEffect(() => {
         fetchPosts();
     }, []);
@@ -51,7 +55,7 @@ const PostCarousel = ({fetchPosts, fetchEvents ,userType, posts , Loadiingposts}
         setIsDialogOpen(true);
     };
 
-    
+
     const handleEditPost = (event) => {
         setSelectedEvent(event);
         setEditMode(true);
@@ -120,7 +124,8 @@ const PostCarousel = ({fetchPosts, fetchEvents ,userType, posts , Loadiingposts}
             }
             setIsDialogOpen(false);
             fetchPosts();
-            
+            fetchEvents();
+
         } catch (error) {
             console.error('Error saving post:', error);
         }

@@ -21,7 +21,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
             setLevel(course.level || 'Beginner');
             setDescription(course.description || '');
             setDays(course.days || {});
-            setPdfUrls(course.pdfUrls || []); 
+            setPdfUrls(course.pdfUrls || []);
         } else {
             resetForm();
         }
@@ -58,7 +58,7 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
 
         if (response.ok) {
             const result = await response.json();
-            setPdfUrls([...pdfUrls, result.file_url]); 
+            setPdfUrls([...pdfUrls, result.file_url]);
         } else {
             console.error('Failed to upload PDF:', response.statusText);
         }
@@ -199,30 +199,37 @@ const CourseFormModal = ({ isOpen, onClose, onSave, course }) => {
                         <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                         {errors.description && <p className="error">{errors.description}</p>}
                     </label>
-                    <label>
-                        Upload PDF:
-                        <input type="file" accept=".pdf" onChange={(e) => handlePdfUpload(e.target.files[0])} />
-                    </label>
-                    <h3>Uploaded Files</h3>
-                    <table className="pdf-table">
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pdfUrls.map((pdfUrl, index) => {
-                                const fileName = decodeURIComponent(pdfUrl.split('/').pop()); // Extract the file name from the URL
-                                return (
-                                    <tr key={index}>
-                                        <td><a href={pdfUrl} target="_blank" rel="noopener noreferrer">{fileName}</a></td>
-                                        <td><button type="button" onClick={() => handleDeletePdf(pdfUrl)}>Delete</button></td>
+
+                    {/* Conditionally render PDF upload and table if course is defined (i.e., in update mode) */}
+                    {course && (
+                        <>
+                            <label>
+                                Upload PDF:
+                                <input type="file" accept=".pdf" onChange={(e) => handlePdfUpload(e.target.files[0])} />
+                            </label>
+                            <h3>Uploaded Files</h3>
+                            <table className="pdf-table">
+                                <thead>
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th></th>
                                     </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                                </thead>
+                                <tbody>
+                                    {pdfUrls.map((pdfUrl, index) => {
+                                        const fileName = decodeURIComponent(pdfUrl.split('/').pop()); // Extract the file name from the URL
+                                        return (
+                                            <tr key={index}>
+                                                <td><a href={pdfUrl} target="_blank" rel="noopener noreferrer">{fileName}</a></td>
+                                                <td><button type="button" onClick={() => handleDeletePdf(pdfUrl)}>Delete</button></td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </>
+                    )}
+
                     <div className="modal-buttons">
                         <button type="submit">{course ? 'Update Course' : 'Add Course'}</button>
                         <button type="button" onClick={onClose}>Cancel</button>
