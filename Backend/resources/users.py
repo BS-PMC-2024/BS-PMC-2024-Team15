@@ -488,7 +488,8 @@ class GetAllUsers(MethodView):
                     "satesfiedTasks": user_data.get('satesfiedTasks'),
                     "deadlinedTasks": user_data.get('deadlinedTasks'),
                     "prioritizeTasks": user_data.get('prioritizeTasks'),
-                    "createdAt": user_data.get('createdAt')
+                    "createdAt": user_data.get('createdAt'),
+                    "user_id":user_data.get('user_id')
                 })
 
             return jsonify(users), 200
@@ -496,3 +497,13 @@ class GetAllUsers(MethodView):
         except Exception as e:
             print("Error:", str(e))
             return jsonify({"message": str(e)}), 400
+
+@blp.route('/get_user_events/<user_id>', methods=['GET'])
+def get_user_events(user_id):
+    try:
+        firestore_db = current_app.config['FIRESTORE_DB']
+        events_ref = firestore_db.collection('events').where('user_id', '==', user_id).stream()
+        events = [event.to_dict() for event in events_ref]
+        return jsonify(events), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
