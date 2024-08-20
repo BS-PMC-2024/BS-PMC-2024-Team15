@@ -6,11 +6,11 @@ const RankForm = ({ event, onClose, onSave, fetchEvents }) => {  // Add fetchEve
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSave(efficiencyRank); 
+        onSave(efficiencyRank);
         handleSaveRank(event.id, efficiencyRank);  // Call handleSaveRank on submit
-        onClose(); 
+        onClose();
     };
-    
+
     const handleSaveRank = async (eventId, rank) => {
         try {
             const response = await fetch(`http://localhost:5000/rank_event/${eventId}`, {
@@ -21,7 +21,7 @@ const RankForm = ({ event, onClose, onSave, fetchEvents }) => {  // Add fetchEve
                 },
                 body: JSON.stringify({ rank, isRanked: true })
             });
-    
+
             if (response.ok) {
                 alert('Event ranked successfully!');
                 fetchEvents();  // Refresh events

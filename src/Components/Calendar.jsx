@@ -12,8 +12,8 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     const [showEventForm, setShowEventForm] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
-    
-    const CustomEventComponent = ({ event }) => { 
+
+    const CustomEventComponent = ({ event }) => {
         return (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span>{event.title}</span>
@@ -36,7 +36,7 @@ const CalendarComponent = ({ events, fetchEvents }) => {
         let backgroundColor;
         let borderLeft;
         let color = '#FFFFFF'; // Default text color is white
-    
+
         if (event.isRanked) {
             backgroundColor = 'transparent';
             borderLeft = '2px solid green'; // not working currently
@@ -59,7 +59,7 @@ const CalendarComponent = ({ events, fetchEvents }) => {
                     break;
             }
         }
-    
+
         switch (event.importance) {
             case 'High':
                 borderLeft = '14px solid #f04a4a';
@@ -74,20 +74,20 @@ const CalendarComponent = ({ events, fetchEvents }) => {
                 borderLeft = '14px solid #3174ad';
                 break;
         }
-    
+
         const style = {
             backgroundColor: backgroundColor,
             borderLeft: borderLeft,
             color: color, // Apply the text color
         };
-    
+
         return {
             style: style,
             tooltip: event.additionalInfo // Set tooltip text or other details
         };
     };
-    
-    
+
+
     const handleSelectSlot = (slotInfo) => {
         setSelectedSlot(slotInfo.start);
         setSelectedEvent(null);
@@ -122,7 +122,7 @@ const CalendarComponent = ({ events, fetchEvents }) => {
             const response = await fetch(url, requestOptions);
             alert('event added/updated successfully!');
             fetchEvents();
-           // handleCloseEventForm();
+            // handleCloseEventForm();
         } catch (error) {
             console.error('Error saving or updating event:', error);
         }

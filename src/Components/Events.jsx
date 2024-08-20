@@ -182,7 +182,7 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                                                         <td>{event.duration}</td>
                                                         <td>{event.eventType}/{event.importance}</td>
                                                         <td>
-                                                            <button className="edit-btn" onClick={() => toggleEventForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
+                                                            <button className="edit-btn" onClick={() => toggleRankForm(event)}><i className="fa-solid fa-ranking-star"></i> Rank efficiency</button>
                                                             <button className="remove-btn" onClick={() => confirmRemoveEvent(event.id)}><i className="fa-solid fa-trash"></i> Remove</button>
                                                         </td>
                                                     </tr>
@@ -194,6 +194,16 @@ const EventsComponent = ({ events, loading, fetchEvents }) => {
                             )}
                         </>
                     )}
+
+                    {showRankForm && (
+                        <RankForm
+                            event={selectedEvent}
+                            onSave={(rank) => handleSaveRank(selectedEvent.id, rank)}
+                            onClose={() => setShowRankForm(false)}
+                            fetchEvents={fetchEvents}
+                        />
+                    )}
+
                     <EventFormModal
                         isOpen={showEventForm}
                         onClose={() => setShowEventForm(false)}

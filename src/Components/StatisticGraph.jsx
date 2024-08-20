@@ -41,7 +41,7 @@ const StatisticGraph = ({ events, loading }) => {
                 const eventDate = new Date(event.startTime);
                 const { start, end } = getWeekRange(eventDate);
                 const weekLabel = `${start} - ${end}`;
-                
+
                 if (weeks[weekLabel]) {
                     if (event.isRanked) {
                         weeks[weekLabel].totalRank += event.rank;
@@ -160,7 +160,7 @@ const StatisticGraph = ({ events, loading }) => {
 export default StatisticGraph;
 
 // Helper function to get week number
-Date.prototype.getWeek = function() {
+Date.prototype.getWeek = function () {
     const onejan = new Date(this.getFullYear(), 0, 1);
     return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
 };
