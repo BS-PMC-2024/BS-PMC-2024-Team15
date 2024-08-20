@@ -95,6 +95,12 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     };
 
     const handleSelectEvent = (event) => {
+        const { style } = eventStyleGetter(event);
+
+        if (style.backgroundColor === 'transparent' || style.backgroundColor === '#000000') {
+            return; // Do nothing if the background is transparent (white) or black
+        }
+
         setSelectedEvent(event);
         setSelectedSlot(null);
         setShowEventForm(true);
