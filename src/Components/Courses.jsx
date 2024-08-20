@@ -6,23 +6,22 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
     const [showCourseForm, setShowCourseForm] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [userCourses, setUserCourses] = useState([]);
-    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false); // For dialog visibility
-    const [courseToRemove, setCourseToRemove] = useState(null); // For storing the course to remove
-    const [showInfoDialog, setShowInfoDialog] = useState(false); // For Info dialog visibility
-    const [infoCourse, setInfoCourse] = useState(null); // For storing the course to show info
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+    const [courseToRemove, setCourseToRemove] = useState(null);
+    const [showInfoDialog, setShowInfoDialog] = useState(false);
+    const [infoCourse, setInfoCourse] = useState(null);
     const [registeredUsers, setRegisteredUsers] = useState([]);
     const [registeredUsersIds, setRegisteredUsersIds] = useState([]);
     const [Notification, setNotification] = useState('');
-
-
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if (userType === "student") {
             fetchUserCourses();
         }
         fetchCourses();
+        fetchRegisteredUserIds();
     }, []);
-
 
     const fetchRegisteredUsers = async (courseId) => {
         try {
@@ -53,10 +52,10 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                 throw new Error(`Failed to fetch registered users`);
             }
             const data = await response.json();
-            setRegisteredUsersIds(data);
-            console.log(data);
+            return data; // Return the fetched data
         } catch (error) {
             console.error("Error fetching registered users:", error);
+            return [];
         }
     };
 
@@ -203,9 +202,27 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
         fetchRegisteredUsers(course.id);
     };
 
-    const handleNotificationClick = (course, Notification) => {
-        fetchRegisteredUserIds(course.id);
-        SaveNotification(registeredUsersIds, Notification)
+    const handleNotificationClick = async (course, Notification) => {
+        if (Notification.trim() === '') {
+            setError('Notification message is required');
+            return;
+        }
+
+        // Fetch the registered user IDs and use the returned data immediately
+        const userIds = await fetchRegisteredUserIds(course.id);
+
+        if (userIds.length > 0) {
+            const result = await SaveNotification(userIds, Notification);
+            if (!result.ok) {
+                alert('Message has been sent');
+            } else {
+                alert('Message has not been sent.');
+            }
+        } else {
+            alert('No registered users found to send the message.');
+        }
+
+        setError(''); // Clear the error if validation passes
     };
 
     const SaveNotification = async (registeredUserIds, notification) => {
@@ -230,14 +247,12 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
 
             const data = await response.json();
             console.log('Notification saved:', data);
-            return data;
+            return { success: true, data };
         } catch (error) {
             console.error('Error saving notification:', error.message);
             return { success: false, error: error.message };
         }
     };
-
-
     return (
         <div className="courses">
             {loadingCourses ? (
@@ -397,7 +412,6 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                 <p><strong>Duration:</strong> {infoCourse.duration}</p>
                                 <p><strong>Level:</strong> {infoCourse.level}</p>
                                 <p><strong>Description:</strong> {infoCourse.description}</p>
-                                {/* Add any other fields you want to display */}
                                 <p><strong>Registered Users:</strong></p>
                                 <ul>
                                     {registeredUsers && registeredUsers.length > 0 ? (
@@ -408,7 +422,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                         <li>No users registered for this course.</li>
                                     )}
                                 </ul>
-                                <p><strong>messege:</strong></p>
+                                <p><strong>Message:</strong></p>
                                 <input
                                     type="text"
                                     id="Notification"
@@ -416,6 +430,7 @@ const CoursesComponent = ({ courses, fetchCourses, loadingCourses, userType, fet
                                     onChange={(e) => setNotification(e.target.value)}
                                     required
                                 />
+                                {error && <p className="error-message">{error}</p>}
                             </>
                         )}
                         <div className="modal-buttons">

@@ -1,40 +1,68 @@
-/* Hide notification cards by default */
-.notification-card {
-  display: none; /* Hide the cards */
+/* Notification container for dropdown alignment */
+.notification-container {
+  position: relative;
+  display: inline-block;
 }
 
-/* Notification drawer styles */
-.notification-drawer {
-  position: fixed;
+/* Hamburger button styles */
+.hamburger-button {
+  margin-top:20px;
+  padding-top: 10px;
+  width: 200px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative; 
+}
+
+/* Red dot indicating unread notifications */
+.notification-dot {
+  position: absolute;
   top: 0;
-  left: -300px; /* Initially off-screen */
+  right: -10px; /* Adjust the position of the dot */
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+/* Notification dropdown menu styles */
+.notification-dropdown {
+  position: absolute;
+  top: 100%; /* Align dropdown below the button */
+  left: 0;
   width: 300px;
-  height: 100%;
   background-color: #333;
   color: white;
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-  transition: left 0.3s ease;
-  z-index: 999;
-  overflow-y: auto; /* Allow scrolling if content exceeds height */
+  padding: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
 }
 
-/* Show drawer and messages when open */
-.notification-drawer.open {
-  left: 0; /* Slide in */
+.notification-dropdown.open {
+  display: block;
 }
 
-.notification-drawer.open .notification-card {
-  display: block; /* Show the cards when drawer is open */
+/* Notification card styles */
+.notification-card {
+  background-color: #444;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
 }
 
-/* Backdrop to close the drawer when clicking outside */
-.backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 998;
+.notification-card p {
+  margin: 0;
+}
+
+.dismiss-button {
+  background-color: #ff6666;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 5px;
 }
