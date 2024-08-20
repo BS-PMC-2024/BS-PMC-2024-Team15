@@ -156,3 +156,92 @@ class upload_file(MethodView):
         except Exception as e:
             print("Error:", str(e))
             return jsonify({'message': str(e)}), 400
+
+
+@blp.route('/get_course_users/<string:courseId>', methods=['GET'])
+class GetCourseUsers(MethodView):
+    def get(self, courseId):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            
+            users_collection = firestore_db.collection('users')
+            users = users_collection.stream()
+            registered_user_ids = []
+
+            for user_doc in users:
+                user_info = user_doc.to_dict()
+                courses = user_info.get('courses', [])
+                if courseId in courses:
+                    registered_user_ids.append(user_doc.id)
+
+            user_full_names = []
+            for user_id in registered_user_ids:
+                user_doc = firestore_db.collection('users').document(user_id).get()
+                if user_doc.exists:
+                    user_info = user_doc.to_dict()
+                    full_name = user_info.get('fullName')
+                    if full_name:
+                        user_full_names.append(full_name)
+                    else:
+                        print(f"User {user_id} has no 'fullName' field")  # Debugging line
+                else:
+                    print(f"User document {user_id} not found")  # Debugging line
+
+            print(f"User Full Names: {user_full_names}")  # Debugging line
+            return jsonify(user_full_names), 200
+        except Exception as e:
+            print(f"Error: {str(e)}")  # Debugging line
+            return jsonify({"message": str(e)}), 400
+        
+
+@blp.route('/get_course_users_ID/<string:courseId>', methods=['GET'])
+class GetCourseUsers(MethodView):
+    def get(self, courseId):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            
+            users_collection = firestore_db.collection('users')
+            users = users_collection.stream()
+            registered_user_ids = []
+
+            for user_doc in users:
+                user_info = user_doc.to_dict()
+                courses = user_info.get('courses', [])
+                id = user_info.get('user_id')
+                if courseId in courses:
+                    registered_user_ids.append(id)
+
+            print(f"User Full Names: {registered_user_ids}")  # Debugging line
+            return jsonify(registered_user_ids), 200
+        except Exception as e:
+            print(f"Error: {str(e)}")  # Debugging line
+            return jsonify({"message": str(e)}), 400
+        
+
+
+@blp.route('/add_notification', methods=['POST'])
+class AddNotification(MethodView):
+    def post(self):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            data = request.get_json()
+            user_ids = data.get('user_ids')
+            message = data.get('message')
+
+            if not user_ids or not message:
+                return jsonify({"success": False, "error": "Invalid data"}), 400
+
+            notification_ref = {
+                'user_ids': user_ids,
+                'message': message
+            }
+
+            doc_ref = firestore_db.collection('notification').add(notification_ref)
+
+            # Debugging
+            print(f"Document Reference Type: {type(doc_ref)}")
+            print(f"Document Reference Content: {doc_ref}")
+
+         
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500

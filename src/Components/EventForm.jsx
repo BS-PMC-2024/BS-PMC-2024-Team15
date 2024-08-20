@@ -112,6 +112,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, event, slot }) => {
     };
 
     const handleFadeOutAndClose = () => {
+        
         setClosing(true);
         setTimeout(() => {
             setClosing(false);

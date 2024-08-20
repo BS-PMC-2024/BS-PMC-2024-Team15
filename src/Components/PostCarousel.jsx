@@ -34,45 +34,16 @@ const Carousel = ({ children }) => {
     );
 };
 
-const PostCarousel = ({ fetchEvents ,userType}) => {
+const PostCarousel = ({fetchPosts, fetchEvents ,userType, posts , Loadiingposts}) => {
     const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [editMode, setEditMode] = useState(false);
 
+   
     useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const idToken = localStorage.getItem('accessToken');
-                if (!idToken) {
-                    throw new Error('No access token found');
-                }
-
-                const url = 'http://localhost:5000/get_event_Posts'; // Make sure this matches your backend endpoint
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${idToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                setEvents(data);
-            } catch (error) {
-                console.error('Error fetching event posts:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchEvents();
+        fetchPosts();
     }, []);
 
     const handleAddToCalendar = (event) => {
@@ -111,6 +82,7 @@ const PostCarousel = ({ fetchEvents ,userType}) => {
         } catch (error) {
             console.error('Error removing post:', error);
         }
+        fetchPosts();
     };
 
     const handleCloseDialog = () => {
@@ -147,7 +119,8 @@ const PostCarousel = ({ fetchEvents ,userType}) => {
                 setEvents((prevEvents) => [...prevEvents, { ...eventData, id: result.id }]);
             }
             setIsDialogOpen(false);
-            fetchEvents();
+            fetchPosts();
+            
         } catch (error) {
             console.error('Error saving post:', error);
         }
@@ -155,11 +128,11 @@ const PostCarousel = ({ fetchEvents ,userType}) => {
 
     return (
         <div className="event-post">
-            {loading ? (
-                <p>Loading events...</p>
+            {Loadiingposts ? (
+                <p>Loading posts...</p>
             ) : (
                 <Carousel>
-                    {events.map((event) => (
+                    {posts.map((event) => (
                         <PostCard
                             key={event.id}
                             event={event}

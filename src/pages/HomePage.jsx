@@ -19,17 +19,21 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true);
     const [showAIAssistant, setShowAIAssistant] = useState(false);
     const [userType, setUserType] = useState(null);
-    
-    
+    const [posts, setPosts] = useState([]);
+    const [loadingPosts, setLoadingPosts] = useState(true);
+    const [UserId,setUserId] = useState('');
+
     useEffect(() => {
         fetchUserType();
         fetchEvents();
         fetchCourses();
+        fetchPosts();
     }, []);
 
     const fetchUserType = async () => {
         try {
             const idToken = localStorage.getItem('accessToken');
+           
             if (!idToken) {
                 throw new Error('No access token found');
             }
@@ -48,6 +52,7 @@ const HomePage = () => {
 
             const data = await response.json();
             setUserType(data.user_type);
+            setUserId(data.user_id);
         } catch (error) {
             console.error('Error fetching user type:', error);
         }
@@ -108,6 +113,35 @@ const HomePage = () => {
             setLoading(false);
         }
     };
+    
+    const fetchPosts= async () => {
+        try {
+            const idToken = localStorage.getItem('accessToken');
+            if (!idToken) {
+                throw new Error('No access token found');
+            }
+
+            const url = 'http://localhost:5000/get_event_Posts'; // Make sure this matches your backend endpoint
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setPosts(data);
+        } catch (error) {
+            console.error('Error fetching event posts:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
     const scrollToCalendar = () => {
@@ -164,7 +198,9 @@ const HomePage = () => {
         <div className="homepage">
             <div className="container">
                 <div className="full_sidebar">
-                    <Navbar userType={userType}/>
+                    <Navbar userType={userType}  
+                    fetchCourses={fetchCourses} 
+                    fetchPosts={fetchPosts}/>
                     <Sidebar
                         scrollToCourses={scrollToCourses}
                         scrollToCalendar={scrollToCalendar}
@@ -176,6 +212,7 @@ const HomePage = () => {
                 <main className="main-content">
                     <h1 class="main_logo">Study Buddy</h1>
                     <UserHomePage
+                        UserId={UserId}
                         calendarRef={calendarRef}
                         eventsRef={eventsRef}
                         statisticsRef={statisticsRef}
@@ -189,10 +226,15 @@ const HomePage = () => {
                         loadingCourses={loadingCourses}
                         courses={courses}
                         userType={userType}
+                        fetchPosts = {fetchPosts}
+                        loadingPosts={loadingPosts}
+                        posts={posts}
+                        
                     />
                 </main>
             </div>
 
+            <a className="sidebar-btn" onClick={toggleAIAssistant}><li><i class="fa-solid fa-calendar-plus"></i>Assistant Chat</li></a>
 
             {showAIAssistant && (
                 <AIAssistantComponent

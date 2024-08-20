@@ -28,9 +28,11 @@ class userRegister(MethodView):
         email = data.get('email')
         password = data.get('password')
         dateOfBirth = data.get('dateOfBirth')
+        gender=data.get('gender')
         userType = data.get('type')
         receiveNews = data.get('receiveNews')
         fullName = data.get('fullName')
+        icon = data.get('icon')
         planDay = data.get('planDay')
         stickSchedule = data.get('stickSchedule')
         satesfiedTasks = data.get('satesfiedTasks')
@@ -48,8 +50,10 @@ class userRegister(MethodView):
                 'email': email,
                 'dateOfBirth': dateOfBirth,
                 'type': userType,
+                'gender':gender,
                 'receiveNews': receiveNews,
                 'fullName': fullName,
+                'icon': icon,
                 'courses' : courses,
                 'planDay': planDay,
                 'stickSchedule': stickSchedule,
@@ -112,8 +116,9 @@ class getUserType(MethodView):
             if user_data:
                 user_info = user_data.to_dict()
                 user_type = user_info['type']
+
                 print (user_type)
-                return jsonify({'user_type': user_type}), 200
+                return jsonify({'user_type': user_type, 'user_id':user_id}), 200
             else:
                 return jsonify({"message": "User not found"}), 404
 
@@ -357,3 +362,96 @@ class get_student_courses(MethodView):
             return jsonify({"message": str(e)}), 400
 
 
+@blp.route('/notifications', methods=['GET'])
+class Notifications(MethodView):
+    def get(self):
+        try:
+        # Get the Authorization header
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return jsonify({"success": False, "error": "Missing or invalid token"}), 401
+            # Get the Firestore DB from the current app context
+            firestore_db = current_app.config['FIRESTORE_DB']
+                   # Extract the token
+            id_token = auth_header.split(' ')[1]
+            
+            # Verify the token and get the user ID
+            decoded_token = verify_firebase_token(id_token)
+            user_id = decoded_token['users'][0]['localId']
+
+
+            # Fetch notifications where the user_id is present in the 'user_ids' array
+            notifications_ref = firestore_db.collection('notification').where('user_ids', 'array_contains', user_id) #Fix for all users
+            
+            # Collect notifications including their ID
+            notifications = []
+            for doc in notifications_ref.stream():
+                notification_data = doc.to_dict()
+                notification_data['id'] = doc.id  # Add document ID to the notification data
+                notifications.append(notification_data)
+
+            return jsonify({"success": True, "notifications": notifications}), 200
+
+        except Exception as e:
+            print("Error:", str(e))
+            return jsonify({"success": False, "error": str(e)}), 500
+
+@blp.route('/mark_notification_as_seen', methods=['POST'])
+def mark_notification_as_seen():
+    try:
+        # Get the Authorization header
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"success": False, "error": "Missing or invalid token"}), 401
+
+        # Extract the token
+        id_token = auth_header.split(' ')[1]
+        
+        # Verify the token and get the user ID
+        decoded_token = verify_firebase_token(id_token)
+        user_id = decoded_token['users'][0]['localId']
+
+        # Extract notification ID from request
+        notification_id = request.json.get('notification_id')
+        
+        if not notification_id:
+            return jsonify({"success": False, "error": "Notification ID is required"}), 400
+
+        firestore_db = current_app.config['FIRESTORE_DB']
+        notification_ref = firestore_db.collection('notification').document(notification_id)
+        
+        # Use ArrayRemove to remove user_id from the 'user_ids' array
+        notification_ref.update({
+            'user_ids': firestore.ArrayRemove([user_id]) #Fix for all users
+        })
+
+        return jsonify({"success": True, "message": f"User ID {user_id} removed from 'user_ids' array"}), 200
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+
+
+@blp.route('/get__users_IDs', methods=['GET'])
+class GetCourseUsers(MethodView):
+    def get(self):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            
+            users_collection = firestore_db.collection('users')
+            users = users_collection.stream()
+            registered_user_ids = []
+
+            for user_doc in users:
+                user_info = user_doc.to_dict()
+                id = user_info.get('user_id')
+                registered_user_ids.append(id)
+
+            print(f"User ids: {registered_user_ids}")  # Debugging line
+            return jsonify(registered_user_ids), 200
+        except Exception as e:
+            print(f"Error: {str(e)}")  # Debugging line
+            return jsonify({"message": str(e)}), 400
+        
