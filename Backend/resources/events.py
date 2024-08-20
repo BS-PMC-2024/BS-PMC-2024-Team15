@@ -4,6 +4,7 @@ from flask import request, jsonify, current_app
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 import requests
+import datetime
 
 
 blp = Blueprint('events', __name__, description='Operations on events')
@@ -195,3 +196,51 @@ class uploudImage(MethodView):
         except Exception as e:
             print("Error:", str(e))
             return jsonify({'message': str(e)}), 400
+        
+
+@blp.route('/rank_event/<string:eventId>', methods=['PUT'])
+class rankEvent(MethodView):
+    def put(self, eventId):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            data = request.get_json()
+            rank = data.get('rank')
+
+            if rank is None:
+                return jsonify({"message": "Rank value is required"}), 400
+
+            event_ref = firestore_db.collection('events').document(eventId)
+            event_ref.update({"rank": rank, "isRanked": True})
+
+            return jsonify({"message": "Event ranked successfully"}), 200
+        except Exception as e:
+            return jsonify({"message": str(e)}), 400
+
+
+
+@blp.route('/rank_event/<string:eventId>', methods=['PUT'])
+class rankEvent(MethodView):
+    def put(self, eventId):
+        try:
+            firestore_db = current_app.config['FIRESTORE_DB']
+            data = request.get_json()
+            rank = data.get('rank')
+
+            if rank is None:
+                return jsonify({"message": "Rank value is required"}), 400
+
+            event_ref = firestore_db.collection('events').document(eventId)
+            event_ref.update({"rank": rank, "isRanked": True})
+
+            event = event_ref.get().to_dict()
+            user_id = event['user_id']
+            start_time = event['startTime']
+            current_week = datetime.datetime.fromisoformat(start_time).isocalendar()[1]
+
+            events_in_week = firestore_db.collection('events').where('user_id', '==', user_id).where('weekNumber', '==', current_week).stream()
+            all_ranked = all(event.to_dict().get('isRanked', False) for event in events_in_week)
+
+            return jsonify({"message": "Event ranked successfully"}), 200
+        except Exception as e:
+            return jsonify({"message": str(e)}), 400
+

@@ -1,98 +1,166 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CanvasJSReact from '@canvasjs/react-charts';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
-var CanvasJS = CanvasJSReact.CanvasJS;
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-class GraphComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.addSymbols = this.addSymbols.bind(this);
-    }
+const StatisticGraph = ({ events, loading }) => {
+    const [weeklyEfficiency, setWeeklyEfficiency] = useState([]);
+    const [eventStatistics, setEventStatistics] = useState([]);
 
-    calculateEventStatistics = (events) => {
-        const eventTypes = ['Study', 'Hobby', 'Social']; // Update with your event types
-        const statistics = {};
-    
-        // Initialize statistics object
-        eventTypes.forEach(type => {
-            statistics[type] = { totalHours: 0, count: 0 }; // Example: Track total hours and count
-        });
-    
-        // Get today's date and the date two weeks from now
-        const today = new Date();
-        const twoWeeksFromNow = new Date(today);
-        twoWeeksFromNow.setDate(today.getDate() + 14);
-    
-        // Calculate total duration and count for each event type within the date range
-        events.forEach(event => {
-            const eventDate = new Date(event.startTime);
-    
-            if (eventDate >= today && eventDate <= twoWeeksFromNow && eventTypes.includes(event.eventType)) {
-                // Assuming duration is a string like '1:00' or '0:30'
-                const [hours, minutes] = event.duration.split(':').map(Number);
-                const durationInHours = hours + minutes / 60;
-                statistics[event.eventType].totalHours += durationInHours;
-                statistics[event.eventType].count++;
-            }
-        });
-    
-        return eventTypes.map(type => ({
-            label: type,
-            y: statistics[type].totalHours // Example: Use total hours for the chart data
-        }));
-    };
-    
-
-    addSymbols(e) {
-        var suffixes = ["", "K", "M", "B"];
-        var order = Math.max(Math.floor(Math.log(Math.abs(e.value)) / Math.log(1000)), 0);
-
-        if (order > suffixes.length - 1)
-            order = suffixes.length - 1;
-
-        var suffix = suffixes[order];
-        return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
-    }
-
-    render() {
-        const { events, loading } = this.props;
-
-        const eventStatistics = this.calculateEventStatistics(events);
-
-        const options = {
-            animationEnabled: true,
-            theme: "light2", //light2,dark1,dark2
-            title: {
-                text: "Time management for next 14 days"
-            },
-            axisY: {
-                title: "Hours",
-                labelFormatter: this.addSymbols,
-                scaleBreaks: {
-                    autoCalculate: true
-                }
-            },
-            axisX: {
-                title: "Events",
-                labelAngle: 0
-            },
-            data: [{
-                type: "column",
-                dataPoints: eventStatistics // Use the calculated event statistics here
-            }]
+    useEffect(() => {
+        // Helper function to get the start of the week (Sunday) and end of the week (Saturday)
+        const getWeekRange = (date) => {
+            const start = new Date(date);
+            const day = start.getDay();
+            const diff = start.getDate() - day;
+            const startOfWeek = new Date(start.setDate(diff));
+            const endOfWeek = new Date(start.setDate(start.getDate() + 6));
+            return {
+                start: `${startOfWeek.getDate()}-${startOfWeek.toLocaleString('default', { month: 'short' }).toUpperCase()}`,
+                end: `${endOfWeek.getDate()}-${endOfWeek.toLocaleString('default', { month: 'short' }).toUpperCase()}`
+            };
         };
 
-        return (
-            <div id="statistic">
-                {loading ? (
-                    <p>Loading event statistics...</p>
-                ) : (
-                    <CanvasJSChart options={options} />
-                )}
-            </div>
-        );
-    }
-}
+        // Calculate weekly efficiency based on ranked events
+        const calculateWeeklyEfficiency = (events) => {
+            const weeks = {};
+            const today = new Date();
 
-export default GraphComponent;
+            // Calculate week labels for 3 weeks before, the current week
+            for (let i = -3; i <= 0; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() + i * 7);
+                const { start, end } = getWeekRange(date);
+                const weekLabel = `${start} - ${end}`;
+                weeks[weekLabel] = { totalRank: 0, count: 0 };
+            }
+
+            events.forEach((event) => {
+                const eventDate = new Date(event.startTime);
+                const { start, end } = getWeekRange(eventDate);
+                const weekLabel = `${start} - ${end}`;
+                
+                if (weeks[weekLabel]) {
+                    if (event.isRanked) {
+                        weeks[weekLabel].totalRank += event.rank;
+                        weeks[weekLabel].count++;
+                    }
+                }
+            });
+
+            return Object.keys(weeks).map((week) => ({
+                weekLabel: week,
+                efficiencyScore: weeks[week].count > 0 ? weeks[week].totalRank / weeks[week].count : 0,
+            }));
+        };
+
+        // Calculate event statistics
+        const calculateEventStatistics = (events) => {
+            const eventTypes = ['Study', 'Hobby', 'Social'];
+            const statistics = {};
+
+            eventTypes.forEach((type) => {
+                statistics[type] = { totalHours: 0, count: 0 };
+            });
+
+            const today = new Date();
+            const twoWeeksFromNow = new Date(today);
+            twoWeeksFromNow.setDate(today.getDate() + 14);
+
+            events.forEach((event) => {
+                const eventDate = new Date(event.startTime);
+                if (eventDate >= today && eventDate <= twoWeeksFromNow && eventTypes.includes(event.eventType)) {
+                    const [hours, minutes] = event.duration.split(':').map(Number);
+                    const durationInHours = hours + minutes / 60;
+                    statistics[event.eventType].totalHours += durationInHours;
+                    statistics[event.eventType].count++;
+                }
+            });
+
+            return eventTypes.map((type) => ({
+                label: type,
+                y: statistics[type].totalHours,
+            }));
+        };
+
+        setEventStatistics(calculateEventStatistics(events));
+        setWeeklyEfficiency(calculateWeeklyEfficiency(events));
+    }, [events]);
+
+    const weeklyEfficiencyOptions = {
+        animationEnabled: true,
+        theme: 'light2',
+        title: {
+            text: 'Weekly Efficiency (Last 4 Weeks)',
+        },
+        axisY: {
+            title: 'Efficiency Score (0-10)',
+            maximum: 10,
+            interval: 1,
+        },
+        axisX: {
+            title: 'Weeks',
+            interval: 1,
+        },
+        data: [
+            {
+                type: 'line',
+                dataPoints: weeklyEfficiency.map((week) => ({
+                    label: week.weekLabel,
+                    y: week.efficiencyScore,
+                })),
+            },
+        ],
+    };
+
+    const timeManagementOptions = {
+        animationEnabled: true,
+        theme: 'light2',
+        title: {
+            text: 'Time Management for Next 14 Days',
+        },
+        axisY: {
+            title: 'Hours',
+        },
+        axisX: {
+            title: 'Event Types',
+        },
+        data: [
+            {
+                type: 'column',
+                dataPoints: eventStatistics,
+            },
+        ],
+    };
+
+    return (
+        <div id="statistic">
+            {loading ? (
+                <p>Loading event statistics...</p>
+            ) : (
+                <Tabs>
+                    <TabList>
+                        <Tab>Time Management</Tab>
+                        <Tab>Weekly Efficiency</Tab>
+                    </TabList>
+                    <TabPanel>
+                        <CanvasJSChart options={timeManagementOptions} />
+                    </TabPanel>
+                    <TabPanel>
+                        <CanvasJSChart options={weeklyEfficiencyOptions} />
+                    </TabPanel>
+                </Tabs>
+            )}
+        </div>
+    );
+};
+
+export default StatisticGraph;
+
+// Helper function to get week number
+Date.prototype.getWeek = function() {
+    const onejan = new Date(this.getFullYear(), 0, 1);
+    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+};

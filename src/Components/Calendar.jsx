@@ -12,6 +12,17 @@ const CalendarComponent = ({ events, fetchEvents }) => {
     const [showEventForm, setShowEventForm] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
+    
+    const CustomEventComponent = ({ event }) => { 
+        return (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>{event.title}</span>
+                {event.isRanked && (
+                    <img src="https://cdn-icons-png.flaticon.com/128/4436/4436481.png" alt="Done" style={{ height: '16px', marginLeft: 'auto' }} /> // added icon for ranked events.
+                )}
+            </div>
+        );
+    };
 
     useEffect(() => {
         //Fetch events only if events are empty or null
@@ -22,30 +33,33 @@ const CalendarComponent = ({ events, fetchEvents }) => {
 
     const eventStyleGetter = (event, start, end, isSelected) => {
         const now = new Date();
-        let backgroundColor = '#3174ad';
-        let borderLeft = '';
+        let backgroundColor;
+        let borderLeft;
+        let color = '#FFFFFF'; // Default text color is white
     
-
-        if (end < now) {
-           //if event has been ranked, return white color
-            backgroundColor = '#000000';
-
-        } else { switch (event.eventType) {
-            case 'Study':
-                backgroundColor = '#9773dc';
-                break;
-            case 'Social':
-                backgroundColor = '#69b0e6';
-                break;
-            case 'Hobby':
-                backgroundColor = '#5dd2a5';
-                break;
-            default:
-                backgroundColor = '#3174ad';
-                break;
+        if (event.isRanked) {
+            backgroundColor = 'transparent';
+            borderLeft = '2px solid green'; // not working currently
+            color = '#000000'; // Set text color to black for ranked events so it can be seen with white background.
+        } else if (end < now) {
+            backgroundColor = '#000000'; // Black for past events not yet ranked
+        } else {
+            switch (event.eventType) {
+                case 'Study':
+                    backgroundColor = '#9773dc';
+                    break;
+                case 'Social':
+                    backgroundColor = '#69b0e6';
+                    break;
+                case 'Hobby':
+                    backgroundColor = '#5dd2a5';
+                    break;
+                default:
+                    backgroundColor = '#3174ad';
+                    break;
+            }
         }
-        }
-       
+    
         switch (event.importance) {
             case 'High':
                 borderLeft = '14px solid #f04a4a';
@@ -54,16 +68,17 @@ const CalendarComponent = ({ events, fetchEvents }) => {
                 borderLeft = '14px solid #f1ba41';
                 break;
             case 'Low':
-                borderLeft = '14px solid  #f7f322';
+                borderLeft = '14px solid #f7f322';
                 break;
             default:
-                backgroundColor = '#3174ad';
+                borderLeft = '14px solid #3174ad';
                 break;
         }
     
         const style = {
             backgroundColor: backgroundColor,
-            borderLeft: borderLeft
+            borderLeft: borderLeft,
+            color: color, // Apply the text color
         };
     
         return {
