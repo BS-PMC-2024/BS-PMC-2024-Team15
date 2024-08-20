@@ -17,8 +17,39 @@ const AdminHomePage = ({ userType, loadingCourses, fetchEvents, showAIAssistant,
     };
 
     const handleSendMsg = async () => {
-        // Your code for sending message
+        try {
+            const response = await fetch('http://localhost:5000/get__users_IDs', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+            });
+
+            const user_ids = await response.json();
+
+            const payload = {
+                user_ids,
+                message: notification
+            };
+
+            const responseNotif = await fetch('http://localhost:5000/add_notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+
+            alert('Message sent successfully!');
+            setNotification('');
+            handleCloseModal();
+        } catch (error) {
+            console.error('Error sending message:', error.message);
+
+        }
     };
+
 
     return (
         <>
