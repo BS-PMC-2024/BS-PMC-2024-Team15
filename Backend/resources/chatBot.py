@@ -145,6 +145,14 @@ For example:
           "event_name": "Complex Algebra",
           "importance": "High",
           "eventType": "Study"
+        },
+        {
+          "time": "12:15-14:15",
+          "duration": 2:00,
+          "mission": "learn math",
+          "event_name": "Complex Math",
+          "importance": "High",
+          "eventType": "Study"
         }
       ]
     },
