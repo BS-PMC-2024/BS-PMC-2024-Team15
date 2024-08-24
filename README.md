@@ -1,3 +1,21 @@
+## StudyBuddy : 
+
+StudyBuddy is an AI-driven application designed to help users schedule and manage their study sessions effectively. The project utilizes advanced algorithms to provide personalized study plans and tips to optimize learning.
+
+Features
+
+AI-Powered Scheduling: Generates personalized study schedules based on user input.
+Study Reminders: Sends reminders to keep you on track with your study plan.
+Progress Tracking: Monitors your study progress and adjusts the schedule as needed.
+Technology Stack
+
+Backend: Python,Flask
+Frontend: HTML, CSS, JavaScript, React
+Machine Learning: OpenAi
+Database: FireBase
+
+
+
 ## Available Scripts
 
 In the project directory, you can run:
