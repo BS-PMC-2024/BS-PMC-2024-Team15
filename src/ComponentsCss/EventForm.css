@@ -117,7 +117,7 @@
 }
 
 .modal-buttons button:first-child {
-    background-color: #4CAF50; /* Green color for Add Event and Update Event */
+    background-color: #bd9cfd; /* Green color for Add Event and Update Event */
     color: white;
 }
 
@@ -154,7 +154,8 @@
 
 .day-time div {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    margin-bottom: 20px;
     background: #fff;
     opacity: 0.8;
     padding: 15px;

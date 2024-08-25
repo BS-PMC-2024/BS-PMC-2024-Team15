@@ -92,13 +92,13 @@
 }
 
 .dialog-actions button:first-child {
-    background-color: #4CAF50; /* Green color for Save Changes */
+    background-color: #bd9cfd; /* Green color for Save Changes */
     color: white;
     transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 .dialog-actions button:first-child:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: #bd9cfd; /* Darker green on hover */
 }
 
 .dialog-actions button:nth-of-type(2) {

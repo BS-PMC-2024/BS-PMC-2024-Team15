@@ -1,3 +1,6 @@
+.modal-content{
+    width: 30vw;
+}
 .modal-content h3 {
     margin-top: 20px;
     margin-bottom: 10px;
@@ -17,4 +20,21 @@
 
 .pdf-table th {
     background-color: #f2f2f2;
+}
+
+
+
+.add-new-course-form{
+    width: 70vw !important;
+    .days_and_time{
+        display: flex;
+        width: 40% !important;
+        flex-direction: column;
+    }
+
+    .form_desc_input{
+        display: flex;
+        flex-direction: column;
+        width: 90% !important;
+    }
 }

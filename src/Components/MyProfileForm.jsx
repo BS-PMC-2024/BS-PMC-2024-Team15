@@ -134,15 +134,17 @@ const MyProfileForm = ({ isOpen, onClose, onSave }) => {
                             onChange={handleChange}
                         />
                     </label>
-                    <h3>User created at: {"" + profileData.createdAt}</h3>
+                    <p>User created at: {"" + profileData.createdAt}</p>
 
                     <h2>my first quizz : </h2>
 
-                    <h3>How often do you plan your day in advance?: {profileData.planDay} </h3>
-                    <h3>How well do you stick to your planned schedule?: {profileData.stickSchedule}</h3>
-                    <h3>How effectively do you prioritize your tasks?: {profileData.prioritizeTasks}</h3>
-                    <h3>How often do you meet deadlines?: {profileData.deadlinedTasks}</h3>
-                    <h3>How satisfied are you with your current time management skills?: {profileData.satesfiedTasks}</h3>
+                    <p className="profile_quizz_test">
+                        How often do you plan your day in advance? <span>{profileData.planDay}</span><br/>
+                        How well do you stick to your planned schedule? <span>{profileData.stickSchedule}</span><br/>
+                        How effectively do you prioritize your tasks? <span>{profileData.prioritizeTasks}</span><br/>
+                        How often do you meet deadlines? <span>{profileData.deadlinedTasks}</span><br/>
+                        How satisfied are you with your current time management skills? <span>{profileData.satesfiedTasks}</span>
+                    </p>
 
                     <div className="modal-buttons">
                         <button type="submit">Edit information</button>

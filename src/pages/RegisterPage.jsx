@@ -132,114 +132,125 @@ const RegisterPage = () => {
     return (
         <section className="registration-section">
             <div className="registration-container">
-                <h2>Register</h2>
                 <div className="registration-form-container">
                     <form onSubmit={handleSubmit}>
-                        <label htmlFor="fullName">Full Name</label>
-                        <input
-                            type="text"
-                            id="fullName"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            required
-                        />
-                        {errors.fullName && <p className="error-message">{errors.fullName}</p>}
-
-                        <label htmlFor="dateOfBirth">Date of Birth (optional)</label>
-                        <input
-                            type="date"
-                            id="dateOfBirth"
-                            value={dateOfBirth}
-                            onChange={(e) => setDateOfBirth(e.target.value)}
-                        />
-                        {errors.dateOfBirth && <p className="error-message">{errors.dateOfBirth}</p>}
-
-
-                        <label htmlFor="gender">Gender</label>
-                        <select
-                            id="gender"
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                        >
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="else">Else</option>
-                        </select>
-
-                        <label htmlFor="type">Type</label>
-                        <select
-                            id="type"
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
-                        >
-                            <option value="student">Student</option>
-                            <option value="lecturer">Lecturer</option>
-                        </select>
-
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                        {errors.email && <p className="error-message">{errors.email}</p>}
-
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                        {errors.password && <p className="error-message">{errors.password}</p>}
-
-                        <label htmlFor="icon">Icon:</label>
-                        <div className="icon-selector">
-                            <div className="selected-icon" onClick={() => setIcon(!icon)}>
-                                <img src={icon} alt="Selected Icon" style={{ width: '50px', height: '50px' }} />
-                            </div>
-                            <div className="icon-list">
-                                {iconList.map((iconUrl, index) => (
-                                    <div key={index} className="icon-item" onClick={() => setIcon(iconUrl)}>
-                                        <img src={iconUrl} alt={`icon-${index}`} style={{ width: '50px', height: '50px', cursor: 'pointer' }} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <label>How often do you plan your day in advance?</label>
-                        {renderRatingOptions(setPlanDay, planDay, "planDay")}
-
-                        <label>How well do you stick to your planned schedule?</label>
-                        {renderRatingOptions(setStickSchedule, stickSchedule, "stickSchedule")}
-
-                        <label>How effectively do you prioritize your tasks?</label>
-                        {renderRatingOptions(setPrioritizeTasks, prioritizeTasks, "prioritizeTasks")}
-
-                        <label>How often do you meet deadlines?</label>
-                        {renderRatingOptions(setnDeadlinedTasks, deadlinedTasks, "deadlinedTasks")}
-
-                        <label>How satisfied are you with your current time management skills?</label>
-                        {renderRatingOptions(setSatesfiedTasks, satesfiedTasks, "satesfiedTasks")}
-
-                        <div className="receive-emails">
+                        <div className="reg_main">
+                        <h2>Register</h2>
+                            <label htmlFor="fullName">Full Name
                             <input
-                                type="checkbox"
-                                id="receiveNews"
-                                checked={receiveNews}
-                                onChange={(e) => setReceiveNews(e.target.checked)}
+                                type="text"
+                                id="fullName"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                required
                             />
-                            <label htmlFor="receiveNews">Interested in receiving news</label>
+                            {errors.fullName && <p className="error-message">{errors.fullName}</p>}
+                            </label>
+
+                            <label htmlFor="email">Email
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                            {errors.email && <p className="error-message">{errors.email}</p>}
+                            </label>
+
+                            <label htmlFor="password">Password
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            {errors.password && <p className="error-message">{errors.password}</p>}
+                            </label>
+
+                            <label htmlFor="dateOfBirth">Date of Birth (optional)
+                            <input
+                                type="date"
+                                id="dateOfBirth"
+                                value={dateOfBirth}
+                                onChange={(e) => setDateOfBirth(e.target.value)}
+                            />
+                            {errors.dateOfBirth && <p className="error-message">{errors.dateOfBirth}</p>}
+                            </label>
+
+                            <label htmlFor="gender">Gender
+                            <select
+                                id="gender"
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                            >
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="else">Else</option>
+                            </select>
+                            </label>
+
+                            <label htmlFor="type">Type
+                            <select
+                                id="type"
+                                value={type}
+                                onChange={(e) => setType(e.target.value)}
+                            >
+                                <option value="student">Student</option>
+                                <option value="lecturer">Lecturer</option>
+                            </select>
+                            </label>
+
+                            <label htmlFor="icon">Icon:</label>
+                            <div className="icon-selector">
+                                <div className="icon-list">
+                                    <div className="selected-icon" onClick={() => setIcon(!icon)}>
+                                        <img src={icon} alt="Selected Icon" />
+                                    </div>
+                                    {iconList.map((iconUrl, index) => (
+                                        <div key={index} className="icon-item" onClick={() => setIcon(iconUrl)}>
+                                            <img src={iconUrl} alt={`icon-${index}`} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="receive-emails">
+                                <label htmlFor="receiveNews">
+                                    <input
+                                        type="checkbox"
+                                        id="receiveNews"
+                                        checked={receiveNews}
+                                        onChange={(e) => setReceiveNews(e.target.checked)}
+                                    />
+                                Interested in receiving news?</label>
+                            </div>
                         </div>
 
-                        <button type="submit">Register</button>
-                        <p>
-                            Have an account?
-                            <a href="/login" className="register-link"> Login</a>
-                        </p>
+                        <div className="reg_quiz">
+                            <label>How often do you plan your day in advance?</label>
+                            {renderRatingOptions(setPlanDay, planDay, "planDay")}
+
+                            <label>How well do you stick to your planned schedule?</label>
+                            {renderRatingOptions(setStickSchedule, stickSchedule, "stickSchedule")}
+
+                            <label>How effectively do you prioritize your tasks?</label>
+                            {renderRatingOptions(setPrioritizeTasks, prioritizeTasks, "prioritizeTasks")}
+
+                            <label>How often do you meet deadlines?</label>
+                            {renderRatingOptions(setnDeadlinedTasks, deadlinedTasks, "deadlinedTasks")}
+
+                            <label>How satisfied are you with your current time management skills?</label>
+                            {renderRatingOptions(setSatesfiedTasks, satesfiedTasks, "satesfiedTasks")}
+                        </div>
+
+                        <div className="reg_btn_container">
+                            <button type="submit">Register</button>
+                            <p>
+                                Have an account?
+                                <a href="/login" className="register-link"> Login</a>
+                            </p>
+                        </div>
                     </form>
                 </div>
             </div>

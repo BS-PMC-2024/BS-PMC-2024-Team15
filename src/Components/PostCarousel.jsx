@@ -22,7 +22,7 @@ const Carousel = ({ children }) => {
 
     return (
         <div className="carousel">
-            <button onClick={prevSlide} className="carousel-control prev">❮</button>
+            <button onClick={prevSlide} className="carousel-control prev"><i class="fa-solid fa-angle-left"></i></button>
             <div className="carousel-slides">
                 <div
                     className="carousel-wrapper"
@@ -33,7 +33,7 @@ const Carousel = ({ children }) => {
                     {children}
                 </div>
             </div>
-            <button onClick={nextSlide} className="carousel-control next">❯</button>
+            <button onClick={nextSlide} className="carousel-control next"><i class="fa-solid fa-angle-right"></i></button>
         </div>
     );
 };
